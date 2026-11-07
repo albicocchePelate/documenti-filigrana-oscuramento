@@ -1,0 +1,7 @@
+{
+  "/kit": {
+    "target": "https://codice.albicocchepelate.it",
+    "secure": true,
+    "changeOrigin": true
+  }
+}

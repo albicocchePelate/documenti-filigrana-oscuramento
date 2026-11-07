@@ -1,0 +1,8 @@
+<ul>
+  @for (pagina of pagine(); track pagina) {
+    <li>
+      <canvas #foglio [attr.aria-label]="'Anteprima di ' + pagina.nome"></canvas>
+      <button type="button" (click)="togli.emit($index)">Togli</button>
+    </li>
+  }
+</ul>

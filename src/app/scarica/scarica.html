@@ -1,0 +1,10 @@
+<button type="button" [disabled]="!pronto() || preparo()" (click)="immagini()">
+  {{ preparo() ? 'Preparo…' : 'Scarica immagini' }}
+</button>
+@if (!pronto()) {
+  <p class="nota">Scrivi prima per cosa ti serve la copia.</p>
+} @else {
+  <p class="nota">
+    La copia non contiene metadati: niente posizione, telefono o data dello scatto.
+  </p>
+}

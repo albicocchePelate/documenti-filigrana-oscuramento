@@ -1,0 +1,9 @@
+/* Font, colori e tema arrivano da /kit/stile.css del sito. Qui solo quello che serve in più. */
+
+body {
+  padding: 24px 16px;
+}
+
+button {
+  cursor: pointer;
+}

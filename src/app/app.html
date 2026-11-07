@@ -1,0 +1,11 @@
+<app-carica (caricati)="aggiungi($event)" />
+
+@if (errore(); as messaggio) {
+  <p class="errore" role="alert">{{ messaggio }}</p>
+}
+
+@if (pagine().length) {
+  <app-filigrana [(scopo)]="scopo" [(data)]="data" [testo]="testo()" />
+  <app-anteprima [pagine]="pagine()" [testo]="testo()" (togli)="togli($event)" />
+  <app-scarica [pagine]="pagine()" [testo]="testo()" [pronto]="pronto()" />
+}

@@ -1,0 +1,12 @@
+<label
+  class="zona"
+  [class.sopra]="sopra()"
+  (dragover)="trascina($event)"
+  (dragleave)="sopra.set(false)"
+  (drop)="lascia($event)"
+>
+  <input type="file" accept="image/jpeg,image/png" multiple (change)="scegli($event)" />
+  <strong>Trascina qui i documenti</strong>
+  <span>o clicca per sceglierli · JPG, PNG</span>
+</label>
+<p class="nota">I file restano sul tuo computer. Questa pagina non può inviarli.</p>

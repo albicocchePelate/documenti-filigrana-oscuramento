@@ -1,0 +1,11 @@
+:host {
+  display: grid;
+  gap: 24px;
+  max-width: 720px;
+  margin-inline: auto;
+}
+
+.errore {
+  color: var(--danger);
+  font-size: 0.9375rem;
+}

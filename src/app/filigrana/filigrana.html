@@ -1,0 +1,18 @@
+<div class="campi">
+  <label class="scopo">
+    <span>Per cosa ti serve la copia?</span>
+    <input
+      [value]="scopo()"
+      (input)="scopo.set(valore($event))"
+      placeholder="affitto via Roma 10"
+      autocomplete="off"
+    />
+  </label>
+  <label>
+    <span>Data</span>
+    <input type="date" [value]="data()" (input)="data.set(valore($event))" />
+  </label>
+</div>
+<p class="sulla-copia">
+  Sulla copia: <strong>{{ testo() }}</strong>
+</p>

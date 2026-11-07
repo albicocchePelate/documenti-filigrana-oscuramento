@@ -1,0 +1,47 @@
+:host {
+  display: grid;
+  gap: 10px;
+}
+
+.zona {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  padding: 36px 16px;
+  border: 1.5px dashed var(--line-strong);
+  border-radius: 18px;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s;
+}
+
+.zona:hover,
+.zona.sopra {
+  border-color: var(--accent-ink);
+  background: var(--accent-soft);
+}
+
+.zona:focus-within {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+/* Il campo vero resta, per la tastiera e i lettori di schermo, ma non si vede */
+.zona input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.zona span,
+.nota {
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.nota {
+  text-align: center;
+}
