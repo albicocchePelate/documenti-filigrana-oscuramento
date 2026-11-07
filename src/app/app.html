@@ -1,16 +1,52 @@
-<app-carica (caricati)="aggiungi($event)" />
-
-@if (lettura(); as testo) {
-  <p class="lettura" aria-live="polite">
-    <span class="rotella" aria-hidden="true"></span>{{ testo }}
-  </p>
-}
-@for (errore of errori(); track errore) {
-  <p class="errore" role="alert">{{ errore }}</p>
-}
-
 @if (pagine().length) {
-  <app-filigrana [(scopo)]="scopo" [(data)]="data" [(visibilita)]="visibilita" [testo]="testo()" />
-  <app-scarica [pagine]="pagine()" [filigrana]="filigrana()" [pronto]="pronto()" />
+  <section>
+    <h2><span class="numero">1</span>Documenti</h2>
+    <app-carica
+      [compatta]="true"
+      [riepilogo]="riepilogo()"
+      (caricati)="aggiungi($event)"
+      (ricomincia)="ricomincia()"
+    />
+    <ng-container *ngTemplateOutlet="stato" />
+  </section>
+
+  <section>
+    <h2><span class="numero">2</span>Filigrana</h2>
+    <app-filigrana
+      [(scopo)]="scopo"
+      [(data)]="data"
+      [(visibilita)]="visibilita"
+      [testo]="testo()"
+    />
+  </section>
+
+  <section>
+    <h2><span class="numero">3</span>Scarica</h2>
+    <app-scarica [pagine]="pagine()" [filigrana]="filigrana()" [pronto]="pronto()" />
+  </section>
+
   <app-anteprima [pagine]="pagine()" [filigrana]="filigrana()" (togli)="togli($event)" />
+} @else {
+  <header class="intro">
+    <h1>Una copia del documento che vale solo per chi la riceve</h1>
+    <p>
+      Aggiungi una scritta con lo scopo e la data, e copri i dati che non servono. Se la copia
+      finisce altrove, non vale per altro.
+    </p>
+    <p class="esempi">Carta d'identità, patente, busta paga, contratto.</p>
+  </header>
+  <app-carica (caricati)="aggiungi($event)" />
+  <ng-container *ngTemplateOutlet="stato" />
 }
+
+<!-- Cosa si sta leggendo, e i file che non si sono potuti aprire -->
+<ng-template #stato>
+  @if (lettura(); as testo) {
+    <p class="lettura" aria-live="polite">
+      <span class="rotella" aria-hidden="true"></span>{{ testo }}
+    </p>
+  }
+  @for (errore of errori(); track errore) {
+    <p class="errore" role="alert">{{ errore }}</p>
+  }
+</ng-template>

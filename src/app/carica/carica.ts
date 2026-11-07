@@ -1,15 +1,23 @@
-import { Component, output, signal } from '@angular/core';
+import { Component, input, output, signal } from '@angular/core';
 
+/** Grande quando non c'è ancora niente; dopo, una riga con «Aggiungi altri» e «Ricomincia». */
 @Component({
   selector: 'app-carica',
   templateUrl: './carica.html',
   styleUrl: './carica.css',
 })
 export class Carica {
+  readonly compatta = input(false);
+  /** «3 pagine da 2 file» */
+  readonly riepilogo = input('');
   readonly caricati = output<File[]>();
+  readonly ricomincia = output<void>();
 
   /** C'è un file trascinato sopra la zona */
   protected readonly sopra = signal(false);
+
+  protected readonly formati =
+    'image/jpeg,image/png,image/heic,image/heif,.heic,.heif,application/pdf';
 
   protected scegli(evento: Event): void {
     const campo = evento.target as HTMLInputElement;

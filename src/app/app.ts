@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import { Component, computed, signal } from '@angular/core';
 import { Anteprima } from './anteprima/anteprima';
 import { Carica } from './carica/carica';
@@ -10,7 +11,7 @@ import { Scarica } from './scarica/scarica';
 
 @Component({
   selector: 'app-root',
-  imports: [Anteprima, Carica, Filigrana, Scarica],
+  imports: [Anteprima, Carica, Filigrana, NgTemplateOutlet, Scarica],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
@@ -30,6 +31,14 @@ export class App {
     visibilita: this.visibilita(),
   }));
   protected readonly pronto = computed(() => this.scopo().trim().length > 0);
+
+  /** «3 pagine da 2 file» */
+  protected readonly riepilogo = computed(() => {
+    const pagine = this.pagine().length;
+    const file = new Set(this.pagine().map((pagina) => pagina.documento)).size;
+    const quante = pagine === 1 ? '1 pagina' : `${pagine} pagine`;
+    return file > 1 ? `${quante} da ${file} file` : quante;
+  });
 
   protected async aggiungi(file: File[]): Promise<void> {
     const errori: string[] = [];
@@ -52,6 +61,11 @@ export class App {
     }
     this.lettura.set('');
     this.errori.set(errori);
+  }
+
+  protected ricomincia(): void {
+    this.pagine.set([]);
+    this.errori.set([]);
   }
 
   protected togli(indice: number): void {

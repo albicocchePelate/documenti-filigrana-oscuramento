@@ -7,7 +7,7 @@
   display: grid;
   justify-items: center;
   gap: 4px;
-  padding: 36px 16px;
+  padding: 44px 16px;
   border: 1.5px dashed var(--line-strong);
   border-radius: 18px;
   text-align: center;
@@ -18,18 +18,20 @@
 }
 
 .zona:hover,
-.zona.sopra {
+.zona.sopra,
+.riga.sopra {
   border-color: var(--accent-ink);
   background: var(--accent-soft);
 }
 
-.zona:focus-within {
+.zona:focus-within,
+.aggiungi:focus-within {
   outline: 3px solid var(--focus);
   outline-offset: 3px;
 }
 
 /* Il campo vero resta, per la tastiera e i lettori di schermo, ma non si vede */
-.zona input {
+input {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -37,11 +39,55 @@
 }
 
 .zona span,
-.nota {
+.nota,
+.riepilogo {
   color: var(--muted);
   font-size: 0.9375rem;
 }
 
 .nota {
   text-align: center;
+}
+
+/* Dopo il caricamento: una riga sola */
+.riga {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 8px 8px 8px 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s;
+}
+
+.riepilogo {
+  flex: 1;
+  min-width: 140px;
+}
+
+.aggiungi,
+.ricomincia {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 99px;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.9375rem;
+  cursor: pointer;
+}
+
+.ricomincia {
+  border-color: transparent;
+  color: var(--muted);
+}
+
+.ricomincia:hover {
+  color: var(--text);
 }

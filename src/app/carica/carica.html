@@ -1,17 +1,29 @@
-<label
-  class="zona"
-  [class.sopra]="sopra()"
-  (dragover)="trascina($event)"
-  (dragleave)="sopra.set(false)"
-  (drop)="lascia($event)"
->
-  <input
-    type="file"
-    accept="image/jpeg,image/png,image/heic,image/heif,.heic,.heif,application/pdf"
-    multiple
-    (change)="scegli($event)"
-  />
-  <strong>Trascina qui i documenti</strong>
-  <span>o clicca per sceglierli · JPG, PNG, HEIC, PDF</span>
-</label>
-<p class="nota">I file restano sul tuo computer. Questa pagina non può inviarli.</p>
+@if (compatta()) {
+  <div
+    class="riga"
+    [class.sopra]="sopra()"
+    (dragover)="trascina($event)"
+    (dragleave)="sopra.set(false)"
+    (drop)="lascia($event)"
+  >
+    <span class="riepilogo">{{ riepilogo() }}</span>
+    <label class="aggiungi">
+      <input type="file" [accept]="formati" multiple (change)="scegli($event)" />
+      Aggiungi altri
+    </label>
+    <button type="button" class="ricomincia" (click)="ricomincia.emit()">Ricomincia</button>
+  </div>
+} @else {
+  <label
+    class="zona"
+    [class.sopra]="sopra()"
+    (dragover)="trascina($event)"
+    (dragleave)="sopra.set(false)"
+    (drop)="lascia($event)"
+  >
+    <input type="file" [accept]="formati" multiple (change)="scegli($event)" />
+    <strong>Trascina qui il documento</strong>
+    <span>o clicca per sceglierlo · JPG, PNG, HEIC, PDF, anche più file</span>
+  </label>
+  <p class="nota">I file restano sul tuo computer. Questa pagina non può inviarli.</p>
+}

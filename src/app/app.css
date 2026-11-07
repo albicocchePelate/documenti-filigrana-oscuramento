@@ -1,6 +1,6 @@
 :host {
   display: grid;
-  gap: 24px;
+  gap: 28px;
   max-width: 720px;
   margin-inline: auto;
 }
@@ -31,4 +31,51 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.intro {
+  display: grid;
+  gap: 8px;
+  text-align: center;
+}
+
+.intro h1 {
+  font-family: var(--font-title);
+  font-weight: 600;
+  font-size: clamp(1.25rem, 4vw, 1.5rem);
+  line-height: 1.25;
+}
+
+.intro p {
+  color: var(--muted);
+}
+
+.esempi {
+  font-size: 0.9375rem;
+}
+
+section {
+  display: grid;
+  gap: 12px;
+}
+
+h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-title);
+  font-weight: 600;
+  font-size: 1.0625rem;
+}
+
+/* Il numero del passo, in un cerchietto */
+.numero {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  font-size: 0.875rem;
 }
