@@ -41,7 +41,7 @@
             [attr.aria-current]="$index === corrente() ? 'true' : null"
             (click)="corrente.set($index)"
           >
-            <canvas #miniatura></canvas>
+            <canvas [appMiniatura]="pagina"></canvas>
           </button>
         </li>
       }

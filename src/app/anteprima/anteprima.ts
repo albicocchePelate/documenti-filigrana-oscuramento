@@ -8,17 +8,15 @@ import {
   output,
   signal,
   viewChild,
-  viewChildren,
 } from '@angular/core';
 import { ImpostazioniFiligrana, disegnaPagina, fontPronto } from '../filigrana/disegna';
 import { Pagina } from '../pagina';
-
-/** Larghezza delle miniature, in pixel */
-const MINIATURA = 96;
+import { Miniatura } from './miniatura';
 
 /** Una pagina alla volta, grande, con sotto le miniature per saltare da una all'altra. */
 @Component({
   selector: 'app-anteprima',
+  imports: [Miniatura],
   templateUrl: './anteprima.html',
   styleUrl: './anteprima.css',
   host: { '(document:keydown)': 'tasto($event)' },
@@ -46,7 +44,6 @@ export class Anteprima {
   });
 
   private readonly grande = viewChild<ElementRef<HTMLCanvasElement>>('grande');
-  private readonly miniature = viewChildren<ElementRef<HTMLCanvasElement>>('miniatura');
   private readonly fontCaricato = signal(false);
 
   constructor() {
@@ -58,17 +55,6 @@ export class Anteprima {
       const foglio = this.grande()?.nativeElement;
       const pagina = this.pagina();
       if (foglio && pagina) disegnaPagina(foglio, pagina, this.filigrana());
-    });
-
-    // Le miniature servono solo a riconoscere la pagina: niente filigrana
-    effect(() => {
-      const pagine = this.pagine();
-      this.miniature().forEach(({ nativeElement: foglio }, i) => {
-        const immagine = pagine[i].immagine;
-        foglio.width = MINIATURA;
-        foglio.height = Math.round((MINIATURA * immagine.height) / immagine.width);
-        foglio.getContext('2d')!.drawImage(immagine, 0, 0, foglio.width, foglio.height);
-      });
     });
   }
 
