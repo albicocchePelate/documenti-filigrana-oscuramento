@@ -1,6 +1,11 @@
-<button type="button" [disabled]="!pronto() || preparo()" (click)="immagini()">
-  {{ preparo() ? 'Preparo…' : 'Scarica immagini' }}
-</button>
+<div class="pulsanti">
+  <button type="button" class="pdf" [disabled]="!pronto() || preparo()" (click)="pdf()">
+    {{ preparo() ? 'Preparo…' : 'Scarica PDF' }}
+  </button>
+  <button type="button" class="immagini" [disabled]="!pronto() || preparo()" (click)="immagini()">
+    Scarica immagini
+  </button>
+</div>
 @if (!pronto()) {
   <p class="nota">Scrivi prima per cosa ti serve la copia.</p>
 } @else {

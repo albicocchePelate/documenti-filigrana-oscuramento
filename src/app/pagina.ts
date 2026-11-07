@@ -3,7 +3,9 @@ export const LATO_MASSIMO = 2400;
 
 /** Una pagina del documento, già letta e pronta da disegnare. */
 export interface Pagina {
-  /** Serve a dare un nome ai file scaricati: «patente-1.jpg» */
+  /** Il nome del file da cui arriva, senza estensione: «busta-paga» */
+  documento: string;
+  /** Il nome per l'immagine scaricata: «busta-paga-2» se il documento ha più pagine */
   nome: string;
   immagine: ImageBitmap;
 }

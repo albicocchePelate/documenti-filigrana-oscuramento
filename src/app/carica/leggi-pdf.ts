@@ -33,7 +33,11 @@ export async function leggiPdf(
     await pagina.render({ canvas: foglio, viewport: vista }).promise;
 
     const suffisso = documento.numPages > 1 ? `-${numero}` : '';
-    pagine.push({ nome: `${nome}${suffisso}`, immagine: await createImageBitmap(foglio) });
+    pagine.push({
+      documento: nome,
+      nome: `${nome}${suffisso}`,
+      immagine: await createImageBitmap(foglio),
+    });
   }
   await documento.destroy();
   return pagine;

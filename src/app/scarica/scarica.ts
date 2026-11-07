@@ -1,6 +1,6 @@
 import { Component, input, signal } from '@angular/core';
 import { Pagina } from '../pagina';
-import { salvaImmagini } from './salva';
+import { salvaImmagini, salvaPdf } from './salva';
 
 @Component({
   selector: 'app-scarica',
@@ -15,10 +15,18 @@ export class Scarica {
 
   protected readonly preparo = signal(false);
 
-  protected async immagini(): Promise<void> {
+  protected pdf(): Promise<void> {
+    return this.prepara(() => salvaPdf(this.pagine(), this.testo()));
+  }
+
+  protected immagini(): Promise<void> {
+    return this.prepara(() => salvaImmagini(this.pagine(), this.testo()));
+  }
+
+  private async prepara(salva: () => Promise<void>): Promise<void> {
     this.preparo.set(true);
     try {
-      await salvaImmagini(this.pagine(), this.testo());
+      await salva();
     } finally {
       this.preparo.set(false);
     }

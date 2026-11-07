@@ -26,9 +26,9 @@ export async function leggiFile(
   switch (formato(file)) {
     case 'immagine':
       // La foto viene girata nel verso giusto, come la mostra il telefono
-      return [{ nome, immagine: await riduci(await createImageBitmap(file)) }];
+      return [{ documento: nome, nome, immagine: await riduci(await createImageBitmap(file)) }];
     case 'heic':
-      return [{ nome, immagine: await riduci(await leggiHeic(file)) }];
+      return [{ documento: nome, nome, immagine: await riduci(await leggiHeic(file)) }];
     case 'pdf':
       return leggiPdf(file, nome, avanzamento);
     default:
