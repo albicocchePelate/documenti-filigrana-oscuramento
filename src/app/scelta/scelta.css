@@ -1,0 +1,35 @@
+:host {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+
+.nome {
+  width: 130px;
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.opzioni {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+button {
+  min-height: 38px;
+  padding: 0 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: 99px;
+  background: none;
+  color: var(--text);
+  font-size: 0.9375rem;
+}
+
+button[aria-checked='true'] {
+  border-color: var(--accent-ink);
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  font-weight: 600;
+}

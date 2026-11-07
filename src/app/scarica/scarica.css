@@ -8,37 +8,6 @@
   gap: 10px;
 }
 
-/* Due opzioni affiancate, come un interruttore */
-.scelta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-}
-
-.nome-scelta {
-  width: 100px;
-  color: var(--muted);
-  font-size: 0.9375rem;
-}
-
-.scelta button {
-  min-height: 38px;
-  padding: 0 16px;
-  border: 1px solid var(--line-strong);
-  border-radius: 99px;
-  background: none;
-  color: var(--text);
-  font-size: 0.9375rem;
-}
-
-.scelta button[aria-checked='true'] {
-  border-color: var(--accent-ink);
-  background: var(--accent-soft);
-  color: var(--accent-ink);
-  font-weight: 600;
-}
-
 /* Una riga per file: cosa contiene, e il suo pulsante */
 .uscite {
   display: grid;
@@ -63,14 +32,54 @@
   min-width: 0;
 }
 
-.file strong {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.aggiunta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+
+.nome-campo {
+  width: 130px;
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+input {
+  min-height: 38px;
+  padding: 0 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.9375rem;
+}
+
+/* Il nome si scrive; dopo, attaccati, aggiunta ed estensione */
+.nome-file {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.nome-file input {
+  flex: 1;
+  min-width: 80px;
   font-weight: 600;
 }
 
-.file span {
+.coda {
+  padding-left: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.contenuto {
+  padding: 4px 0 0 2px;
   color: var(--muted);
   font-size: 0.875rem;
 }

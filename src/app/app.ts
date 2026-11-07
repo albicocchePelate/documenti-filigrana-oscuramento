@@ -4,7 +4,12 @@ import { Anteprima } from './anteprima/anteprima';
 import { Carica } from './carica/carica';
 import { formato, leggiFile } from './carica/leggi';
 import { PdfProtetto } from './carica/leggi-pdf';
-import { ImpostazioniFiligrana, testoFiligrana } from './filigrana/disegna';
+import {
+  ImpostazioniFiligrana,
+  STILE_INIZIALE,
+  StileFiligrana,
+  testoFiligrana,
+} from './filigrana/disegna';
 import { Filigrana } from './filigrana/filigrana';
 import { Pagina } from './pagina';
 import { Scarica } from './scarica/scarica';
@@ -22,7 +27,7 @@ export class App {
   /** Si parte da «Solo per »: di solito basta completarla */
   protected readonly scritta = signal(INIZIO);
   protected readonly data = signal(oggi());
-  protected readonly visibilita = signal(0.38);
+  protected readonly stile = signal<StileFiligrana>(STILE_INIZIALE);
   /** Cosa si sta leggendo adesso, mentre i file arrivano */
   protected readonly lettura = signal('');
   protected readonly errori = signal<string[]>([]);
@@ -32,8 +37,8 @@ export class App {
     testoFiligrana(this.completata() ? this.scritta() : `${INIZIO}…`, this.data()),
   );
   protected readonly filigrana = computed<ImpostazioniFiligrana>(() => ({
+    ...this.stile(),
     testo: this.testo(),
-    visibilita: this.visibilita(),
   }));
   protected readonly completata = computed(() => {
     const scritta = this.scritta().trim();

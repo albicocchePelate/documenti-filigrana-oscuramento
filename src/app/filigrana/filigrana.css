@@ -40,9 +40,33 @@ input {
   color: var(--text);
 }
 
+.stile {
+  display: grid;
+  gap: 8px;
+}
+
+.visibilita {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.visibilita .nome {
+  width: 130px;
+  flex: none;
+  color: var(--muted);
+}
+
 .visibilita input {
-  min-height: auto;
+  flex: 1;
+  min-height: 38px;
   padding: 0;
   border: 0;
   accent-color: var(--accent-ink);
+}
+
+.percentuale {
+  width: 3em;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
 }

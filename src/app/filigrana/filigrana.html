@@ -13,17 +13,38 @@
     <input type="date" [value]="data()" (input)="data.set(valore($event))" />
   </label>
 </div>
-<label class="visibilita">
-  <span>Visibilità della filigrana: {{ visibilita() * 100 | number: '1.0-0' }}%</span>
-  <input
-    type="range"
-    min="0.15"
-    max="0.7"
-    step="0.01"
-    [value]="visibilita()"
-    (input)="visibilita.set(+valore($event))"
+<div class="stile">
+  <label class="visibilita">
+    <span class="nome">Visibilità</span>
+    <input
+      type="range"
+      min="0.15"
+      max="0.7"
+      step="0.01"
+      [value]="stile().visibilita"
+      (input)="cambia('visibilita', +valore($event))"
+    />
+    <span class="percentuale">{{ stile().visibilita * 100 | number: '1.0-0' }}%</span>
+  </label>
+  <app-scelta
+    nome="Dimensione"
+    [opzioni]="dimensioni"
+    [valore]="stile().dimensione"
+    (valoreChange)="cambia('dimensione', $event)"
   />
-</label>
+  <app-scelta
+    nome="Colore"
+    [opzioni]="colori"
+    [valore]="stile().colore"
+    (valoreChange)="cambia('colore', $event)"
+  />
+  <app-scelta
+    nome="Fittezza"
+    [opzioni]="fittezze"
+    [valore]="stile().fittezza"
+    (valoreChange)="cambia('fittezza', $event)"
+  />
+</div>
 <p class="sulla-copia">
   Sulla copia: <strong>{{ testo() }}</strong>
 </p>

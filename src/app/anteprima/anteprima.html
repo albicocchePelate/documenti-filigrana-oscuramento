@@ -23,9 +23,14 @@
         ›
       </button>
     }
-    <button type="button" class="togli" (click)="togli.emit(corrente())">
-      Togli questa pagina
-    </button>
+    @if (confermaTogli()) {
+      <span class="conferma" role="group" aria-label="Conferma">
+        <button type="button" class="annulla" (click)="confermaTogli.set(false)">Annulla</button>
+        <button type="button" class="si" (click)="confermaTogliPagina()">Sì, togli</button>
+      </span>
+    } @else {
+      <button type="button" class="togli" (click)="chiediTogli()">Togli questa pagina</button>
+    }
   </div>
 
   <canvas #grande class="grande" [attr.aria-label]="'Anteprima: ' + didascalia()"></canvas>
@@ -39,7 +44,7 @@
             [class.scelta]="$index === corrente()"
             [attr.aria-label]="'Vai a ' + pagina.nome"
             [attr.aria-current]="$index === corrente() ? 'true' : null"
-            (click)="corrente.set($index)"
+            (click)="mostra($index)"
           >
             <canvas [appMiniatura]="pagina"></canvas>
           </button>

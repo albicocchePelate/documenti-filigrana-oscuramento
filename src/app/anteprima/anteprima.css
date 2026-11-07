@@ -50,6 +50,33 @@
   color: var(--danger);
 }
 
+.conferma {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.annulla,
+.si {
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 99px;
+  font-size: 0.9375rem;
+}
+
+.annulla {
+  border: 1px solid var(--line-strong);
+  background: none;
+  color: var(--text);
+}
+
+.si {
+  border: 0;
+  background: var(--danger);
+  color: var(--bg);
+  font-weight: 600;
+}
+
 /* La pagina grande: tutta la larghezza, ma mai più alta dello schermo */
 .grande {
   display: block;

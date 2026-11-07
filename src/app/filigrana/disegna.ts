@@ -5,11 +5,31 @@ const FONT = '"DM Sans Variable", system-ui, sans-serif';
 /** Il font del sito va caricato prima di disegnare, altrimenti il canvas usa quello di sistema. */
 export const fontPronto = document.fonts.load(`600 16px ${FONT}`).catch(() => []);
 
-/** Cosa scrivere e quanto si vede: da 0 (invisibile) a 1 (pieno) */
-export interface ImpostazioniFiligrana {
-  testo: string;
+/** Come appare la filigrana. La visibilità va da 0 (invisibile) a 1 (piena). */
+export interface StileFiligrana {
   visibilita: number;
+  dimensione: 'piccola' | 'media' | 'grande';
+  colore: 'grigio' | 'rosso' | 'blu';
+  fittezza: 'rada' | 'normale' | 'fitta';
 }
+
+export const STILE_INIZIALE: StileFiligrana = {
+  visibilita: 0.38,
+  dimensione: 'media',
+  colore: 'grigio',
+  fittezza: 'normale',
+};
+
+/** Cosa scrivere, e come */
+export interface ImpostazioniFiligrana extends StileFiligrana {
+  testo: string;
+}
+
+/** Il lato corto della pagina diviso per questo numero dà l'altezza del testo */
+const DIVISORE = { piccola: 34, media: 24, grande: 16 };
+const COLORE = { grigio: '60, 60, 60', rosso: '190, 30, 30', blu: '30, 70, 170' };
+/** Lo spazio tra una scritta e l'altra, in multipli dell'altezza del testo */
+const SPAZIO = { rada: 6, normale: 3.5, fitta: 2.2 };
 
 /** «Solo per affitto via Roma 10 · 12/11/2026»: la scritta scelta, poi la data */
 export function testoFiligrana(scritta: string, data: string): string {
@@ -35,23 +55,23 @@ function disegnaFiligrana(
   disegno: CanvasRenderingContext2D,
   larghezza: number,
   altezza: number,
-  { testo, visibilita }: ImpostazioniFiligrana,
+  { testo, visibilita, dimensione, colore, fittezza }: ImpostazioniFiligrana,
 ): void {
-  const corpo = Math.max(14, Math.round(Math.min(larghezza, altezza) / 24));
+  const corpo = Math.max(12, Math.round(Math.min(larghezza, altezza) / DIVISORE[dimensione]));
   const diagonale = Math.hypot(larghezza, altezza);
 
   disegno.save();
   disegno.font = `600 ${corpo}px ${FONT}`;
   disegno.textBaseline = 'middle';
-  // Grigio semitrasparente con un bordo chiaro: si legge sia sui fogli bianchi sia sulle foto scure
-  disegno.fillStyle = `rgba(60, 60, 60, ${visibilita})`;
+  // Colore semitrasparente con un bordo chiaro: si legge sia sui fogli bianchi sia sulle foto scure
+  disegno.fillStyle = `rgba(${COLORE[colore]}, ${visibilita})`;
   disegno.strokeStyle = `rgba(255, 255, 255, ${visibilita})`;
   disegno.lineWidth = Math.max(1, corpo / 12);
   disegno.translate(larghezza / 2, altezza / 2);
   disegno.rotate(-Math.PI / 6);
 
-  const passoX = disegno.measureText(testo).width + corpo * 3;
-  const passoY = corpo * 3.5;
+  const passoX = disegno.measureText(testo).width + corpo * SPAZIO[fittezza];
+  const passoY = corpo * SPAZIO[fittezza];
   for (let y = -diagonale / 2, riga = 0; y < diagonale / 2; y += passoY, riga++) {
     // Righe sfalsate, così non restano colonne vuote
     const sfalsamento = (riga % 2) * (passoX / 2);

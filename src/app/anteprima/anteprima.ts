@@ -43,6 +43,10 @@ export class Anteprima {
       : pagina.documento;
   });
 
+  /** Chiesto di togliere la pagina: si aspetta la conferma */
+  protected readonly confermaTogli = signal(false);
+  private attesaConferma?: ReturnType<typeof setTimeout>;
+
   private readonly grande = viewChild<ElementRef<HTMLCanvasElement>>('grande');
   private readonly fontCaricato = signal(false);
 
@@ -58,10 +62,27 @@ export class Anteprima {
     });
   }
 
+  /** Primo clic: chiede conferma. Se non arriva entro qualche secondo, si torna indietro */
+  protected chiediTogli(): void {
+    this.confermaTogli.set(true);
+    clearTimeout(this.attesaConferma);
+    this.attesaConferma = setTimeout(() => this.confermaTogli.set(false), 5000);
+  }
+
+  protected confermaTogliPagina(): void {
+    clearTimeout(this.attesaConferma);
+    this.confermaTogli.set(false);
+    this.togli.emit(this.corrente());
+  }
+
   protected vai(passo: number): void {
-    this.corrente.update((indice) =>
-      Math.max(0, Math.min(indice + passo, this.pagine().length - 1)),
-    );
+    this.mostra(this.corrente() + passo);
+  }
+
+  /** Cambiare pagina annulla una richiesta di togliere ancora in sospeso */
+  protected mostra(indice: number): void {
+    this.confermaTogli.set(false);
+    this.corrente.set(Math.max(0, Math.min(indice, this.pagine().length - 1)));
   }
 
   /** Frecce della tastiera per sfogliare, tranne quando si scrive in un campo */

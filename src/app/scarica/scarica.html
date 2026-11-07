@@ -1,53 +1,33 @@
 <div class="scelte">
-  <div class="scelta" role="radiogroup" aria-label="Formato">
-    <span class="nome-scelta">Formato</span>
-    <button
-      type="button"
-      role="radio"
-      [attr.aria-checked]="formato() === 'pdf'"
-      (click)="formato.set('pdf')"
-    >
-      PDF
-    </button>
-    <button
-      type="button"
-      role="radio"
-      [attr.aria-checked]="formato() === 'jpg'"
-      (click)="formato.set('jpg')"
-    >
-      Immagini JPG
-    </button>
-  </div>
-
+  <app-scelta nome="Formato" [opzioni]="formati" [(valore)]="formato" />
   @if (documenti().length > 1) {
-    <div class="scelta" role="radiogroup" aria-label="Documenti">
-      <span class="nome-scelta">Documenti</span>
-      <button
-        type="button"
-        role="radio"
-        [attr.aria-checked]="!insieme()"
-        (click)="insieme.set(false)"
-      >
-        Separati
-      </button>
-      <button
-        type="button"
-        role="radio"
-        [attr.aria-checked]="insieme()"
-        (click)="insieme.set(true)"
-      >
-        Tutti in un file
-      </button>
-    </div>
+    <app-scelta nome="Documenti" [opzioni]="raggruppamenti" [(valore)]="insieme" />
   }
+  <label class="aggiunta">
+    <span class="nome-campo">Aggiunta al nome</span>
+    <input
+      [value]="aggiunta()"
+      (input)="aggiunta.set(valore($event))"
+      placeholder="nessuna"
+      autocomplete="off"
+    />
+  </label>
 </div>
 
 <ul class="uscite">
   @for (uscita of uscite(); track uscita.etichetta) {
     <li>
       <span class="file">
-        <strong>{{ uscita.etichetta }}</strong>
-        <span>{{ contenuto(uscita) }}</span>
+        <span class="nome-file">
+          <input
+            [value]="nome(uscita)"
+            (input)="rinomina(uscita, valore($event))"
+            [attr.aria-label]="'Nome del file per ' + uscita.etichetta"
+            autocomplete="off"
+          />
+          <span class="coda">{{ coda(uscita) }}</span>
+        </span>
+        <span class="contenuto">{{ contenuto(uscita) }}</span>
       </span>
       <button type="button" [disabled]="!pronto() || preparo()" (click)="scarica(uscita)">
         {{ preparo() === uscita.etichetta ? 'Preparo…' : 'Scarica' }}

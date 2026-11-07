@@ -12,8 +12,12 @@ export function perDocumento(pagine: Pagina[]): Pagina[][] {
   return [...gruppi.values()];
 }
 
-/** Un PDF con queste pagine: con il nome del documento, o «documenti» se sono più d'uno */
-export async function salvaPdf(pagine: Pagina[], filigrana: ImpostazioniFiligrana): Promise<void> {
+/** Un PDF con queste pagine. `nome` è il nome del file senza estensione. */
+export async function salvaPdf(
+  pagine: Pagina[],
+  filigrana: ImpostazioniFiligrana,
+  nome: string,
+): Promise<void> {
   const pronte = [];
   for (const pagina of pagine) {
     pronte.push({
@@ -22,28 +26,25 @@ export async function salvaPdf(pagine: Pagina[], filigrana: ImpostazioniFiligran
       altezza: pagina.immagine.height,
     });
   }
-  const nome = perDocumento(pagine).length === 1 ? pagine[0].documento : 'documenti';
-  salva(creaPdf(pronte), `${nome}-con-filigrana.pdf`);
+  salva(creaPdf(pronte), `${nome}.pdf`);
 }
 
-/** Le immagini: una sola si scarica così com'è, più d'una in uno ZIP */
+/** Le immagini: una sola si scarica così com'è, più d'una in uno ZIP («nome-1.jpg», «nome-2.jpg»…) */
 export async function salvaImmagini(
   pagine: Pagina[],
   filigrana: ImpostazioniFiligrana,
+  nome: string,
 ): Promise<void> {
+  if (pagine.length === 1) {
+    const jpeg = await inJpeg(pagine[0], filigrana);
+    salva(new Blob([jpeg as BlobPart], { type: 'image/jpeg' }), `${nome}.jpg`);
+    return;
+  }
   const immagini = [];
-  for (const pagina of pagine) {
-    immagini.push({
-      nome: `${pagina.nome}-con-filigrana.jpg`,
-      contenuto: await inJpeg(pagina, filigrana),
-    });
+  for (const [i, pagina] of pagine.entries()) {
+    immagini.push({ nome: `${nome}-${i + 1}.jpg`, contenuto: await inJpeg(pagina, filigrana) });
   }
-  if (immagini.length === 1) {
-    salva(new Blob([immagini[0].contenuto as BlobPart], { type: 'image/jpeg' }), immagini[0].nome);
-  } else {
-    const nome = perDocumento(pagine).length === 1 ? pagine[0].documento : 'documenti';
-    salva(creaZip(immagini), `${nome}-con-filigrana.zip`);
-  }
+  salva(creaZip(immagini), `${nome}.zip`);
 }
 
 /** La pagina con la filigrana, in JPEG. Il JPEG rifatto da zero non porta con sé metadati. */

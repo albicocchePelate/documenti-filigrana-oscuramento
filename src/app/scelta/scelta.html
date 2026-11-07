@@ -1,0 +1,13 @@
+<span class="nome" [id]="nome()">{{ nome() }}</span>
+<div class="opzioni" role="radiogroup" [attr.aria-labelledby]="nome()">
+  @for (opzione of opzioni(); track opzione.etichetta) {
+    <button
+      type="button"
+      role="radio"
+      [attr.aria-checked]="opzione.valore === valore()"
+      (click)="valore.set(opzione.valore)"
+    >
+      {{ opzione.etichetta }}
+    </button>
+  }
+</div>
