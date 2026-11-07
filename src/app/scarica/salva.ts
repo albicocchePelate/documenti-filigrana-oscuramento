@@ -1,12 +1,12 @@
-import { disegnaPagina, fontPronto } from '../filigrana/disegna';
+import { ImpostazioniFiligrana, disegnaPagina, fontPronto } from '../filigrana/disegna';
 import { Pagina } from '../pagina';
 import { creaPdf } from './crea-pdf';
 
 /** Un solo PDF con tutte le pagine, nell'ordine dell'anteprima. */
-export async function salvaPdf(pagine: Pagina[], testo: string): Promise<void> {
+export async function salvaPdf(pagine: Pagina[], filigrana: ImpostazioniFiligrana): Promise<void> {
   const pronte = [];
   for (const pagina of pagine) {
-    const jpeg = await inJpeg(pagina, testo);
+    const jpeg = await inJpeg(pagina, filigrana);
     pronte.push({
       jpeg: new Uint8Array(await jpeg.arrayBuffer()),
       larghezza: pagina.immagine.width,
@@ -19,16 +19,19 @@ export async function salvaPdf(pagine: Pagina[], testo: string): Promise<void> {
 }
 
 /** Una immagine per pagina. */
-export async function salvaImmagini(pagine: Pagina[], testo: string): Promise<void> {
+export async function salvaImmagini(
+  pagine: Pagina[],
+  filigrana: ImpostazioniFiligrana,
+): Promise<void> {
   for (const pagina of pagine)
-    salva(await inJpeg(pagina, testo), `${pagina.nome}-con-filigrana.jpg`);
+    salva(await inJpeg(pagina, filigrana), `${pagina.nome}-con-filigrana.jpg`);
 }
 
 /** La pagina con la filigrana, in JPEG. Il JPEG rifatto da zero non porta con sé metadati. */
-async function inJpeg(pagina: Pagina, testo: string): Promise<Blob> {
+async function inJpeg(pagina: Pagina, filigrana: ImpostazioniFiligrana): Promise<Blob> {
   await fontPronto;
   const foglio = document.createElement('canvas');
-  disegnaPagina(foglio, pagina, testo);
+  disegnaPagina(foglio, pagina, filigrana);
   return new Promise<Blob>((pronta, errore) =>
     foglio.toBlob((blob) => (blob ? pronta(blob) : errore()), 'image/jpeg', 0.9),
   );

@@ -1,6 +1,9 @@
+/* Miniature: anche un documento lungo resta in una schermata o poco più */
 ul {
   display: grid;
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  align-items: start;
+  gap: 12px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -15,7 +18,7 @@ canvas {
   width: 100%;
   height: auto;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: 10px;
 }
 
 button {

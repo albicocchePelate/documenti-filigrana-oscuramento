@@ -10,7 +10,7 @@
 }
 
 @if (pagine().length) {
-  <app-filigrana [(scopo)]="scopo" [(data)]="data" [testo]="testo()" />
-  <app-anteprima [pagine]="pagine()" [testo]="testo()" (togli)="togli($event)" />
-  <app-scarica [pagine]="pagine()" [testo]="testo()" [pronto]="pronto()" />
+  <app-filigrana [(scopo)]="scopo" [(data)]="data" [(visibilita)]="visibilita" [testo]="testo()" />
+  <app-scarica [pagine]="pagine()" [filigrana]="filigrana()" [pronto]="pronto()" />
+  <app-anteprima [pagine]="pagine()" [filigrana]="filigrana()" (togli)="togli($event)" />
 }

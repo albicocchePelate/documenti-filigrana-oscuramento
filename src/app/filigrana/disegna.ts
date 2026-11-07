@@ -5,6 +5,12 @@ const FONT = '"DM Sans Variable", system-ui, sans-serif';
 /** Il font del sito va caricato prima di disegnare, altrimenti il canvas usa quello di sistema. */
 export const fontPronto = document.fonts.load(`600 16px ${FONT}`).catch(() => []);
 
+/** Cosa scrivere e quanto si vede: da 0 (invisibile) a 1 (pieno) */
+export interface ImpostazioniFiligrana {
+  testo: string;
+  visibilita: number;
+}
+
 /** «Solo per affitto via Roma 10 · 12/11/2026» */
 export function testoFiligrana(scopo: string, data: string): string {
   const giorno = data ? new Date(`${data}T12:00`).toLocaleDateString('it-IT') : '';
@@ -12,12 +18,16 @@ export function testoFiligrana(scopo: string, data: string): string {
 }
 
 /** Disegna sul foglio la pagina e, sopra, la filigrana. */
-export function disegnaPagina(foglio: HTMLCanvasElement, pagina: Pagina, testo: string): void {
+export function disegnaPagina(
+  foglio: HTMLCanvasElement,
+  pagina: Pagina,
+  filigrana: ImpostazioniFiligrana,
+): void {
   foglio.width = pagina.immagine.width;
   foglio.height = pagina.immagine.height;
   const disegno = foglio.getContext('2d')!;
   disegno.drawImage(pagina.immagine, 0, 0);
-  disegnaFiligrana(disegno, foglio.width, foglio.height, testo);
+  disegnaFiligrana(disegno, foglio.width, foglio.height, filigrana);
 }
 
 // Il testo si ripete in diagonale su tutta la pagina: tagliarlo via è impossibile.
@@ -25,7 +35,7 @@ function disegnaFiligrana(
   disegno: CanvasRenderingContext2D,
   larghezza: number,
   altezza: number,
-  testo: string,
+  { testo, visibilita }: ImpostazioniFiligrana,
 ): void {
   const corpo = Math.max(14, Math.round(Math.min(larghezza, altezza) / 24));
   const diagonale = Math.hypot(larghezza, altezza);
@@ -34,8 +44,8 @@ function disegnaFiligrana(
   disegno.font = `600 ${corpo}px ${FONT}`;
   disegno.textBaseline = 'middle';
   // Grigio semitrasparente con un bordo chiaro: si legge sia sui fogli bianchi sia sulle foto scure
-  disegno.fillStyle = 'rgba(60, 60, 60, 0.38)';
-  disegno.strokeStyle = 'rgba(255, 255, 255, 0.38)';
+  disegno.fillStyle = `rgba(60, 60, 60, ${visibilita})`;
+  disegno.strokeStyle = `rgba(255, 255, 255, ${visibilita})`;
   disegno.lineWidth = Math.max(1, corpo / 12);
   disegno.translate(larghezza / 2, altezza / 2);
   disegno.rotate(-Math.PI / 6);

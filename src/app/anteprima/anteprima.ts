@@ -1,5 +1,5 @@
 import { Component, ElementRef, effect, input, output, signal, viewChildren } from '@angular/core';
-import { disegnaPagina, fontPronto } from '../filigrana/disegna';
+import { ImpostazioniFiligrana, disegnaPagina, fontPronto } from '../filigrana/disegna';
 import { Pagina } from '../pagina';
 
 @Component({
@@ -9,7 +9,7 @@ import { Pagina } from '../pagina';
 })
 export class Anteprima {
   readonly pagine = input.required<Pagina[]>();
-  readonly testo = input.required<string>();
+  readonly filigrana = input.required<ImpostazioniFiligrana>();
   readonly togli = output<number>();
 
   private readonly fogli = viewChildren<ElementRef<HTMLCanvasElement>>('foglio');
@@ -18,12 +18,14 @@ export class Anteprima {
   constructor() {
     fontPronto.then(() => this.fontCaricato.set(true));
 
-    // Ogni volta che cambiano le pagine o il testo, si ridisegna tutto
+    // Ogni volta che cambiano le pagine o la filigrana, si ridisegna tutto
     effect(() => {
       this.fontCaricato();
       const pagine = this.pagine();
-      const testo = this.testo();
-      this.fogli().forEach((foglio, i) => disegnaPagina(foglio.nativeElement, pagine[i], testo));
+      const filigrana = this.filigrana();
+      this.fogli().forEach((foglio, i) =>
+        disegnaPagina(foglio.nativeElement, pagine[i], filigrana),
+      );
     });
   }
 }

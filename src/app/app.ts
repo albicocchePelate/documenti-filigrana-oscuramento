@@ -3,7 +3,7 @@ import { Anteprima } from './anteprima/anteprima';
 import { Carica } from './carica/carica';
 import { formato, leggiFile } from './carica/leggi';
 import { PdfProtetto } from './carica/leggi-pdf';
-import { testoFiligrana } from './filigrana/disegna';
+import { ImpostazioniFiligrana, testoFiligrana } from './filigrana/disegna';
 import { Filigrana } from './filigrana/filigrana';
 import { Pagina } from './pagina';
 import { Scarica } from './scarica/scarica';
@@ -18,12 +18,17 @@ export class App {
   protected readonly pagine = signal<Pagina[]>([]);
   protected readonly scopo = signal('');
   protected readonly data = signal(oggi());
+  protected readonly visibilita = signal(0.38);
   /** Cosa si sta leggendo adesso, mentre i file arrivano */
   protected readonly lettura = signal('');
   protected readonly errori = signal<string[]>([]);
 
   /** Finché lo scopo è vuoto l'anteprima mostra «Solo per …», così si vede l'effetto */
   protected readonly testo = computed(() => testoFiligrana(this.scopo() || '…', this.data()));
+  protected readonly filigrana = computed<ImpostazioniFiligrana>(() => ({
+    testo: this.testo(),
+    visibilita: this.visibilita(),
+  }));
   protected readonly pronto = computed(() => this.scopo().trim().length > 0);
 
   protected async aggiungi(file: File[]): Promise<void> {
