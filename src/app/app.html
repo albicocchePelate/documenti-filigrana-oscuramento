@@ -28,12 +28,12 @@
   <app-anteprima [pagine]="pagine()" [filigrana]="filigrana()" (togli)="togli($event)" />
 } @else {
   <header class="intro">
-    <h1>Una copia del documento che vale solo per chi la riceve</h1>
+    <h1>Proteggi i documenti prima di mandarli</h1>
     <p>
-      Aggiungi una scritta con lo scopo e la data, e copri i dati che non servono. Se la copia
-      finisce altrove, non vale per altro.
+      Aggiungi una filigrana con scopo e data, e oscura i dati che non servono. Se la copia
+      finisce in mani sbagliate, non si può usare per altro.
     </p>
-    <p class="esempi">Carta d'identità, patente, busta paga, contratto.</p>
+    <p class="esempi">Per esempio: carta d'identità, patente, busta paga, contratto.</p>
   </header>
   <app-carica (caricati)="aggiungi($event)" />
   <ng-container *ngTemplateOutlet="stato" />
