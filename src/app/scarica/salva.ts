@@ -41,7 +41,8 @@ export async function salvaImmagini(
   if (immagini.length === 1) {
     salva(new Blob([immagini[0].contenuto as BlobPart], { type: 'image/jpeg' }), immagini[0].nome);
   } else {
-    salva(creaZip(immagini), 'immagini-con-filigrana.zip');
+    const nome = perDocumento(pagine).length === 1 ? pagine[0].documento : 'documenti';
+    salva(creaZip(immagini), `${nome}-con-filigrana.zip`);
   }
 }
 

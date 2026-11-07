@@ -1,57 +1,61 @@
-@if (documenti().length > 1) {
-  <fieldset class="scelta">
-    <legend>{{ documenti().length }} documenti:</legend>
-    <label>
-      <input type="radio" name="pdf" [checked]="!unico()" (change)="unico.set(false)" />
-      un PDF per ciascuno
-    </label>
-    <label>
-      <input type="radio" name="pdf" [checked]="unico()" (change)="unico.set(true)" />
-      un PDF unico
-    </label>
-  </fieldset>
-}
-
-<div class="pulsanti">
-  @if (documenti().length > 1 && !unico()) {
-    <!-- Un pulsante per documento: ogni scaricamento è un clic, il browser non lo blocca -->
-    @for (documento of documenti(); track documento[0].documento) {
-      <button
-        type="button"
-        class="pdf"
-        [disabled]="!pronto() || preparo()"
-        (click)="pdf(documento, documento[0].documento)"
-      >
-        {{
-          preparo() === documento[0].documento ? 'Preparo…' : '↓ ' + documento[0].documento + '.pdf'
-        }}
-      </button>
-    }
-  } @else {
+<div class="scelte">
+  <div class="scelta" role="radiogroup" aria-label="Formato">
+    <span class="nome-scelta">Formato</span>
     <button
       type="button"
-      class="pdf"
-      [disabled]="!pronto() || preparo()"
-      (click)="pdf(pagine(), 'tutto')"
+      role="radio"
+      [attr.aria-checked]="formato() === 'pdf'"
+      (click)="formato.set('pdf')"
     >
-      {{ preparo() === 'tutto' ? 'Preparo…' : 'Scarica PDF' }}
+      PDF
     </button>
+    <button
+      type="button"
+      role="radio"
+      [attr.aria-checked]="formato() === 'jpg'"
+      (click)="formato.set('jpg')"
+    >
+      Immagini JPG
+    </button>
+  </div>
+
+  @if (documenti().length > 1) {
+    <div class="scelta" role="radiogroup" aria-label="Documenti">
+      <span class="nome-scelta">Documenti</span>
+      <button
+        type="button"
+        role="radio"
+        [attr.aria-checked]="!insieme()"
+        (click)="insieme.set(false)"
+      >
+        Separati
+      </button>
+      <button
+        type="button"
+        role="radio"
+        [attr.aria-checked]="insieme()"
+        (click)="insieme.set(true)"
+      >
+        Tutti in un file
+      </button>
+    </div>
   }
-  <button type="button" class="immagini" [disabled]="!pronto() || preparo()" (click)="immagini()">
-    {{
-      preparo() === 'immagini'
-        ? 'Preparo…'
-        : pagine().length > 1
-          ? 'Scarica immagini (ZIP)'
-          : 'Scarica immagine'
-    }}
-  </button>
 </div>
+
+<ul class="uscite">
+  @for (uscita of uscite(); track uscita.etichetta) {
+    <li>
+      <span class="file">
+        <strong>{{ uscita.etichetta }}</strong>
+        <span>{{ contenuto(uscita) }}</span>
+      </span>
+      <button type="button" [disabled]="!pronto() || preparo()" (click)="scarica(uscita)">
+        {{ preparo() === uscita.etichetta ? 'Preparo…' : 'Scarica' }}
+      </button>
+    </li>
+  }
+</ul>
 
 @if (!pronto()) {
   <p class="nota">Completa prima la scritta sulla copia.</p>
-} @else {
-  <p class="nota">
-    La copia non contiene metadati: niente posizione, telefono o data dello scatto.
-  </p>
 }

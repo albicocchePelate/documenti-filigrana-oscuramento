@@ -3,6 +3,12 @@ import { ImpostazioniFiligrana } from '../filigrana/disegna';
 import { Pagina } from '../pagina';
 import { perDocumento, salvaImmagini, salvaPdf } from './salva';
 
+/** Un file che si scarica: cosa contiene e come si chiama nella riga */
+interface Uscita {
+  etichetta: string;
+  pagine: Pagina[];
+}
+
 @Component({
   selector: 'app-scarica',
   templateUrl: './scarica.html',
@@ -11,27 +17,38 @@ import { perDocumento, salvaImmagini, salvaPdf } from './salva';
 export class Scarica {
   readonly pagine = input.required<Pagina[]>();
   readonly filigrana = input.required<ImpostazioniFiligrana>();
-  /** Si scarica solo dopo aver scritto lo scopo */
+  /** Si scarica solo dopo aver completato la scritta */
   readonly pronto = input.required<boolean>();
 
-  /** Cosa si sta preparando: «tutto», un documento, «immagini» */
+  protected readonly formato = signal<'pdf' | 'jpg'>('pdf');
+  /** Con più documenti: separati (di solito è quello che serve) o tutti in un file */
+  protected readonly insieme = signal(false);
+  /** L'etichetta della riga che si sta preparando */
   protected readonly preparo = signal<string | null>(null);
-  /** Con più documenti: un PDF per ciascuno (di solito è quello che serve) o uno solo */
-  protected readonly unico = signal(false);
+
   protected readonly documenti = computed(() => perDocumento(this.pagine()));
 
-  protected pdf(pagine: Pagina[], chi: string): Promise<void> {
-    return this.prepara(chi, () => salvaPdf(pagine, this.filigrana()));
+  /** Una riga per ogni file che si otterrà */
+  protected readonly uscite = computed<Uscita[]>(() => {
+    const documenti = this.documenti();
+    if (documenti.length === 1)
+      return [{ etichetta: documenti[0][0].documento, pagine: documenti[0] }];
+    if (this.insieme()) return [{ etichetta: 'Tutti i documenti', pagine: this.pagine() }];
+    return documenti.map((pagine) => ({ etichetta: pagine[0].documento, pagine }));
+  });
+
+  /** «2 pagine», oppure «2 immagini in uno ZIP» */
+  protected contenuto(uscita: Uscita): string {
+    const quante = uscita.pagine.length;
+    if (this.formato() === 'pdf') return quante === 1 ? '1 pagina' : `${quante} pagine`;
+    return quante === 1 ? '1 immagine' : `${quante} immagini in uno ZIP`;
   }
 
-  protected immagini(): Promise<void> {
-    return this.prepara('immagini', () => salvaImmagini(this.pagine(), this.filigrana()));
-  }
-
-  private async prepara(chi: string, salva: () => Promise<void>): Promise<void> {
-    this.preparo.set(chi);
+  protected async scarica(uscita: Uscita): Promise<void> {
+    this.preparo.set(uscita.etichetta);
     try {
-      await salva();
+      if (this.formato() === 'pdf') await salvaPdf(uscita.pagine, this.filigrana());
+      else await salvaImmagini(uscita.pagine, this.filigrana());
     } finally {
       this.preparo.set(null);
     }
