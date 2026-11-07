@@ -1,7 +1,12 @@
 <app-carica (caricati)="aggiungi($event)" />
 
-@if (errore(); as messaggio) {
-  <p class="errore" role="alert">{{ messaggio }}</p>
+@if (lettura(); as testo) {
+  <p class="lettura" aria-live="polite">
+    <span class="rotella" aria-hidden="true"></span>{{ testo }}
+  </p>
+}
+@for (errore of errori(); track errore) {
+  <p class="errore" role="alert">{{ errore }}</p>
 }
 
 @if (pagine().length) {

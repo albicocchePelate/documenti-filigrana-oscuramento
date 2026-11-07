@@ -9,3 +9,26 @@
   color: var(--danger);
   font-size: 0.9375rem;
 }
+
+.lettura {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.rotella {
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--accent-ink);
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: gira 0.9s linear infinite;
+}
+
+@keyframes gira {
+  to {
+    transform: rotate(360deg);
+  }
+}

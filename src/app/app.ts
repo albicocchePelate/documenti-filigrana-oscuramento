@@ -1,7 +1,8 @@
 import { Component, computed, signal } from '@angular/core';
 import { Anteprima } from './anteprima/anteprima';
 import { Carica } from './carica/carica';
-import { formatoLeggibile, leggiImmagine } from './carica/leggi-immagine';
+import { formato, leggiFile } from './carica/leggi';
+import { PdfProtetto } from './carica/leggi-pdf';
 import { testoFiligrana } from './filigrana/disegna';
 import { Filigrana } from './filigrana/filigrana';
 import { Pagina } from './pagina';
@@ -17,22 +18,35 @@ export class App {
   protected readonly pagine = signal<Pagina[]>([]);
   protected readonly scopo = signal('');
   protected readonly data = signal(oggi());
-  protected readonly errore = signal('');
+  /** Cosa si sta leggendo adesso, mentre i file arrivano */
+  protected readonly lettura = signal('');
+  protected readonly errori = signal<string[]>([]);
 
   /** Finché lo scopo è vuoto l'anteprima mostra «Solo per …», così si vede l'effetto */
   protected readonly testo = computed(() => testoFiligrana(this.scopo() || '…', this.data()));
   protected readonly pronto = computed(() => this.scopo().trim().length > 0);
 
   protected async aggiungi(file: File[]): Promise<void> {
-    const leggibili = file.filter(formatoLeggibile);
-    const scartati = file.length - leggibili.length;
-    this.errore.set(
-      scartati
-        ? `${scartati === 1 ? 'Un file' : `${scartati} file`} non li leggo: per ora solo JPG e PNG.`
-        : '',
-    );
-    const nuove = await Promise.all(leggibili.map(leggiImmagine));
-    this.pagine.update((pagine) => [...pagine, ...nuove]);
+    const errori: string[] = [];
+    for (const uno of file) {
+      if (!formato(uno)) {
+        errori.push(`«${uno.name}»: questo formato non lo leggo. Vanno bene JPG, PNG, HEIC e PDF.`);
+        continue;
+      }
+      this.lettura.set(`Leggo «${uno.name}»…`);
+      try {
+        const nuove = await leggiFile(uno, (testo) => this.lettura.set(testo));
+        this.pagine.update((pagine) => [...pagine, ...nuove]);
+      } catch (errore) {
+        errori.push(
+          errore instanceof PdfProtetto
+            ? `«${uno.name}» è protetto da password: aprilo, salvane una copia senza password e riprova.`
+            : `«${uno.name}»: non riesco a leggerlo. Forse è rovinato?`,
+        );
+      }
+    }
+    this.lettura.set('');
+    this.errori.set(errori);
   }
 
   protected togli(indice: number): void {
