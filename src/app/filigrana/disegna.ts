@@ -11,10 +11,10 @@ export interface ImpostazioniFiligrana {
   visibilita: number;
 }
 
-/** «Solo per affitto via Roma 10 · 12/11/2026» */
-export function testoFiligrana(scopo: string, data: string): string {
+/** «Solo per affitto via Roma 10 · 12/11/2026»: la scritta scelta, poi la data */
+export function testoFiligrana(scritta: string, data: string): string {
   const giorno = data ? new Date(`${data}T12:00`).toLocaleDateString('it-IT') : '';
-  return [`Solo per ${scopo.trim()}`, giorno].filter(Boolean).join(' · ');
+  return [scritta.trim(), giorno].filter(Boolean).join(' · ');
 }
 
 /** Disegna sul foglio la pagina e, sopra, la filigrana. */

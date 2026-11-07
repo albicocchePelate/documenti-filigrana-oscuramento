@@ -15,12 +15,13 @@ label {
   font-size: 0.9375rem;
 }
 
-.scopo {
+.scritta {
   flex: 1;
   min-width: 220px;
 }
 
 input {
+  width: 100%;
   min-height: 44px;
   padding: 0 12px;
   border: 1px solid var(--line-strong);

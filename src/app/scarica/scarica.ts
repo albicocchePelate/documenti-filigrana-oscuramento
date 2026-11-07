@@ -1,7 +1,7 @@
-import { Component, input, signal } from '@angular/core';
+import { Component, computed, input, signal } from '@angular/core';
 import { ImpostazioniFiligrana } from '../filigrana/disegna';
 import { Pagina } from '../pagina';
-import { salvaImmagini, salvaPdf } from './salva';
+import { perDocumento, salvaImmagini, salvaPdf } from './salva';
 
 @Component({
   selector: 'app-scarica',
@@ -14,22 +14,26 @@ export class Scarica {
   /** Si scarica solo dopo aver scritto lo scopo */
   readonly pronto = input.required<boolean>();
 
-  protected readonly preparo = signal(false);
+  /** Cosa si sta preparando: «tutto», un documento, «immagini» */
+  protected readonly preparo = signal<string | null>(null);
+  /** Con più documenti: un PDF per ciascuno (di solito è quello che serve) o uno solo */
+  protected readonly unico = signal(false);
+  protected readonly documenti = computed(() => perDocumento(this.pagine()));
 
-  protected pdf(): Promise<void> {
-    return this.prepara(() => salvaPdf(this.pagine(), this.filigrana()));
+  protected pdf(pagine: Pagina[], chi: string): Promise<void> {
+    return this.prepara(chi, () => salvaPdf(pagine, this.filigrana()));
   }
 
   protected immagini(): Promise<void> {
-    return this.prepara(() => salvaImmagini(this.pagine(), this.filigrana()));
+    return this.prepara('immagini', () => salvaImmagini(this.pagine(), this.filigrana()));
   }
 
-  private async prepara(salva: () => Promise<void>): Promise<void> {
-    this.preparo.set(true);
+  private async prepara(chi: string, salva: () => Promise<void>): Promise<void> {
+    this.preparo.set(chi);
     try {
       await salva();
     } finally {
-      this.preparo.set(false);
+      this.preparo.set(null);
     }
   }
 }

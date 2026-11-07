@@ -1,8 +1,50 @@
-<ul>
-  @for (pagina of pagine(); track pagina) {
-    <li>
-      <canvas #foglio [attr.aria-label]="'Anteprima di ' + pagina.nome"></canvas>
-      <button type="button" (click)="togli.emit($index)">Togli</button>
-    </li>
+@if (pagina(); as attuale) {
+  <div class="barra">
+    @if (pagine().length > 1) {
+      <button
+        type="button"
+        class="freccia"
+        aria-label="Pagina precedente"
+        [disabled]="corrente() === 0"
+        (click)="vai(-1)"
+      >
+        ‹
+      </button>
+    }
+    <span class="didascalia">{{ didascalia() }}</span>
+    @if (pagine().length > 1) {
+      <button
+        type="button"
+        class="freccia"
+        aria-label="Pagina successiva"
+        [disabled]="corrente() === pagine().length - 1"
+        (click)="vai(1)"
+      >
+        ›
+      </button>
+    }
+    <button type="button" class="togli" (click)="togli.emit(corrente())">
+      Togli questa pagina
+    </button>
+  </div>
+
+  <canvas #grande class="grande" [attr.aria-label]="'Anteprima: ' + didascalia()"></canvas>
+
+  @if (pagine().length > 1) {
+    <ul class="miniature">
+      @for (pagina of pagine(); track pagina) {
+        <li>
+          <button
+            type="button"
+            [class.scelta]="$index === corrente()"
+            [attr.aria-label]="'Vai a ' + pagina.nome"
+            [attr.aria-current]="$index === corrente() ? 'true' : null"
+            (click)="corrente.set($index)"
+          >
+            <canvas #miniatura></canvas>
+          </button>
+        </li>
+      }
+    </ul>
   }
-</ul>
+}

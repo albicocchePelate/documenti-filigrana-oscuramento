@@ -8,7 +8,8 @@ import { Component, input, model } from '@angular/core';
   styleUrl: './filigrana.css',
 })
 export class Filigrana {
-  readonly scopo = model.required<string>();
+  /** «Solo per affitto via Roma 10» */
+  readonly scritta = model.required<string>();
   /** Nel formato del campo data: «2026-11-12» */
   readonly data = model.required<string>();
   /** Da 0 a 1 */

@@ -13,7 +13,7 @@
   <section>
     <h2><span class="numero">2</span>Filigrana</h2>
     <app-filigrana
-      [(scopo)]="scopo"
+      [(scritta)]="scritta"
       [(data)]="data"
       [(visibilita)]="visibilita"
       [testo]="testo()"
@@ -22,7 +22,7 @@
 
   <section>
     <h2><span class="numero">3</span>Scarica</h2>
-    <app-scarica [pagine]="pagine()" [filigrana]="filigrana()" [pronto]="pronto()" />
+    <app-scarica [pagine]="pagine()" [filigrana]="filigrana()" [pronto]="completata()" />
   </section>
 
   <app-anteprima [pagine]="pagine()" [filigrana]="filigrana()" (togli)="togli($event)" />
@@ -30,8 +30,8 @@
   <header class="intro">
     <h1>Proteggi i documenti prima di mandarli</h1>
     <p>
-      Aggiungi una filigrana con scopo e data, e oscura i dati che non servono. Se la copia
-      finisce in mani sbagliate, non si può usare per altro.
+      Aggiungi una filigrana con scopo e data, e oscura i dati che non servono. Se la copia finisce
+      in mani sbagliate, non si può usare per altro.
     </p>
     <p class="esempi">Per esempio: carta d'identità, patente, busta paga, contratto.</p>
   </header>

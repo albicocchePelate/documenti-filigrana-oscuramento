@@ -40,3 +40,33 @@ button:disabled {
   color: var(--muted);
   font-size: 0.9375rem;
 }
+
+.scelta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 18px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 0.9375rem;
+}
+
+.scelta legend {
+  float: left;
+  margin-right: 4px;
+  padding: 0;
+  color: var(--muted);
+}
+
+.scelta label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  cursor: pointer;
+}
+
+.scelta input {
+  accent-color: var(--accent-ink);
+}

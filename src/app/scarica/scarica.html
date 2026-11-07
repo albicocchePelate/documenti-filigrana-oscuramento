@@ -1,13 +1,55 @@
+@if (documenti().length > 1) {
+  <fieldset class="scelta">
+    <legend>{{ documenti().length }} documenti:</legend>
+    <label>
+      <input type="radio" name="pdf" [checked]="!unico()" (change)="unico.set(false)" />
+      un PDF per ciascuno
+    </label>
+    <label>
+      <input type="radio" name="pdf" [checked]="unico()" (change)="unico.set(true)" />
+      un PDF unico
+    </label>
+  </fieldset>
+}
+
 <div class="pulsanti">
-  <button type="button" class="pdf" [disabled]="!pronto() || preparo()" (click)="pdf()">
-    {{ preparo() ? 'Preparo…' : 'Scarica PDF' }}
-  </button>
+  @if (documenti().length > 1 && !unico()) {
+    <!-- Un pulsante per documento: ogni scaricamento è un clic, il browser non lo blocca -->
+    @for (documento of documenti(); track documento[0].documento) {
+      <button
+        type="button"
+        class="pdf"
+        [disabled]="!pronto() || preparo()"
+        (click)="pdf(documento, documento[0].documento)"
+      >
+        {{
+          preparo() === documento[0].documento ? 'Preparo…' : '↓ ' + documento[0].documento + '.pdf'
+        }}
+      </button>
+    }
+  } @else {
+    <button
+      type="button"
+      class="pdf"
+      [disabled]="!pronto() || preparo()"
+      (click)="pdf(pagine(), 'tutto')"
+    >
+      {{ preparo() === 'tutto' ? 'Preparo…' : 'Scarica PDF' }}
+    </button>
+  }
   <button type="button" class="immagini" [disabled]="!pronto() || preparo()" (click)="immagini()">
-    Scarica immagini
+    {{
+      preparo() === 'immagini'
+        ? 'Preparo…'
+        : pagine().length > 1
+          ? 'Scarica immagini (ZIP)'
+          : 'Scarica immagine'
+    }}
   </button>
 </div>
+
 @if (!pronto()) {
-  <p class="nota">Scrivi prima per cosa ti serve la copia.</p>
+  <p class="nota">Completa prima la scritta sulla copia.</p>
 } @else {
   <p class="nota">
     La copia non contiene metadati: niente posizione, telefono o data dello scatto.
