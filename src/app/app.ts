@@ -11,7 +11,7 @@ import {
   testoFiligrana,
 } from './filigrana/disegna';
 import { Filigrana } from './filigrana/filigrana';
-import { Pagina } from './pagina';
+import { Pagina, Zona } from './pagina';
 import { perDocumento } from './scarica/salva';
 import { Scarica } from './scarica/scarica';
 
@@ -74,6 +74,13 @@ export class App {
   protected ricomincia(): void {
     this.pagine.set([]);
     this.errori.set([]);
+  }
+
+  /** Le zone coperte di una pagina sono cambiate: la pagina viene sostituita con quella nuova */
+  protected copri({ pagina, zone }: { pagina: Pagina; zone: Zona[] }): void {
+    this.pagine.update((pagine) =>
+      pagine.map((altra) => (altra === pagina ? { ...pagina, zone } : altra)),
+    );
   }
 
   protected togli(pagina: Pagina): void {

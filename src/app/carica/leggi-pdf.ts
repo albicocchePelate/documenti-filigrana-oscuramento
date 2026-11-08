@@ -37,6 +37,7 @@ export async function leggiPdf(
       documento: nome,
       nome: `${nome}${suffisso}`,
       immagine: await createImageBitmap(foglio),
+      zone: [],
     });
   }
   await documento.destroy();

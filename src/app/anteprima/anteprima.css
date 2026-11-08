@@ -78,10 +78,22 @@
   font-weight: 600;
 }
 
+/* Il foglio prende la misura della pagina disegnata, così i rettangoli combaciano */
+.foglio {
+  position: relative;
+  justify-self: center;
+  max-width: 100%;
+  touch-action: pan-y;
+}
+
+.foglio.copro {
+  cursor: crosshair;
+  touch-action: none;
+}
+
 /* La pagina grande: tutta la larghezza, ma mai più alta dello schermo */
 .grande {
   display: block;
-  justify-self: center;
   max-width: 100%;
   max-height: 540px;
   border-radius: 4px;
@@ -123,4 +135,83 @@
 .miniature canvas {
   display: block;
   border-radius: 6px;
+}
+
+.strumenti {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+
+.copri {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 99px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 0.875rem;
+}
+
+.copri svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.copri[aria-pressed='true'] {
+  border-color: var(--text);
+  background: var(--text);
+  color: var(--bg);
+  font-weight: 600;
+}
+
+.conteggio,
+.suggerimento {
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+
+.annulla-zona {
+  min-height: 32px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 99px;
+  background: none;
+  color: var(--accent-ink);
+  font-size: 0.8125rem;
+}
+
+/* Sopra il disegno: invisibili, servono per cliccare una zona e toglierla */
+.zona {
+  position: absolute;
+}
+
+.zona.scelta,
+.zona.bozza {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.zona.bozza {
+  background: rgb(0 0 0 / 0.85);
+}
+
+.via {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--accent-ink);
+  color: var(--bg);
+  font-size: 1rem;
+  line-height: 1;
 }

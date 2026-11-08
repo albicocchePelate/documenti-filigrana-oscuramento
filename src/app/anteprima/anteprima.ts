@@ -10,7 +10,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { ImpostazioniFiligrana, disegnaPagina, fontPronto } from '../filigrana/disegna';
-import { Pagina } from '../pagina';
+import { Pagina, Zona } from '../pagina';
 import { Miniatura } from './miniatura';
 
 /** Una pagina alla volta, grande, con sotto le miniature per saltare da una all'altra. */
@@ -26,6 +26,15 @@ export class Anteprima {
   readonly pagine = input.required<Pagina[]>();
   readonly filigrana = input.required<ImpostazioniFiligrana>();
   readonly togli = output<Pagina>();
+  readonly copri = output<{ pagina: Pagina; zone: Zona[] }>();
+
+  /** «Copri una zona» acceso: trascinando sulla pagina si disegna un rettangolo */
+  protected readonly copro = signal(false);
+  /** Il rettangolo che si sta trascinando, non ancora aggiunto */
+  protected readonly bozza = signal<Zona | null>(null);
+  /** La zona cliccata: mostra la × per toglierla */
+  protected readonly zonaScelta = signal<Zona | null>(null);
+  private inizio: { x: number; y: number } | null = null;
 
   /** La pagina mostrata: resta la stessa quando se ne aggiungono, si sposta se si toglie */
   protected readonly corrente = linkedSignal<Pagina[], number>({
@@ -76,6 +85,52 @@ export class Anteprima {
     this.togli.emit(this.pagine()[this.corrente()]);
   }
 
+  protected inizia(evento: PointerEvent): void {
+    if (!this.copro()) return;
+    const foglio = evento.currentTarget as HTMLElement;
+    foglio.setPointerCapture(evento.pointerId);
+    this.inizio = punto(evento, foglio);
+    this.zonaScelta.set(null);
+  }
+
+  protected trascina(evento: PointerEvent): void {
+    if (!this.inizio) return;
+    const fine = punto(evento, evento.currentTarget as HTMLElement);
+    this.bozza.set({
+      x: Math.min(this.inizio.x, fine.x),
+      y: Math.min(this.inizio.y, fine.y),
+      larghezza: Math.abs(fine.x - this.inizio.x),
+      altezza: Math.abs(fine.y - this.inizio.y),
+    });
+  }
+
+  /** Lasciato il dito o il mouse, il rettangolo si aggiunge (se non è un semplice clic) */
+  protected finisci(): void {
+    const zona = this.bozza();
+    this.inizio = null;
+    this.bozza.set(null);
+    if (!zona || zona.larghezza < 0.01 || zona.altezza < 0.01) return;
+    const pagina = this.pagina();
+    this.copri.emit({ pagina, zone: [...pagina.zone, zona] });
+  }
+
+  protected scegliZona(evento: PointerEvent, zona: Zona): void {
+    evento.stopPropagation();
+    this.zonaScelta.set(zona);
+  }
+
+  protected togliZona(zona: Zona): void {
+    const pagina = this.pagina();
+    this.zonaScelta.set(null);
+    this.copri.emit({ pagina, zone: pagina.zone.filter((altra) => altra !== zona) });
+  }
+
+  protected annullaUltima(): void {
+    const pagina = this.pagina();
+    this.zonaScelta.set(null);
+    this.copri.emit({ pagina, zone: pagina.zone.slice(0, -1) });
+  }
+
   protected vai(passo: number): void {
     this.mostra(this.corrente() + passo);
   }
@@ -83,6 +138,7 @@ export class Anteprima {
   /** Cambiare pagina annulla una richiesta di togliere ancora in sospeso */
   protected mostra(indice: number): void {
     this.confermaTogli.set(false);
+    this.zonaScelta.set(null);
     this.corrente.set(Math.max(0, Math.min(indice, this.pagine().length - 1)));
   }
 
@@ -92,4 +148,14 @@ export class Anteprima {
     if (evento.key === 'ArrowLeft') this.vai(-1);
     if (evento.key === 'ArrowRight') this.vai(1);
   }
+}
+
+/** Dove si trova il puntatore sul foglio, in frazioni (da 0 a 1) */
+function punto(evento: PointerEvent, foglio: HTMLElement): { x: number; y: number } {
+  const area = foglio.getBoundingClientRect();
+  const dentro = (valore: number) => Math.max(0, Math.min(1, valore));
+  return {
+    x: dentro((evento.clientX - area.left) / area.width),
+    y: dentro((evento.clientY - area.top) / area.height),
+  };
 }

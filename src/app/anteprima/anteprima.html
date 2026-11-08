@@ -35,7 +35,74 @@
     }
   </div>
 
-  <canvas #grande class="grande" [attr.aria-label]="'Anteprima: ' + didascalia()"></canvas>
+  <div class="strumenti">
+    <button
+      type="button"
+      class="copri"
+      [attr.aria-pressed]="copro()"
+      (click)="copro.set(!copro()); zonaScelta.set(null)"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="4" y="7" width="16" height="10" rx="1.5" />
+      </svg>
+      Copri una zona
+    </button>
+    @if (attuale.zone.length) {
+      <span class="conteggio">
+        {{ attuale.zone.length === 1 ? '1 zona coperta' : attuale.zone.length + ' zone coperte' }}
+      </span>
+      <button type="button" class="annulla-zona" (click)="annullaUltima()">Annulla l'ultima</button>
+    }
+  </div>
+  @if (copro()) {
+    <p class="suggerimento">
+      Trascina sulla pagina sopra i dati da nascondere. Il dato sotto viene cancellato, non solo
+      coperto.
+    </p>
+  }
+
+  <!-- Il foglio: la pagina disegnata, e sopra i rettangoli per sceglierli e toglierli -->
+  <div
+    class="foglio"
+    [class.copro]="copro()"
+    (pointerdown)="inizia($event)"
+    (pointermove)="trascina($event)"
+    (pointerup)="finisci()"
+    (pointercancel)="finisci()"
+  >
+    <canvas #grande class="grande" [attr.aria-label]="'Anteprima: ' + didascalia()"></canvas>
+    @for (zona of attuale.zone; track zona) {
+      <div
+        class="zona"
+        [class.scelta]="zona === zonaScelta()"
+        [style.left.%]="zona.x * 100"
+        [style.top.%]="zona.y * 100"
+        [style.width.%]="zona.larghezza * 100"
+        [style.height.%]="zona.altezza * 100"
+        (pointerdown)="scegliZona($event, zona)"
+      >
+        @if (zona === zonaScelta()) {
+          <button
+            type="button"
+            class="via"
+            aria-label="Togli questa zona"
+            (click)="togliZona(zona)"
+          >
+            ×
+          </button>
+        }
+      </div>
+    }
+    @if (bozza(); as zona) {
+      <div
+        class="zona bozza"
+        [style.left.%]="zona.x * 100"
+        [style.top.%]="zona.y * 100"
+        [style.width.%]="zona.larghezza * 100"
+        [style.height.%]="zona.altezza * 100"
+      ></div>
+    }
+  </div>
 
   @if (pagine().length > 1) {
     <ul class="miniature">

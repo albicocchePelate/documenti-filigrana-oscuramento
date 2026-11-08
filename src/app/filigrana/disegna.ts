@@ -37,7 +37,10 @@ export function testoFiligrana(scritta: string, data: string): string {
   return [scritta.trim(), giorno].filter(Boolean).join(' · ');
 }
 
-/** Disegna sul foglio la pagina e, sopra, la filigrana. */
+/**
+ * Disegna sul foglio la pagina, poi le zone coperte, poi la filigrana sopra a tutto.
+ * Sotto le zone il disegno è nero pieno: nel file scaricato quel dato non c'è più.
+ */
 export function disegnaPagina(
   foglio: HTMLCanvasElement,
   pagina: Pagina,
@@ -47,6 +50,15 @@ export function disegnaPagina(
   foglio.height = pagina.immagine.height;
   const disegno = foglio.getContext('2d')!;
   disegno.drawImage(pagina.immagine, 0, 0);
+  disegno.fillStyle = '#000';
+  for (const zona of pagina.zone) {
+    disegno.fillRect(
+      zona.x * foglio.width,
+      zona.y * foglio.height,
+      zona.larghezza * foglio.width,
+      zona.altezza * foglio.height,
+    );
+  }
   disegnaFiligrana(disegno, foglio.width, foglio.height, filigrana);
 }
 

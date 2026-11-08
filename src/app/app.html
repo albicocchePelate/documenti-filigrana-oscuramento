@@ -33,7 +33,12 @@
           <strong>{{ scarica.nome(uscita) }}{{ scarica.coda(uscita) }}</strong>
           <span>{{ scarica.contenuto(uscita) }}</span>
         </p>
-        <app-anteprima [pagine]="uscita.pagine" [filigrana]="filigrana()" (togli)="togli($event)" />
+        <app-anteprima
+          [pagine]="uscita.pagine"
+          [filigrana]="filigrana()"
+          (togli)="togli($event)"
+          (copri)="copri($event)"
+        />
       }
     </section>
   </div>
