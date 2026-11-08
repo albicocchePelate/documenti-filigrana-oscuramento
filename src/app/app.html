@@ -14,8 +14,29 @@
       </section>
 
       <section>
-        <h2><span class="numero">2</span>Filigrana</h2>
-        <app-filigrana [(scritta)]="scritta" [(data)]="data" [(stile)]="stile" [testo]="testo()" />
+        <h2>
+          <span class="numero">2</span>Filigrana
+          <label class="interruttore">
+            <input
+              type="checkbox"
+              role="switch"
+              [checked]="conFiligrana()"
+              (change)="conFiligrana.set(!conFiligrana())"
+            />
+            <span class="cursore" aria-hidden="true"></span>
+            <span class="testo-interruttore">{{ conFiligrana() ? 'Sì' : 'No' }}</span>
+          </label>
+        </h2>
+        @if (conFiligrana()) {
+          <app-filigrana
+            [(scritta)]="scritta"
+            [(data)]="data"
+            [(stile)]="stile"
+            [testo]="testo()"
+          />
+        } @else {
+          <p class="senza">Nessuna filigrana: la copia avrà solo le zone coperte.</p>
+        }
       </section>
 
       <app-scarica

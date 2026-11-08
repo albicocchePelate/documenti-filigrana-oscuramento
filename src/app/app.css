@@ -144,3 +144,60 @@ h2 {
   color: var(--accent-ink);
   font-size: 0.875rem;
 }
+
+/* L'interruttore accanto al titolo: accende e spegne la filigrana */
+.interruttore {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  font-family: var(--font-text);
+  font-weight: 400;
+  font-size: 0.875rem;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.interruttore input {
+  position: absolute;
+  opacity: 0;
+}
+
+.cursore {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  border-radius: 99px;
+  background: var(--line-strong);
+  transition: background-color 0.2s;
+}
+
+.cursore::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--bg);
+  transition: translate 0.2s var(--ease-spring);
+}
+
+.interruttore input:checked + .cursore {
+  background: var(--accent-ink);
+}
+
+.interruttore input:checked + .cursore::after {
+  translate: 16px 0;
+}
+
+.interruttore input:focus-visible + .cursore {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.senza {
+  color: var(--muted);
+  font-size: 0.875rem;
+}

@@ -25,8 +25,11 @@ export class Scarica {
   protected readonly formato = signal<'pdf' | 'jpg'>('pdf');
   /** Con più documenti: separati (di solito è quello che serve) o tutti in un file */
   protected readonly insieme = signal(false);
-  /** Si aggiunge al nome di ogni file; può restare vuota */
-  protected readonly aggiunta = signal('-con-filigrana');
+  /** Si aggiunge al nome di ogni file; può restare vuota. Segue la filigrana finché non la si cambia */
+  private readonly aggiuntaScritta = signal<string | null>(null);
+  protected readonly aggiunta = computed(
+    () => this.aggiuntaScritta() ?? (this.filigrana().attiva ? '-con-filigrana' : '-oscurato'),
+  );
   /** I nomi cambiati a mano, per etichetta */
   protected readonly nomi = signal<Record<string, string>>({});
   /** L'etichetta della riga che si sta preparando */
@@ -98,6 +101,10 @@ export class Scarica {
     const quante = pagine.length;
     if (this.formato() === 'pdf') return quante === 1 ? '1 pagina' : `${quante} pagine`;
     return quante === 1 ? '1 immagine' : `${quante} immagini in uno ZIP`;
+  }
+
+  protected scriviAggiunta(testo: string): void {
+    this.aggiuntaScritta.set(testo);
   }
 
   protected valore(evento: Event): string {

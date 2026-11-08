@@ -20,8 +20,9 @@ export const STILE_INIZIALE: StileFiligrana = {
   fittezza: 'normale',
 };
 
-/** Cosa scrivere, e come */
+/** Se c'è, cosa scrivere, e come */
 export interface ImpostazioniFiligrana extends StileFiligrana {
+  attiva: boolean;
   testo: string;
 }
 
@@ -59,7 +60,7 @@ export function disegnaPagina(
       zona.altezza * foglio.height,
     );
   }
-  disegnaFiligrana(disegno, foglio.width, foglio.height, filigrana);
+  if (filigrana.attiva) disegnaFiligrana(disegno, foglio.width, foglio.height, filigrana);
 }
 
 // Il testo si ripete in diagonale su tutta la pagina: tagliarlo via è impossibile.

@@ -32,8 +32,11 @@ export class App {
   protected readonly errori = signal<string[]>([]);
 
   protected readonly testo = computed(() => testoFiligrana(this.scritta(), this.data()));
+  /** Chi deve solo coprire dei dati può spegnerla */
+  protected readonly conFiligrana = signal(true);
   protected readonly filigrana = computed<ImpostazioniFiligrana>(() => ({
     ...this.stile(),
+    attiva: this.conFiligrana(),
     testo: this.testo(),
   }));
 
