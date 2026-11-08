@@ -1,4 +1,3 @@
-/** Un file da mettere nello ZIP */
 export interface FileZip {
   nome: string;
   contenuto: Uint8Array;
@@ -74,11 +73,11 @@ export function creaZip(file: FileZip[]): Blob {
 /** Numeri scritti uno dopo l'altro, in little-endian, come vuole il formato ZIP */
 function intestazione(lunghezza: number, campi: [valore: number, byte: number][]): Uint8Array {
   const dati = new DataView(new ArrayBuffer(lunghezza));
-  let offset = 0;
+  let posizione = 0;
   for (const [valore, byte] of campi) {
-    if (byte === 4) dati.setUint32(offset, valore >>> 0, true);
-    else dati.setUint16(offset, valore, true);
-    offset += byte;
+    if (byte === 4) dati.setUint32(posizione, valore >>> 0, true);
+    else dati.setUint16(posizione, valore, true);
+    posizione += byte;
   }
   return new Uint8Array(dati.buffer);
 }

@@ -1,6 +1,5 @@
 import { Component, input, model } from '@angular/core';
 
-/** Un'opzione: il valore, e come si legge sul pulsante */
 export interface Opzione<T> {
   valore: T;
   etichetta: string;

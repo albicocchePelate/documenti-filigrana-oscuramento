@@ -1,7 +1,6 @@
 import { Directive, ElementRef, effect, inject, input } from '@angular/core';
 import { Pagina } from '../pagina';
 
-/** Larghezza delle miniature, in pixel */
 const LARGHEZZA = 72;
 
 /**

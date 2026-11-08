@@ -1,5 +1,4 @@
 @if (pagina(); as attuale) {
-  <!-- La barra degli strumenti: pagine, copri, zoom, togli -->
   <div class="barra">
     @if (pagine().length > 1) {
       <span class="gruppo">
@@ -111,8 +110,7 @@
     </p>
   }
 
-  <!-- Il foglio: la pagina disegnata, e sopra i rettangoli per sceglierli e toglierli -->
-  <!-- Il riquadro: la pagina ci sta intera a 100%; ingrandita, ci si sposta dentro -->
+  <!-- La pagina ci sta intera a 100%; ingrandita, ci si sposta dentro. Sopra, i rettangoli da scegliere e togliere -->
   <div #vista class="vista" [class.ingrandita]="zoom() > 1" (wheel)="rotella($event)">
     <div
       class="foglio"

@@ -32,7 +32,6 @@ export class App {
   protected readonly scritta = signal('Solo per ');
   protected readonly data = signal(oggi());
   protected readonly stile = signal<StileFiligrana>(STILE_INIZIALE);
-  /** Cosa si sta leggendo adesso, mentre i file arrivano */
   protected readonly lettura = signal('');
   protected readonly errori = signal<string[]>([]);
   /** Per ogni documento, cosa conteneva oltre al documento (posizione, telefono, autore…) */
@@ -47,7 +46,6 @@ export class App {
     testo: this.testo(),
   }));
 
-  /** I documenti caricati, per l'elenco del passo 1 */
   protected readonly documenti = computed(() =>
     perDocumento(this.pagine()).map((pagine) => ({
       nome: pagine[0].documento,

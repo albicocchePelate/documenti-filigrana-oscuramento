@@ -6,7 +6,6 @@ import { Verifica } from '../prove/verifica';
 import { Opzione, Scelta } from '../scelta/scelta';
 import { perDocumento, salvaImmagini, salvaPdf } from './salva';
 
-/** Un file che si scarica: cosa contiene e come si chiama all'inizio */
 export interface Uscita {
   etichetta: string;
   nomeIniziale: string;
@@ -38,7 +37,6 @@ export class Scarica {
   );
   /** I nomi cambiati a mano, per etichetta */
   protected readonly nomi = signal<Record<string, string>>({});
-  /** L'etichetta della riga che si sta preparando */
   protected readonly preparo = signal<string | null>(null);
 
   protected readonly formati: Opzione<'pdf' | 'jpg'>[] = [
@@ -52,7 +50,6 @@ export class Scarica {
 
   protected readonly documenti = computed(() => perDocumento(this.pagine()));
 
-  /** Una riga per ogni file che si otterrà */
   protected readonly uscite = computed<Uscita[]>(() => {
     const documenti = this.documenti();
     if (documenti.length > 1 && this.insieme()) {
@@ -88,7 +85,6 @@ export class Scarica {
         ? prima!.value
         : uscite[0].etichetta,
   });
-  /** Letto dalla pagina per mostrarne l'anteprima */
   readonly inVista = computed(
     () => this.uscite().find((uscita) => uscita.etichetta === this.scelta()) ?? this.uscite()[0],
   );
@@ -106,7 +102,6 @@ export class Scarica {
     return [...new Set(etichette)].join(', ');
   }
 
-  /** Apre Verifica sui dati di questi documenti */
   protected vediTolti(evento: Event, uscita: Uscita): void {
     evento.stopPropagation();
     this.verifica.mostra(this.documentiDi(uscita));
@@ -117,11 +112,7 @@ export class Scarica {
   }
 
   /** «2 pagine», oppure «2 immagini in uno ZIP» */
-  contenuto(uscita: Uscita): string {
-    return this.quante(uscita.pagine);
-  }
-
-  protected quante(pagine: Pagina[]): string {
+  quante(pagine: Pagina[]): string {
     const quante = pagine.length;
     if (this.formato() === 'pdf') return quante === 1 ? '1 pagina' : `${quante} pagine`;
     return quante === 1 ? '1 immagine' : `${quante} immagini in uno ZIP`;

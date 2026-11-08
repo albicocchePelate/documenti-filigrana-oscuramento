@@ -1,6 +1,5 @@
 @if (pagine().length) {
   <div class="strumento">
-    <!-- La plancia: i tre passi, uno sotto l'altro -->
     <div class="plancia">
       <section>
         <h2><span class="numero">1</span>Documenti</h2>
@@ -50,7 +49,6 @@
       />
     </div>
 
-    <!-- Il piano di lavoro: le pagine del file scelto in Scarica -->
     <section class="piano" aria-label="Anteprima">
       @if (scarica.inVista(); as uscita) {
         <p class="titolo-piano">
@@ -59,7 +57,7 @@
             <path d="M14 3v5h5" />
           </svg>
           <strong>{{ scarica.nome(uscita) }}{{ scarica.coda(uscita) }}</strong>
-          <span>{{ scarica.contenuto(uscita) }}</span>
+          <span>{{ scarica.quante(uscita.pagine) }}</span>
         </p>
         <app-anteprima
           [pagine]="uscita.pagine"

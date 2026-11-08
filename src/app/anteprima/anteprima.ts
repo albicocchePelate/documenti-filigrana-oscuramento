@@ -24,11 +24,11 @@ const ZOOM = [1, 1.5, 2, 3, 4];
   imports: [Miniatura],
   templateUrl: './anteprima.html',
   styleUrl: './anteprima.css',
-  // Le frecce sfogliano quando l'anteprima ha il focus: con più file ognuno ha la sua
-  // Un clic fuori dalla zona scelta la deseleziona (il clic sulla zona non arriva fin qui)
   host: {
     tabindex: '0',
+    // Le frecce sfogliano quando l'anteprima ha il focus: con più file ognuno ha la sua
     '(keydown)': 'tasto($event)',
+    // Un clic fuori dalla zona scelta la deseleziona (il clic sulla zona non arriva fin qui)
     '(document:pointerdown)': 'zonaScelta.set(null)',
   },
 })

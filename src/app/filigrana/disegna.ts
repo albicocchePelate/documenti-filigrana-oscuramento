@@ -63,7 +63,7 @@ export function disegnaPagina(
   if (filigrana.attiva) disegnaFiligrana(disegno, foglio.width, foglio.height, filigrana);
 }
 
-// Il testo si ripete in diagonale su tutta la pagina: tagliarlo via è impossibile.
+/** Il testo si ripete in diagonale su tutta la pagina: tagliarlo via è impossibile. */
 function disegnaFiligrana(
   disegno: CanvasRenderingContext2D,
   larghezza: number,

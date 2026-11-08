@@ -25,7 +25,6 @@ const MESI = [
   'dicembre',
 ];
 
-/** Un giorno nella griglia del mese */
 interface Giorno {
   data: string;
   numero: number;

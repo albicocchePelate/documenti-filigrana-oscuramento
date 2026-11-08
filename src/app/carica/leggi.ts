@@ -39,7 +39,7 @@ export async function leggiFile(
 }
 
 /** Riporta l'immagine entro LATO_MASSIMO, se serve. */
-export async function riduci(immagine: ImageBitmap): Promise<ImageBitmap> {
+async function riduci(immagine: ImageBitmap): Promise<ImageBitmap> {
   const scala = Math.min(1, LATO_MASSIMO / Math.max(immagine.width, immagine.height));
   if (scala === 1) return immagine;
 

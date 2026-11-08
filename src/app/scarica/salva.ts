@@ -59,9 +59,9 @@ async function inJpeg(pagina: Pagina, filigrana: ImpostazioniFiligrana): Promise
 }
 
 function salva(contenuto: Blob, nome: string): void {
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(contenuto);
-  link.download = nome;
-  link.click();
-  setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+  const collegamento = document.createElement('a');
+  collegamento.href = URL.createObjectURL(contenuto);
+  collegamento.download = nome;
+  collegamento.click();
+  setTimeout(() => URL.revokeObjectURL(collegamento.href), 1000);
 }

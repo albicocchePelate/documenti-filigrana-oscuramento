@@ -5,6 +5,8 @@ busta paga, contratto. Sulla copia si aggiunge una filigrana con scopo e data, p
 per affitto via Roma 10 · 12/11/2026», e si coprono i dati che non servono. Se la copia viene
 usata per altro, la scritta lo rende evidente.
 
+Si usa su [codice.albicocchepelate.it](https://codice.albicocchepelate.it/documenti-filigrana-oscuramento).
+
 ## Cosa fa
 
 - Legge JPG, PNG, HEIC e PDF, anche più file insieme. I PDF vengono aperti pagina per pagina.
@@ -24,7 +26,7 @@ Si può verificare in diversi modi, descritti anche nella finestra «Verifica» 
 - funziona senza connessione a internet;
 - negli strumenti per sviluppatori del browser, alla voce Rete, non compare nessuna richiesta;
 - la pagina dichiara al browser di bloccare qualsiasi invio di dati (`connect-src 'none'`, in
-  cima a [`src/index.html`]);
+  cima a [`src/index.html`](src/index.html)).
 
 Le copie sono ridisegnate da zero e non contengono i dati nascosti dell'originale: posizione,
 dispositivo, data di scatto, autore, programma usato. Lo strumento mostra quali dati aveva ogni

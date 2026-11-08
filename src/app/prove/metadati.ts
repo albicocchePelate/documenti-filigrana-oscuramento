@@ -1,16 +1,16 @@
 import { apriPdf } from '../carica/apri-pdf';
 import { formato } from '../carica/leggi';
 
-/**
- * Cosa raccontava il file oltre al documento: posizione, telefono, data, autore, programma.
- * Lo mostriamo per far vedere cosa non finisce nella copia (che è rifatta da zero e non ne ha).
- */
 /** Un dato nascosto nel file: «Posizione» → «45.46, 9.19» */
 export interface Metadato {
   etichetta: string;
   valore: string;
 }
 
+/**
+ * Cosa raccontava il file oltre al documento: posizione, telefono, data, autore, programma.
+ * Lo mostriamo per far vedere cosa non finisce nella copia (che è rifatta da zero e non ne ha).
+ */
 export async function leggiMetadati(file: File): Promise<Metadato[]> {
   try {
     return formato(file) === 'pdf' ? await delPdf(file) : await dellaFoto(file);
