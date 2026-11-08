@@ -1,10 +1,8 @@
 # Filigrana e oscuramento per documenti
 
-Per quando devi mandare a qualcuno un documento: carta d'identità, busta paga, contratto.
-Aggiungi una scritta con scopo e data e copri i dati che non servono.
+Strumento per aggiungere ai documenti una filigrana con scopo e data, e coprire i dati che non
+servono. Carta d'identità, busta paga, contratto: JPG, PNG, HEIC e PDF.
 
-I file restano sul tuo computer, non vengono caricati da nessuna parte. Con «Verifica» vedi come
-controllarlo.
+Funziona nel browser. I file restano sul computer e non vengono caricati da nessuna parte.
 
-Le copie non hanno i dati nascosti dell'originale, come la posizione o il telefono con cui è stata
-fatta la foto.
+Le copie non contengono i dati nascosti dell'originale, come posizione o dispositivo.
