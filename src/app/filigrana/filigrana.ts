@@ -1,11 +1,12 @@
 import { DecimalPipe } from '@angular/common';
 import { Component, input, model } from '@angular/core';
+import { Calendario } from '../calendario/calendario';
 import { Opzione, Scelta } from '../scelta/scelta';
 import { StileFiligrana } from './disegna';
 
 @Component({
   selector: 'app-filigrana',
-  imports: [DecimalPipe, Scelta],
+  imports: [Calendario, DecimalPipe, Scelta],
   templateUrl: './filigrana.html',
   styleUrl: './filigrana.css',
 })
@@ -36,11 +37,6 @@ export class Filigrana {
   /** Cambia una sola caratteristica e lascia le altre come sono */
   protected cambia<K extends keyof StileFiligrana>(chiave: K, valore: StileFiligrana[K]): void {
     this.stile.update((stile) => ({ ...stile, [chiave]: valore }));
-  }
-
-  /** Il calendario si apre cliccando in qualsiasi punto del campo, non solo sull'icona */
-  protected apriCalendario(evento: Event): void {
-    (evento.target as HTMLInputElement).showPicker?.();
   }
 
   protected valore(evento: Event): string {

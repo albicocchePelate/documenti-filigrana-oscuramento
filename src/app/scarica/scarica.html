@@ -31,28 +31,21 @@
           />
           <span class="coda">{{ coda(uscita) }}</span>
         </span>
-        <span class="contenuto">
-          {{ contenuto(uscita) }} ·
-          <button
-            type="button"
-            class="senza-metadati"
-            [attr.aria-expanded]="metadatiAperti() === uscita.etichetta"
-            (click)="apriMetadati($event, uscita)"
-          >
-            senza metadati ✓
-          </button>
+        <span class="contenuto">{{ contenuto(uscita) }}</span>
+        <span class="tolti">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z" />
+            <path d="M9 12l2 2 4-4" />
+          </svg>
+          @if (tolti(uscita); as tolti) {
+            <span>Tolti dalla copia: {{ tolti }}</span>
+            <button type="button" class="vedi" (click)="vediTolti($event, uscita)">
+              Vedi quali
+            </button>
+          } @else {
+            <span>Nessun dato nascosto da togliere</span>
+          }
         </span>
-        @if (metadatiAperti() === uscita.etichetta) {
-          <span class="tolti">
-            @for (voce of tolti(uscita); track voce.documento) {
-              <span>
-                <strong>{{ voce.documento }}</strong
-                >:
-                {{ voce.dati ? 'tolti ' + voce.dati.toLowerCase() : 'non ne aveva' }}
-              </span>
-            }
-          </span>
-        }
         <button
           type="button"
           class="scarica-file"

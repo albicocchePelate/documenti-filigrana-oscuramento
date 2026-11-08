@@ -8,15 +8,10 @@
       autocomplete="off"
     />
   </label>
-  <label>
+  <div class="campo-data">
     <span>Data</span>
-    <input
-      type="date"
-      [value]="data()"
-      (input)="data.set(valore($event))"
-      (click)="apriCalendario($event)"
-    />
-  </label>
+    <app-calendario [(data)]="data" />
+  </div>
 </div>
 <div class="stile">
   <label class="visibilita">

@@ -151,6 +151,10 @@ code {
   background: var(--surface);
 }
 
+.file.evidenziato {
+  outline: 2px solid var(--accent-ink);
+}
+
 .nome-file {
   font-weight: 600;
   overflow: hidden;

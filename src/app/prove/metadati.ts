@@ -29,7 +29,7 @@ async function dellaFoto(file: File): Promise<Metadato[]> {
       dati.latitude !== undefined && `${dati.latitude.toFixed(5)}, ${dati.longitude.toFixed(5)}`,
     Dispositivo: dispositivo,
     Obiettivo: dati.LensModel,
-    Scattata: dati.DateTimeOriginal && giorno(dati.DateTimeOriginal),
+    'Data di scatto': dati.DateTimeOriginal && giorno(dati.DateTimeOriginal),
     Programma: dati.Software,
     Autore: dati.Artist,
   });
@@ -46,7 +46,7 @@ async function delPdf(file: File): Promise<Metadato[]> {
     Autore: info['Author'],
     'Creato con': info['Creator'],
     Programma: info['Producer'],
-    Creato: data && giorno(data),
+    'Data di creazione': data && giorno(data),
   });
 }
 

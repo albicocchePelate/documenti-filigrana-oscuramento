@@ -38,8 +38,10 @@ input {
   opacity: 0;
 }
 
-.zona span,
-.nota,
+.zona span {
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
 
 /* Dopo il caricamento: l'elenco dei documenti, ognuno si può togliere */
 .riga {

@@ -1,7 +1,8 @@
-import { Component, computed, input, linkedSignal, output, signal } from '@angular/core';
+import { Component, computed, inject, input, linkedSignal, output, signal } from '@angular/core';
 import { ImpostazioniFiligrana } from '../filigrana/disegna';
 import { Pagina } from '../pagina';
 import { Metadato } from '../prove/metadati';
+import { Verifica } from '../prove/verifica';
 import { Opzione, Scelta } from '../scelta/scelta';
 import { perDocumento, salvaImmagini, salvaPdf } from './salva';
 
@@ -25,8 +26,7 @@ export class Scarica {
   /** Per ogni documento, cosa conteneva oltre al documento: lo si mostra per dire che è stato tolto */
   readonly metadati = input<Record<string, Metadato[]>>({});
 
-  /** Il file di cui si stanno guardando i metadati tolti */
-  protected readonly metadatiAperti = signal<string | null>(null);
+  private readonly verifica = inject(Verifica);
 
   protected readonly formato = signal<'pdf' | 'jpg'>('pdf');
   /** Con più documenti: separati (di solito è quello che serve) o tutti in un file */
@@ -98,18 +98,22 @@ export class Scarica {
     this.insieme() && this.documenti().length > 1 ? this.documenti() : [],
   );
 
-  /** Per i documenti di un file: «foto-con-gps» → «Posizione, Dispositivo, Scattata» */
-  protected tolti(uscita: Uscita): { documento: string; dati: string }[] {
-    const documenti = [...new Set(uscita.pagine.map((pagina) => pagina.documento))];
-    return documenti.map((documento) => ({
-      documento,
-      dati: (this.metadati()[documento] ?? []).map((dato) => dato.etichetta).join(', '),
-    }));
+  /** Cosa avevano i documenti del file e la copia non ha: «posizione, dispositivo, data di scatto» */
+  protected tolti(uscita: Uscita): string {
+    const etichette = this.documentiDi(uscita).flatMap((documento) =>
+      (this.metadati()[documento] ?? []).map((dato) => dato.etichetta.toLowerCase()),
+    );
+    return [...new Set(etichette)].join(', ');
   }
 
-  protected apriMetadati(evento: Event, uscita: Uscita): void {
+  /** Apre Verifica sui dati di questi documenti */
+  protected vediTolti(evento: Event, uscita: Uscita): void {
     evento.stopPropagation();
-    this.metadatiAperti.update((aperto) => (aperto === uscita.etichetta ? null : uscita.etichetta));
+    this.verifica.mostra(this.documentiDi(uscita));
+  }
+
+  private documentiDi(uscita: Uscita): string[] {
+    return [...new Set(uscita.pagine.map((pagina) => pagina.documento))];
   }
 
   /** «2 pagine», oppure «2 immagini in uno ZIP» */

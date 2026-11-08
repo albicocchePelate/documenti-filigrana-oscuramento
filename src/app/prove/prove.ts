@@ -1,6 +1,18 @@
-import { Component, ElementRef, computed, inject, input, viewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  afterNextRender,
+  computed,
+  effect,
+  inject,
+  input,
+  Injector,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { Metadato } from './metadati';
 import { Rete } from './rete';
+import { Verifica } from './verifica';
 
 const CODICE = 'https://github.com/albicocchePelate/documenti-filigrana-oscuramento';
 
@@ -18,7 +30,29 @@ export class Prove {
   protected readonly codice = CODICE;
   protected readonly documenti = computed(() => Object.entries(this.metadati()));
 
+  /** I documenti di cui si è chiesto di vedere i dati, dal pulsante «Vedi quali» */
+  protected readonly evidenziati = signal<string[]>([]);
+
   private readonly finestra = viewChild.required<ElementRef<HTMLDialogElement>>('finestra');
+  private readonly verifica = inject(Verifica);
+  private readonly injector = inject(Injector);
+
+  constructor() {
+    effect(() => {
+      const documenti = this.verifica.richiesta();
+      if (!documenti) return;
+      this.verifica.richiesta.set(null);
+      this.evidenziati.set(documenti);
+      this.apri();
+      afterNextRender(
+        () =>
+          this.finestra()
+            .nativeElement.querySelector('.file.evidenziato')
+            ?.scrollIntoView({ block: 'center' }),
+        { injector: this.injector },
+      );
+    });
+  }
 
   protected apri(): void {
     this.finestra().nativeElement.showModal();
@@ -26,6 +60,7 @@ export class Prove {
 
   protected chiudi(): void {
     this.finestra().nativeElement.close();
+    this.evidenziati.set([]);
   }
 
   /** Un clic sullo sfondo, fuori dalla finestra, la chiude */

@@ -26,7 +26,7 @@
 
 .plancia {
   display: grid;
-  padding: 16px;
+  padding: 22px;
   border: 1px solid var(--line);
   border-radius: 20px;
   background: var(--bg);
@@ -34,8 +34,8 @@
 
 /* I passi separati da una linea sottile */
 .plancia > * + * {
-  margin-top: 14px;
-  padding-top: 14px;
+  margin-top: 24px;
+  padding-top: 24px;
   border-top: 1px solid var(--line);
 }
 
@@ -135,7 +135,7 @@ app-carica:not(.strumento app-carica) {
 
 section {
   display: grid;
-  gap: 10px;
+  gap: 16px;
 }
 
 h2 {

@@ -51,7 +51,7 @@
         <strong>Le copie non hanno dati nascosti</strong>
         @if (documenti().length) {
           @for (documento of documenti(); track documento[0]) {
-            <div class="file">
+            <div class="file" [class.evidenziato]="evidenziati().includes(documento[0])">
               <span class="nome-file">{{ documento[0] }}</span>
               @if (documento[1].length) {
                 <dl>
@@ -81,6 +81,19 @@
           volendo.
         </p>
         <p class="come">Verifica: tasto destro → Visualizza sorgente pagina, in cima.</p>
+      </div>
+    </li>
+
+    <li>
+      <span class="spunta" aria-hidden="true">✓</span>
+      <div>
+        <strong>Nel browser non resta niente</strong>
+        <p>
+          I documenti stanno solo nella memoria di questa scheda: chiudendola, spariscono. Niente
+          viene salvato nel browser.
+        </p>
+        <p class="come">Verifica: tasto destro → Ispeziona → Applicazione → Archiviazione.</p>
+        <p class="come">Restano solo le copie che scarichi, nella cartella Download.</p>
       </div>
     </li>
 

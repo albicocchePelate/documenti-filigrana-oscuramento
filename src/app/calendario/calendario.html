@@ -1,0 +1,53 @@
+<button
+  type="button"
+  class="campo"
+  aria-haspopup="dialog"
+  [attr.aria-expanded]="aperto()"
+  (click)="apriOChiudi()"
+>
+  <span>{{ leggibile() }}</span>
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <rect x="3.5" y="5" width="17" height="15" rx="2.5" />
+    <path d="M3.5 10h17M8 3v4M16 3v4" />
+  </svg>
+</button>
+
+@if (aperto()) {
+  <div class="pannello" role="dialog" aria-label="Scegli la data" (keydown)="tasto($event)">
+    <div class="intestazione">
+      <button type="button" class="freccia" aria-label="Mese prima" (click)="cambiaMese(-1)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+      </button>
+      <span class="mese" aria-live="polite">{{ titolo() }}</span>
+      <button type="button" class="freccia" aria-label="Mese dopo" (click)="cambiaMese(1)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+      </button>
+    </div>
+
+    <div class="griglia">
+      @for (nome of nomiGiorni; track $index) {
+        <span class="nome-giorno" aria-hidden="true">{{ nome }}</span>
+      }
+      @for (giorno of giorni(); track $index) {
+        @if (giorno) {
+          <button
+            type="button"
+            class="giorno"
+            [class.oggi]="giorno.oggi"
+            [class.scelto]="giorno.scelto"
+            [attr.tabindex]="giorno.data === attivo() ? 0 : -1"
+            [attr.aria-pressed]="giorno.scelto"
+            [attr.aria-label]="giorno.numero + ' ' + titolo()"
+            (click)="scegli(giorno.data)"
+          >
+            {{ giorno.numero }}
+          </button>
+        } @else {
+          <span></span>
+        }
+      }
+    </div>
+
+    <button type="button" class="vai-a-oggi" (click)="scegli(oggi)">Oggi</button>
+  </div>
+}

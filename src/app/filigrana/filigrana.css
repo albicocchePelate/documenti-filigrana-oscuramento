@@ -1,17 +1,18 @@
 :host {
   display: grid;
-  gap: 10px;
+  gap: 18px;
 }
 
 .campi {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 132px;
-  gap: 10px;
+  grid-template-columns: minmax(0, 1fr) 140px;
+  gap: 12px;
 }
 
-label {
+label,
+.campo-data {
   display: grid;
-  gap: 4px;
+  gap: 6px;
   font-size: 0.875rem;
 }
 
@@ -31,33 +32,6 @@ input {
   font: inherit;
 }
 
-input[type='date'] {
-  padding-right: 6px;
-  cursor: pointer;
-  accent-color: var(--accent-ink);
-  font-variant-numeric: tabular-nums;
-}
-
-input[type='date']:hover {
-  border-color: var(--accent-ink);
-}
-
-input[type='date']::-webkit-datetime-edit-fields-wrapper {
-  padding: 0;
-}
-
-input[type='date']::-webkit-calendar-picker-indicator {
-  width: 18px;
-  height: 18px;
-  margin: 0;
-  padding: 4px;
-  border-radius: 6px;
-  background: var(--accent-ink);
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'%3E%3Crect x='3.5' y='5' width='17' height='15' rx='2.5'/%3E%3Cpath d='M3.5 10h17M8 3v4M16 3v4'/%3E%3C/svg%3E")
-    center / 18px no-repeat;
-  cursor: pointer;
-}
-
 .sulla-copia {
   color: var(--muted);
   font-size: 0.9375rem;
@@ -69,7 +43,7 @@ input[type='date']::-webkit-calendar-picker-indicator {
 
 .stile {
   display: grid;
-  gap: 8px;
+  gap: 12px;
 }
 
 .visibilita {
