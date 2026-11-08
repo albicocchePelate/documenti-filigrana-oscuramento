@@ -45,33 +45,41 @@
   </ul>
 
   @if (ordine().length) {
-    <ol class="ordine" aria-label="Ordine dei documenti nel file">
-      @for (
-        documento of ordine();
-        track documento[0].documento;
-        let primo = $first, ultimo = $last
-      ) {
-        <li>
-          <span class="documento">{{ documento[0].documento }}</span>
-          <span class="pagine">{{ quante(documento) }}</span>
-          <button
-            type="button"
-            [attr.aria-label]="'Sposta prima ' + documento[0].documento"
-            [disabled]="primo"
-            (click)="sposta.emit({ documento: documento[0].documento, verso: -1 })"
-          >
-            ↑
-          </button>
-          <button
-            type="button"
-            [attr.aria-label]="'Sposta dopo ' + documento[0].documento"
-            [disabled]="ultimo"
-            (click)="sposta.emit({ documento: documento[0].documento, verso: 1 })"
-          >
-            ↓
-          </button>
-        </li>
-      }
-    </ol>
+    <div class="ordine">
+      <p class="titolo-ordine">Ordine nel file</p>
+      <ol>
+        @for (
+          documento of ordine();
+          track documento[0].documento;
+          let i = $index, primo = $first, ultimo = $last
+        ) {
+          <li>
+            <span class="posizione">{{ i + 1 }}</span>
+            <span class="documento">
+              <strong>{{ documento[0].documento }}</strong>
+              <span>{{ quante(documento) }}</span>
+            </span>
+            <span class="sposta">
+              <button
+                type="button"
+                [attr.aria-label]="'Sposta prima ' + documento[0].documento"
+                [disabled]="primo"
+                (click)="sposta.emit({ documento: documento[0].documento, verso: -1 })"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 15l6-6 6 6" /></svg>
+              </button>
+              <button
+                type="button"
+                [attr.aria-label]="'Sposta dopo ' + documento[0].documento"
+                [disabled]="ultimo"
+                (click)="sposta.emit({ documento: documento[0].documento, verso: 1 })"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+              </button>
+            </span>
+          </li>
+        }
+      </ol>
+    </div>
   }
 </section>

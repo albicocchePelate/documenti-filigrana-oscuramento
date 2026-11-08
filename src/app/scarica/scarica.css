@@ -112,41 +112,99 @@ input {
   cursor: default;
 }
 
-/* Nel file unico: in che ordine stanno i documenti */
+/* Nel file unico: in che ordine stanno i documenti, uno per riga */
 .ordine {
   display: grid;
-  gap: 2px;
-  margin: 0;
-  padding: 0 0 0 1.4em;
+  gap: 6px;
+}
+
+.titolo-ordine {
+  color: var(--muted);
   font-size: 0.875rem;
 }
 
-.ordine li > * {
-  vertical-align: middle;
+.ordine ol {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ordine li {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 6px 6px 10px;
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.posizione {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
 }
 
 .documento {
+  display: grid;
+  min-width: 0;
+}
+
+.documento strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.875rem;
   font-weight: 600;
 }
 
-.pagine {
-  margin: 0 6px;
+.documento span {
   color: var(--muted);
+  font-size: 0.8125rem;
 }
 
-.ordine button {
-  width: 30px;
-  height: 30px;
+.sposta {
+  display: flex;
+  gap: 2px;
+}
+
+.sposta button {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
   padding: 0;
-  border: 1px solid var(--line-strong);
-  border-radius: 50%;
+  border: 0;
+  border-radius: 8px;
   background: none;
   color: var(--text);
 }
 
-.ordine button:disabled {
-  opacity: 0.3;
+.sposta button:hover:not(:disabled) {
+  background: var(--bg);
+}
+
+.sposta button:disabled {
+  opacity: 0.25;
   cursor: default;
+}
+
+.sposta svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .nota {
