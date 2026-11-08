@@ -35,3 +35,5 @@ file prima di toglierli.
 - Il testo delle copie in PDF non si può selezionare o cercare: ogni pagina diventa un'immagine.
   È voluto, così sotto le zone nere non resta niente.
 - I PDF protetti da password non si aprono.
+
+Realizzato con il supporto di AI.
