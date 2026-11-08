@@ -10,7 +10,12 @@
   </label>
   <label>
     <span>Data</span>
-    <input type="date" [value]="data()" (input)="data.set(valore($event))" />
+    <input
+      type="date"
+      [value]="data()"
+      (input)="data.set(valore($event))"
+      (click)="apriCalendario($event)"
+    />
   </label>
 </div>
 <div class="stile">

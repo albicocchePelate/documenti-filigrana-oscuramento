@@ -1,13 +1,17 @@
-<details>
-  <summary>
-    <svg class="lucchetto" viewBox="0 0 24 24" aria-hidden="true">
-      <rect x="5" y="11" width="14" height="9" rx="2" />
-      <path d="M8 11V8a4 4 0 0 1 8 0v3" />
-    </svg>
-    <span class="domanda">I tuoi file restano su questo computer</span>
-    <span class="stato">{{ rete.altriSiti() === 0 ? 'nessun dato inviato' : 'vedi sotto' }}</span>
-    <svg class="apri" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
-  </summary>
+<p class="riga">
+  <svg class="lucchetto" viewBox="0 0 24 24" aria-hidden="true">
+    <rect x="5" y="11" width="14" height="9" rx="2" />
+    <path d="M8 11V8a4 4 0 0 1 8 0v3" />
+  </svg>
+  I file restano sul tuo computer ·
+  <button type="button" class="verifica" (click)="apri()">Verifica</button>
+</p>
+
+<dialog #finestra aria-labelledby="titolo-prove" (click)="cliccaSfondo($event)">
+  <header>
+    <h2 id="titolo-prove">I tuoi file restano su questo computer</h2>
+    <button type="button" class="chiudi" aria-label="Chiudi" (click)="chiudi()">×</button>
+  </header>
 
   <ul class="garanzie">
     <li>
@@ -90,4 +94,4 @@
       </div>
     </li>
   </ul>
-</details>
+</dialog>

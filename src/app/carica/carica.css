@@ -40,9 +40,6 @@ input {
 
 .zona span,
 .nota,
-.nota {
-  text-align: center;
-}
 
 /* Dopo il caricamento: l'elenco dei documenti, ognuno si può togliere */
 .riga {

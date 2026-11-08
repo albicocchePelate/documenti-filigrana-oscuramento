@@ -31,7 +31,28 @@
           />
           <span class="coda">{{ coda(uscita) }}</span>
         </span>
-        <span class="contenuto">{{ contenuto(uscita) }}</span>
+        <span class="contenuto">
+          {{ contenuto(uscita) }} ·
+          <button
+            type="button"
+            class="senza-metadati"
+            [attr.aria-expanded]="metadatiAperti() === uscita.etichetta"
+            (click)="apriMetadati($event, uscita)"
+          >
+            senza metadati ✓
+          </button>
+        </span>
+        @if (metadatiAperti() === uscita.etichetta) {
+          <span class="tolti">
+            @for (voce of tolti(uscita); track voce.documento) {
+              <span>
+                <strong>{{ voce.documento }}</strong
+                >:
+                {{ voce.dati ? 'tolti ' + voce.dati.toLowerCase() : 'non ne aveva' }}
+              </span>
+            }
+          </span>
+        }
         <button
           type="button"
           class="scarica-file"

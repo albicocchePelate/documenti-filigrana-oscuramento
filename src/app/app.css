@@ -76,12 +76,25 @@ app-carica:not(.strumento app-carica) {
   font-size: 0.9375rem;
 }
 
+/* Mentre legge i file: un'etichetta con la rotella */
 .lettura {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 10px;
+  justify-self: start;
+  padding: 7px 14px;
+  border-radius: 99px;
+  background: var(--surface);
   color: var(--muted);
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
+}
+
+/* Sulla prima pagina tutto è centrato: anche lettura ed errori */
+.stato-iniziale {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  text-align: center;
 }
 
 .rotella {

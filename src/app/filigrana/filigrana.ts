@@ -38,6 +38,11 @@ export class Filigrana {
     this.stile.update((stile) => ({ ...stile, [chiave]: valore }));
   }
 
+  /** Il calendario si apre cliccando in qualsiasi punto del campo, non solo sull'icona */
+  protected apriCalendario(evento: Event): void {
+    (evento.target as HTMLInputElement).showPicker?.();
+  }
+
   protected valore(evento: Event): string {
     return (evento.target as HTMLInputElement).value;
   }

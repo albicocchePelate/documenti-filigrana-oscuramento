@@ -1,40 +1,82 @@
-details {
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  background: var(--bg);
+:host {
+  display: block;
 }
 
-summary {
+.riga {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 4px 12px;
-  padding: 12px 16px;
-  cursor: pointer;
-  list-style: none;
+  justify-content: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 0.875rem;
 }
 
-summary::-webkit-details-marker {
-  display: none;
+:host(.a-sinistra) .riga {
+  justify-content: flex-start;
 }
 
 .lucchetto {
-  width: 18px;
-  height: 18px;
+  width: 15px;
+  height: 15px;
   fill: none;
   stroke: var(--accent-ink);
   stroke-width: 2;
   stroke-linecap: round;
 }
 
-.domanda {
-  font-size: 0.9375rem;
+.verifica {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent-ink);
+  font: inherit;
   font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
 }
 
-.stato {
-  color: var(--muted);
-  font-size: 0.8125rem;
+/* La finestra delle prove, al centro, sopra lo strumento */
+dialog {
+  width: min(760px, calc(100% - 32px));
+  max-height: calc(100% - 48px);
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--bg);
+  color: var(--text);
+}
+
+dialog::backdrop {
+  background: rgb(0 0 0 / 0.4);
+}
+
+dialog header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 20px 8px;
+}
+
+dialog h2 {
+  flex: 1;
+  font-family: var(--font-title);
+  font-weight: 600;
+  font-size: 1.125rem;
+}
+
+.chiudi {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  background: none;
+  color: var(--text);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
 }
 
 .connessione {
@@ -42,29 +84,13 @@ summary::-webkit-details-marker {
   font-weight: 600;
 }
 
-.apri {
-  width: 18px;
-  height: 18px;
-  margin-left: auto;
-  fill: none;
-  stroke: var(--muted);
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  transition: rotate 0.2s;
-}
-
-details[open] .apri {
-  rotate: 180deg;
-}
-
 /* Le garanzie: una per riga, su due colonne quando c'è spazio */
 .garanzie {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 14px 28px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px 28px;
   margin: 0;
-  padding: 6px 16px 18px;
+  padding: 8px 20px 22px;
   list-style: none;
 }
 

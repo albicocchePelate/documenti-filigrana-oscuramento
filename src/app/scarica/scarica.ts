@@ -1,6 +1,7 @@
 import { Component, computed, input, linkedSignal, output, signal } from '@angular/core';
 import { ImpostazioniFiligrana } from '../filigrana/disegna';
 import { Pagina } from '../pagina';
+import { Metadato } from '../prove/metadati';
 import { Opzione, Scelta } from '../scelta/scelta';
 import { perDocumento, salvaImmagini, salvaPdf } from './salva';
 
@@ -21,6 +22,11 @@ export class Scarica {
   readonly pagine = input.required<Pagina[]>();
   readonly filigrana = input.required<ImpostazioniFiligrana>();
   readonly sposta = output<{ documento: string; verso: -1 | 1 }>();
+  /** Per ogni documento, cosa conteneva oltre al documento: lo si mostra per dire che è stato tolto */
+  readonly metadati = input<Record<string, Metadato[]>>({});
+
+  /** Il file di cui si stanno guardando i metadati tolti */
+  protected readonly metadatiAperti = signal<string | null>(null);
 
   protected readonly formato = signal<'pdf' | 'jpg'>('pdf');
   /** Con più documenti: separati (di solito è quello che serve) o tutti in un file */
@@ -91,6 +97,20 @@ export class Scarica {
   protected readonly ordine = computed(() =>
     this.insieme() && this.documenti().length > 1 ? this.documenti() : [],
   );
+
+  /** Per i documenti di un file: «foto-con-gps» → «Posizione, Dispositivo, Scattata» */
+  protected tolti(uscita: Uscita): { documento: string; dati: string }[] {
+    const documenti = [...new Set(uscita.pagine.map((pagina) => pagina.documento))];
+    return documenti.map((documento) => ({
+      documento,
+      dati: (this.metadati()[documento] ?? []).map((dato) => dato.etichetta).join(', '),
+    }));
+  }
+
+  protected apriMetadati(evento: Event, uscita: Uscita): void {
+    evento.stopPropagation();
+    this.metadatiAperti.update((aperto) => (aperto === uscita.etichetta ? null : uscita.etichetta));
+  }
 
   /** «2 pagine», oppure «2 immagini in uno ZIP» */
   contenuto(uscita: Uscita): string {

@@ -11,6 +11,7 @@
           (ricomincia)="ricomincia()"
           (togliDocumento)="togliDocumento($event)"
         />
+        <app-prove class="a-sinistra" [metadati]="metadati()" />
         <ng-container *ngTemplateOutlet="stato" />
       </section>
 
@@ -44,6 +45,7 @@
         #scarica
         [pagine]="pagine()"
         [filigrana]="filigrana()"
+        [metadati]="metadati()"
         (sposta)="sposta($event)"
       />
     </div>
@@ -64,8 +66,6 @@
       }
     </section>
   </div>
-
-  <app-prove [metadati]="metadati()" />
 } @else {
   <header class="intro">
     <h1>Proteggi i documenti prima di inviarli</h1>
@@ -73,8 +73,12 @@
     <p class="esempi">Per esempio: carta d'identità, patente, busta paga, contratto.</p>
   </header>
   <app-carica (caricati)="aggiungi($event)" />
-  <ng-container *ngTemplateOutlet="stato" />
-  <app-prove class="prove-iniziali" />
+  @if (lettura() || errori().length) {
+    <div class="stato-iniziale">
+      <ng-container *ngTemplateOutlet="stato" />
+    </div>
+  }
+  <app-prove class="prove-iniziali" [metadati]="metadati()" />
 }
 
 <!-- Cosa si sta leggendo, e i file che non si sono potuti aprire -->
