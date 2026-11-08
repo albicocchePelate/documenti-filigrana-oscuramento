@@ -13,6 +13,10 @@ import { ImpostazioniFiligrana, disegnaPagina, fontPronto } from '../filigrana/d
 import { Pagina, Zona } from '../pagina';
 import { Miniatura } from './miniatura';
 
+/** L'altezza massima della pagina a zoom 100%: sta nel piano senza far scorrere la pagina */
+const ALTEZZA_VISTA = 540;
+const ZOOM = [1, 1.5, 2, 3, 4];
+
 /** Una pagina alla volta, grande, con sotto le miniature per saltare da una all'altra. */
 @Component({
   selector: 'app-anteprima',
@@ -35,6 +39,21 @@ export class Anteprima {
   /** La zona cliccata: mostra la × per toglierla */
   protected readonly zonaScelta = signal<Zona | null>(null);
   private inizio: { x: number; y: number } | null = null;
+
+  /** Zoom: 1 è la pagina intera nel riquadro */
+  protected readonly zoom = signal(1);
+  /** Quanto è largo il riquadro, per calcolare la misura della pagina */
+  private readonly spazio = signal(0);
+  /** La larghezza della pagina a schermo: intera nel riquadro, per lo zoom */
+  protected readonly larghezza = computed(() => {
+    const pagina = this.pagina();
+    if (!pagina) return 0;
+    const proporzione = pagina.immagine.width / pagina.immagine.height;
+    return Math.min(this.spazio(), ALTEZZA_VISTA * proporzione) * this.zoom();
+  });
+  private readonly vista = viewChild<ElementRef<HTMLElement>>('vista');
+  /** Trascinando la pagina ingrandita ci si sposta: da dove è partito il trascinamento */
+  private spostamento: { x: number; y: number } | null = null;
 
   /** La pagina mostrata: resta la stessa quando se ne aggiungono, si sposta se si toglie */
   protected readonly corrente = linkedSignal<Pagina[], number>({
@@ -63,6 +82,15 @@ export class Anteprima {
   constructor() {
     fontPronto.then(() => this.fontCaricato.set(true));
 
+    // La misura del riquadro cambia con la finestra: la pagina intera deve starci sempre
+    effect((pulisci) => {
+      const vista = this.vista()?.nativeElement;
+      if (!vista) return;
+      const osservatore = new ResizeObserver(([voce]) => this.spazio.set(voce.contentRect.width));
+      osservatore.observe(vista);
+      pulisci(() => osservatore.disconnect());
+    });
+
     // La pagina grande si ridisegna quando cambia lei o la filigrana
     effect(() => {
       this.fontCaricato();
@@ -86,14 +114,28 @@ export class Anteprima {
   }
 
   protected inizia(evento: PointerEvent): void {
-    if (!this.copro()) return;
     const foglio = evento.currentTarget as HTMLElement;
+    if (!this.copro()) {
+      // Pagina ingrandita: trascinandola ci si sposta
+      if (this.zoom() > 1) {
+        foglio.setPointerCapture(evento.pointerId);
+        this.spostamento = { x: evento.clientX, y: evento.clientY };
+      }
+      return;
+    }
     foglio.setPointerCapture(evento.pointerId);
     this.inizio = punto(evento, foglio);
     this.zonaScelta.set(null);
   }
 
   protected trascina(evento: PointerEvent): void {
+    const vista = this.vista()?.nativeElement;
+    if (this.spostamento && vista) {
+      vista.scrollLeft -= evento.clientX - this.spostamento.x;
+      vista.scrollTop -= evento.clientY - this.spostamento.y;
+      this.spostamento = { x: evento.clientX, y: evento.clientY };
+      return;
+    }
     if (!this.inizio) return;
     const fine = punto(evento, evento.currentTarget as HTMLElement);
     this.bozza.set({
@@ -106,6 +148,7 @@ export class Anteprima {
 
   /** Lasciato il dito o il mouse, il rettangolo si aggiunge (se non è un semplice clic) */
   protected finisci(): void {
+    this.spostamento = null;
     const zona = this.bozza();
     this.inizio = null;
     this.bozza.set(null);
@@ -131,6 +174,28 @@ export class Anteprima {
     this.copri.emit({ pagina, zone: pagina.zone.slice(0, -1) });
   }
 
+  /** Un passo di zoom avanti (1) o indietro (-1), tenendo fermo il centro di quello che si vede */
+  protected ingrandisci(verso: 1 | -1): void {
+    const attuale = ZOOM.indexOf(this.zoom());
+    const nuovo = ZOOM[Math.max(0, Math.min(ZOOM.length - 1, attuale + verso))];
+    const vista = this.vista()?.nativeElement;
+    if (!vista || nuovo === this.zoom()) return;
+    const centroX = (vista.scrollLeft + vista.clientWidth / 2) / vista.scrollWidth;
+    const centroY = (vista.scrollTop + vista.clientHeight / 2) / vista.scrollHeight;
+    this.zoom.set(nuovo);
+    requestAnimationFrame(() => {
+      vista.scrollLeft = centroX * vista.scrollWidth - vista.clientWidth / 2;
+      vista.scrollTop = centroY * vista.scrollHeight - vista.clientHeight / 2;
+    });
+  }
+
+  /** Rotella con Ctrl, o pizzico sul trackpad: zoom. Senza Ctrl la rotella scorre la pagina */
+  protected rotella(evento: WheelEvent): void {
+    if (!evento.ctrlKey) return;
+    evento.preventDefault();
+    this.ingrandisci(evento.deltaY < 0 ? 1 : -1);
+  }
+
   protected vai(passo: number): void {
     this.mostra(this.corrente() + passo);
   }
@@ -139,6 +204,7 @@ export class Anteprima {
   protected mostra(indice: number): void {
     this.confermaTogli.set(false);
     this.zonaScelta.set(null);
+    this.zoom.set(1);
     this.corrente.set(Math.max(0, Math.min(indice, this.pagine().length - 1)));
   }
 
