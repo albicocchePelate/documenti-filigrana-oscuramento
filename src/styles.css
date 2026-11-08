@@ -7,3 +7,23 @@ body {
 button {
   cursor: pointer;
 }
+
+/* Testi diversi per chi usa il mouse e per chi tocca lo schermo («clicca» o «tocca») */
+@media (hover: none) {
+  .solo-mouse {
+    display: none !important;
+  }
+}
+
+@media (hover: hover) {
+  .solo-tocco {
+    display: none !important;
+  }
+}
+
+/* Sotto i 16 px l'iPhone ingrandisce la pagina quando si tocca un campo, e non torna indietro */
+@media (pointer: coarse) {
+  input:not([type='range'], [type='checkbox']) {
+    font-size: max(16px, 1em) !important;
+  }
+}

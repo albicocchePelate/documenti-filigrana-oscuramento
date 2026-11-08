@@ -87,6 +87,13 @@ svg {
   background: var(--surface);
 }
 
+@media (pointer: coarse) {
+  .freccia {
+    width: 44px;
+    height: 44px;
+  }
+}
+
 .griglia {
   display: grid;
   grid-template-columns: repeat(7, 1fr);

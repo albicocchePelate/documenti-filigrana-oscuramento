@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { Component, input, model } from '@angular/core';
+import { Component, input, model, signal } from '@angular/core';
 import { Calendario } from '../calendario/calendario';
 import { Opzione, Scelta } from '../scelta/scelta';
 import { StileFiligrana } from './disegna';
@@ -17,6 +17,9 @@ export class Filigrana {
   readonly data = model.required<string>();
   readonly stile = model.required<StileFiligrana>();
   readonly testo = input.required<string>();
+
+  /** Sul telefono le scelte dell'aspetto restano chiuse finché non si chiedono */
+  protected readonly aspetto = signal(false);
 
   protected readonly dimensioni: Opzione<StileFiligrana['dimensione']>[] = [
     { valore: 'piccola', etichetta: 'Piccola' },

@@ -152,12 +152,13 @@
   font-size: 0.8125rem;
 }
 
-/* Il riquadro: occupa lo spazio che resta nel piano, la pagina a 100% ci sta intera.
-   Ingrandita, ci si sposta dentro */
+/* Il riquadro: la pagina a 100% ci sta intera; ingrandita, ci si sposta dentro.
+   In una colonna prende le proporzioni della pagina, così non restano vuoti sopra e sotto */
 .vista {
   display: flex;
   min-height: 0;
-  height: min(560px, 70svh);
+  aspect-ratio: var(--proporzione);
+  max-height: 70svh;
   overflow: auto;
   padding: 10px;
   margin: -10px;
@@ -168,7 +169,8 @@
 @media (min-width: 880px) {
   .vista {
     flex: 1;
-    height: auto;
+    aspect-ratio: auto;
+    max-height: none;
   }
 }
 
@@ -310,4 +312,27 @@
   color: var(--bg);
   font-size: 1rem;
   line-height: 1;
+}
+
+/* Col dito servono bersagli più grandi */
+@media (pointer: coarse) {
+  .barra button {
+    height: 40px;
+  }
+
+  .icona {
+    width: 40px;
+  }
+
+  .scorri {
+    width: 40px;
+    height: 40px;
+  }
+
+  .via {
+    width: 32px;
+    height: 32px;
+    top: -16px;
+    right: -16px;
+  }
 }

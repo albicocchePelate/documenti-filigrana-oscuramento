@@ -50,7 +50,7 @@ export class Scarica {
 
   protected readonly documenti = computed(() => perDocumento(this.pagine()));
 
-  protected readonly uscite = computed<Uscita[]>(() => {
+  readonly uscite = computed<Uscita[]>(() => {
     const documenti = this.documenti();
     if (documenti.length > 1 && this.insieme()) {
       return [{ etichetta: 'Tutti i documenti', nomeIniziale: 'documenti', pagine: this.pagine() }];
@@ -78,7 +78,7 @@ export class Scarica {
   }
 
   /** Il file mostrato nell'anteprima: resta lo stesso finché esiste, altrimenti il primo */
-  protected readonly scelta = linkedSignal<Uscita[], string>({
+  readonly scelta = linkedSignal<Uscita[], string>({
     source: this.uscite,
     computation: (uscite, prima) =>
       uscite.some((uscita) => uscita.etichetta === prima?.value)

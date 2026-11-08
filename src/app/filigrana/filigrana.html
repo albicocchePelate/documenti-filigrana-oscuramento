@@ -13,7 +13,18 @@
     <app-calendario [(data)]="data" />
   </div>
 </div>
-<div class="stile">
+<!-- Sul telefono l'aspetto si apre a richiesta: quello di partenza va bene quasi sempre -->
+<button
+  type="button"
+  class="aspetto"
+  aria-controls="stile-filigrana"
+  [attr.aria-expanded]="aspetto()"
+  (click)="aspetto.set(!aspetto())"
+>
+  Aspetto della filigrana
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+</button>
+<div id="stile-filigrana" class="stile" [class.chiuso]="!aspetto()">
   <label class="visibilita">
     <span class="nome">Visibilità</span>
     <input

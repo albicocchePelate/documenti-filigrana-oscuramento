@@ -125,13 +125,17 @@ export class Anteprima {
       pulisci(() => osservatore.disconnect());
     });
 
-    // La miniatura della pagina mostrata resta sempre in vista
+    // La miniatura della pagina mostrata resta sempre in vista. Scorre solo la striscia:
+    // scrollIntoView sposterebbe anche la pagina, e sul telefono la si ritrova in fondo
     effect(() => {
       const indice = this.corrente();
-      this.miniature()?.nativeElement.children[indice]?.scrollIntoView({
-        block: 'nearest',
-        inline: 'nearest',
-      });
+      const striscia = this.miniature()?.nativeElement;
+      const miniatura = striscia?.children[indice];
+      if (!striscia || !miniatura) return;
+      const fuori = miniatura.getBoundingClientRect();
+      const dentro = striscia.getBoundingClientRect();
+      if (fuori.left < dentro.left) striscia.scrollLeft -= dentro.left - fuori.left;
+      else if (fuori.right > dentro.right) striscia.scrollLeft += fuori.right - dentro.right;
     });
 
     // Cambiata pagina: si apre la nuova e si chiude quella di prima

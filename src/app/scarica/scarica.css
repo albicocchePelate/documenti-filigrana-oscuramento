@@ -1,3 +1,8 @@
+:host {
+  display: block;
+  container-type: inline-size;
+}
+
 .scarica {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -109,6 +114,21 @@ input {
   font-size: 0.9375rem;
 }
 
+/* Stretta (telefono, o la plancia su desktop): il nome prende tutta la riga, il pulsante va sotto */
+@container (max-width: 440px) {
+  .file li {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .scarica-file {
+    grid-row: auto;
+    grid-column: 1;
+    order: 1;
+    min-height: 44px;
+    margin-top: 6px;
+  }
+}
+
 .scarica-file:disabled {
   background: var(--line-strong);
   color: var(--muted);
@@ -198,6 +218,13 @@ input {
 .sposta button:disabled {
   opacity: 0.25;
   cursor: default;
+}
+
+@media (pointer: coarse) {
+  .sposta button {
+    width: 44px;
+    height: 44px;
+  }
 }
 
 .sposta svg {

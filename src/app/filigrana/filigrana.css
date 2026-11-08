@@ -46,6 +46,49 @@ input {
   gap: 12px;
 }
 
+.aspetto {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 99px;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.875rem;
+}
+
+.aspetto svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: rotate 0.2s;
+}
+
+.aspetto[aria-expanded='true'] svg {
+  rotate: 180deg;
+}
+
+/* Su desktop c'è spazio: l'aspetto è sempre aperto e il pulsante non serve */
+@media (max-width: 879px) {
+  .stile.chiuso {
+    display: none;
+  }
+}
+
+@media (min-width: 880px) {
+  .aspetto {
+    display: none;
+  }
+}
+
 .visibilita {
   display: flex;
   align-items: center;

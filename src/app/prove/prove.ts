@@ -16,7 +16,7 @@ import { Verifica } from './verifica';
 
 const CODICE = 'https://github.com/albicocchePelate/documenti-filigrana-oscuramento';
 
-/** «I file restano sul tuo computer · Verifica»: Verifica apre le prove, da controllare da sé. */
+/** «I file restano sul tuo dispositivo · Verifica»: Verifica apre le prove, da controllare da sé. */
 @Component({
   selector: 'app-prove',
   templateUrl: './prove.html',

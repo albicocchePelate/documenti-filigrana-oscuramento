@@ -129,6 +129,24 @@ input {
   cursor: pointer;
 }
 
+/* Col dito servono bersagli più grandi */
+@media (pointer: coarse) {
+  .documenti li {
+    min-height: 44px;
+  }
+
+  .documenti button {
+    min-width: 40px;
+    height: 40px;
+    font-size: 1.125rem;
+  }
+
+  .aggiungi,
+  .ricomincia {
+    min-height: 40px;
+  }
+}
+
 .documenti .togli:hover {
   color: var(--danger);
 }

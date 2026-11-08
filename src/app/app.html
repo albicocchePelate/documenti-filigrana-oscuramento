@@ -51,6 +51,21 @@
 
     <section class="piano" aria-label="Anteprima">
       @if (scarica.inVista(); as uscita) {
+        <!-- Sul telefono la lista dei file sta sotto: qui si sceglie quale vedere -->
+        @if (scarica.uscite().length > 1) {
+          <div class="schede" role="tablist" aria-label="Documento da vedere">
+            @for (altra of scarica.uscite(); track altra.etichetta) {
+              <button
+                type="button"
+                role="tab"
+                [attr.aria-selected]="altra === uscita"
+                (click)="scarica.scelta.set(altra.etichetta)"
+              >
+                {{ scarica.nome(altra) }}
+              </button>
+            }
+          </div>
+        }
         <p class="titolo-piano">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />

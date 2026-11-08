@@ -111,7 +111,13 @@
   }
 
   <!-- La pagina ci sta intera a 100%; ingrandita, ci si sposta dentro. Sopra, i rettangoli da scegliere e togliere -->
-  <div #vista class="vista" [class.ingrandita]="zoom() > 1" (wheel)="rotella($event)">
+  <div
+    #vista
+    class="vista"
+    [class.ingrandita]="zoom() > 1"
+    [style.--proporzione]="attuale.larghezza / attuale.altezza"
+    (wheel)="rotella($event)"
+  >
     <div
       class="foglio"
       [class.copro]="copro()"

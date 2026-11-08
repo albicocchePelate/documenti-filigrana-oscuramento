@@ -3,13 +3,13 @@
     <rect x="5" y="11" width="14" height="9" rx="2" />
     <path d="M8 11V8a4 4 0 0 1 8 0v3" />
   </svg>
-  I file restano sul tuo computer ·
+  I file restano sul tuo dispositivo ·
   <button type="button" class="verifica" (click)="apri()">Verifica</button>
 </p>
 
 <dialog #finestra aria-labelledby="titolo-prove" (click)="cliccaSfondo($event)">
   <header>
-    <h2 id="titolo-prove">I tuoi file restano su questo computer</h2>
+    <h2 id="titolo-prove">I tuoi file restano su questo dispositivo</h2>
     <button type="button" class="chiudi" aria-label="Chiudi" (click)="chiudi()">×</button>
   </header>
 
@@ -24,7 +24,7 @@
             {{ rete.inviiBloccati() }} tentativi di collegarsi fuori sono stati fermati.
           }
         </p>
-        <p class="come">Verifica: tasto destro → Ispeziona → Rete, poi usa lo strumento.</p>
+        <p class="come solo-mouse">Verifica: tasto destro → Ispeziona → Rete, poi usa lo strumento.</p>
       </div>
     </li>
 
@@ -38,7 +38,8 @@
           {{ rete.online() ? 'Tutto succede qui, nel browser.' : 'E sta funzionando.' }}
         </p>
         @if (rete.online()) {
-          <p class="come">Verifica: stacca il Wi-Fi e continua a usarlo.</p>
+          <p class="come solo-mouse">Verifica: stacca il Wi-Fi e continua a usarlo.</p>
+          <p class="come solo-tocco">Verifica: attiva la modalità aereo e continua a usarlo.</p>
         } @else {
           <p>Sei offline e sta funzionando.</p>
         }
@@ -80,7 +81,7 @@
           La pagina dichiara <code>connect-src 'none'</code>: niente richieste di rete, nemmeno
           volendo.
         </p>
-        <p class="come">Verifica: tasto destro → Visualizza sorgente pagina, in cima.</p>
+        <p class="come solo-mouse">Verifica: tasto destro → Visualizza sorgente pagina, in cima.</p>
       </div>
     </li>
 
@@ -92,7 +93,7 @@
           I documenti stanno solo nella memoria di questa scheda: chiudendola, spariscono. Niente
           viene salvato nel browser.
         </p>
-        <p class="come">Verifica: tasto destro → Ispeziona → Applicazione → Archiviazione.</p>
+        <p class="come solo-mouse">Verifica: tasto destro → Ispeziona → Applicazione → Archiviazione.</p>
         <p class="come">Restano solo le copie che scarichi, nella cartella Download.</p>
       </div>
     </li>

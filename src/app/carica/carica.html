@@ -53,7 +53,9 @@
     (drop)="lascia($event)"
   >
     <input type="file" [accept]="formati" multiple (change)="scegli($event)" />
-    <strong>Trascina qui il documento</strong>
-    <span>o clicca per sceglierlo · JPG, PNG, HEIC, PDF, anche più file</span>
+    <strong class="solo-mouse">Trascina qui il documento</strong>
+    <span class="solo-mouse">o clicca per sceglierlo · JPG, PNG, HEIC, PDF, anche più file</span>
+    <strong class="solo-tocco">Scegli il documento</strong>
+    <span class="solo-tocco">Una foto o un PDF, anche più di uno</span>
   </label>
 }

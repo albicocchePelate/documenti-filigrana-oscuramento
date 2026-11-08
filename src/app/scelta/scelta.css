@@ -27,6 +27,13 @@ button {
   font-size: 0.875rem;
 }
 
+@media (pointer: coarse) {
+  button {
+    min-height: 40px;
+    padding: 0 14px;
+  }
+}
+
 button[aria-checked='true'] {
   border-color: var(--accent-ink);
   background: var(--accent-soft);

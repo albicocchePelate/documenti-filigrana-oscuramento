@@ -5,27 +5,69 @@
   margin-inline: auto;
 }
 
-/* Una colonna; da 880 px in su due: la plancia a sinistra, il piano di lavoro a destra */
+/* Sul telefono una colonna, un riquadro per passo, e l'anteprima prima di «Scarica»:
+   si sceglie la filigrana, si guarda e si copre, poi si scarica, sempre scendendo */
 .strumento {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 16px;
 }
 
+.plancia {
+  display: contents;
+}
+
+.plancia > * {
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--bg);
+}
+
+.piano {
+  order: 1;
+}
+
+.plancia app-scarica {
+  order: 2;
+}
+
+/* Da 880 px in su due colonne: la plancia a sinistra, il piano di lavoro a destra.
+   Alto quanto la finestra (meno i margini del body): la pagina non scorre, scorre la plancia */
 @media (min-width: 880px) {
-  /* Alto quanto la finestra (meno i margini del body): la pagina non scorre, scorre la plancia.
-     Dentro il riquadro di codice.albicocchepelate.it l'altezza è fissa */
   .strumento {
     grid-template-columns: minmax(340px, 420px) minmax(0, 1fr);
     height: max(560px, 100dvh - 48px);
   }
 
-  :host(.in-riquadro) .strumento {
-    height: 860px;
-  }
-
   .plancia {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    padding: 22px;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background: var(--bg);
     overflow-y: auto;
     overscroll-behavior: contain;
+  }
+
+  .plancia > * {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+  }
+
+  /* I passi separati da una linea sottile */
+  .plancia > * + * {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+  }
+
+  .piano,
+  .plancia app-scarica {
+    order: 0;
   }
 
   .piano {
@@ -37,22 +79,6 @@
   }
 }
 
-.plancia {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  padding: 22px;
-  border: 1px solid var(--line);
-  border-radius: 20px;
-  background: var(--bg);
-}
-
-/* I passi separati da una linea sottile */
-.plancia > * + * {
-  margin-top: 24px;
-  padding-top: 24px;
-  border-top: 1px solid var(--line);
-}
-
 .piano {
   display: flex;
   flex-direction: column;
@@ -60,6 +86,45 @@
   padding: 18px;
   border-radius: 20px;
   background: var(--surface);
+}
+
+/* Le schede dei documenti, solo sul telefono: su desktop si sceglie dalla lista a sinistra */
+.schede {
+  display: flex;
+  gap: 6px;
+  margin: -4px -18px 0;
+  padding: 0 18px 2px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.schede button {
+  flex: none;
+  max-width: 70%;
+  min-height: 40px;
+  padding: 0 14px;
+  overflow: hidden;
+  border: 1px solid var(--line-strong);
+  border-radius: 99px;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.875rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.schede button[aria-selected='true'] {
+  border-color: var(--accent-ink);
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+
+@media (min-width: 880px) {
+  .schede {
+    display: none;
+  }
 }
 
 .titolo-piano {
