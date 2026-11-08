@@ -19,12 +19,13 @@ import { Miniatura } from './miniatura';
   imports: [Miniatura],
   templateUrl: './anteprima.html',
   styleUrl: './anteprima.css',
-  host: { '(document:keydown)': 'tasto($event)' },
+  // Le frecce sfogliano quando l'anteprima ha il focus: con più file ognuno ha la sua
+  host: { tabindex: '0', '(keydown)': 'tasto($event)' },
 })
 export class Anteprima {
   readonly pagine = input.required<Pagina[]>();
   readonly filigrana = input.required<ImpostazioniFiligrana>();
-  readonly togli = output<number>();
+  readonly togli = output<Pagina>();
 
   /** La pagina mostrata: resta la stessa quando se ne aggiungono, si sposta se si toglie */
   protected readonly corrente = linkedSignal<Pagina[], number>({
@@ -72,7 +73,7 @@ export class Anteprima {
   protected confermaTogliPagina(): void {
     clearTimeout(this.attesaConferma);
     this.confermaTogli.set(false);
-    this.togli.emit(this.corrente());
+    this.togli.emit(this.pagine()[this.corrente()]);
   }
 
   protected vai(passo: number): void {

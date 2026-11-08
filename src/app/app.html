@@ -16,11 +16,15 @@
   </section>
 
   <section>
-    <h2><span class="numero">3</span>Scarica</h2>
-    <app-scarica [pagine]="pagine()" [filigrana]="filigrana()" [pronto]="completata()" />
+    <h2><span class="numero">3</span>Controlla e scarica</h2>
+    <app-scarica
+      [pagine]="pagine()"
+      [filigrana]="filigrana()"
+      [pronto]="completata()"
+      (togli)="togli($event)"
+      (sposta)="sposta($event)"
+    />
   </section>
-
-  <app-anteprima [pagine]="pagine()" [filigrana]="filigrana()" (togli)="togli($event)" />
 } @else {
   <header class="intro">
     <h1>Proteggi i documenti prima di mandarli</h1>

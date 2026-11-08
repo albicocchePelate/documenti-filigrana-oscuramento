@@ -1,6 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { Component, computed, signal } from '@angular/core';
-import { Anteprima } from './anteprima/anteprima';
 import { Carica } from './carica/carica';
 import { formato, leggiFile } from './carica/leggi';
 import { PdfProtetto } from './carica/leggi-pdf';
@@ -12,13 +11,14 @@ import {
 } from './filigrana/disegna';
 import { Filigrana } from './filigrana/filigrana';
 import { Pagina } from './pagina';
+import { perDocumento } from './scarica/salva';
 import { Scarica } from './scarica/scarica';
 
 const INIZIO = 'Solo per ';
 
 @Component({
   selector: 'app-root',
-  imports: [Anteprima, Carica, Filigrana, NgTemplateOutlet, Scarica],
+  imports: [Carica, Filigrana, NgTemplateOutlet, Scarica],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
@@ -84,8 +84,18 @@ export class App {
     this.errori.set([]);
   }
 
-  protected togli(indice: number): void {
-    this.pagine.update((pagine) => pagine.filter((_, i) => i !== indice));
+  protected togli(pagina: Pagina): void {
+    this.pagine.update((pagine) => pagine.filter((altra) => altra !== pagina));
+  }
+
+  /** Sposta tutte le pagine di un documento prima o dopo il documento vicino */
+  protected sposta({ documento, verso }: { documento: string; verso: -1 | 1 }): void {
+    const gruppi = perDocumento(this.pagine());
+    const da = gruppi.findIndex((gruppo) => gruppo[0].documento === documento);
+    const a = da + verso;
+    if (da < 0 || a < 0 || a >= gruppi.length) return;
+    [gruppi[da], gruppi[a]] = [gruppi[a], gruppi[da]];
+    this.pagine.set(gruppi.flat());
   }
 }
 

@@ -1,6 +1,7 @@
 :host {
   display: grid;
   gap: 12px;
+  border-radius: 12px;
 }
 
 .barra {

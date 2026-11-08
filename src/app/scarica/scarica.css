@@ -8,22 +8,19 @@
   gap: 10px;
 }
 
-/* Una riga per file: cosa contiene, e il suo pulsante */
-.uscite {
+/* La scheda di un file: in alto nome e Scarica, sotto le sue pagine */
+.uscita {
   display: grid;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
 }
 
-.uscite li {
+.uscita header {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 10px 10px 16px;
-  border: 1px solid var(--line);
-  border-radius: 14px;
 }
 
 .file {
@@ -84,7 +81,7 @@ input {
   font-size: 0.875rem;
 }
 
-.uscite button {
+.scarica {
   min-height: 42px;
   padding: 0 20px;
   border: 0;
@@ -94,7 +91,7 @@ input {
   font-weight: 600;
 }
 
-.uscite button:disabled {
+.scarica:disabled {
   background: var(--line-strong);
   color: var(--muted);
   cursor: default;
@@ -103,4 +100,46 @@ input {
 .nota {
   color: var(--muted);
   font-size: 0.9375rem;
+}
+
+/* Nel file unico: in che ordine stanno i documenti */
+.ordine {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0 0 0 1.5em;
+  font-size: 0.9375rem;
+}
+
+.ordine li {
+  padding-left: 4px;
+}
+
+.ordine li > * {
+  vertical-align: middle;
+}
+
+.documento {
+  font-weight: 600;
+}
+
+.pagine {
+  margin: 0 8px;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.ordine button {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  background: none;
+  color: var(--text);
+}
+
+.ordine button:disabled {
+  opacity: 0.3;
+  cursor: default;
 }

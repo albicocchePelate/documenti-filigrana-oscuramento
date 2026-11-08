@@ -14,9 +14,10 @@
   </label>
 </div>
 
-<ul class="uscite">
-  @for (uscita of uscite(); track uscita.etichetta) {
-    <li>
+<!-- Una scheda per ogni file che si otterrà, con dentro le sue pagine -->
+@for (uscita of uscite(); track uscita.etichetta) {
+  <article class="uscita">
+    <header>
       <span class="file">
         <span class="nome-file">
           <input
@@ -29,12 +30,54 @@
         </span>
         <span class="contenuto">{{ contenuto(uscita) }}</span>
       </span>
-      <button type="button" [disabled]="!pronto() || preparo()" (click)="scarica(uscita)">
+      <button
+        type="button"
+        class="scarica"
+        [disabled]="!pronto() || preparo()"
+        (click)="scarica(uscita)"
+      >
         {{ preparo() === uscita.etichetta ? 'Preparo…' : 'Scarica' }}
       </button>
-    </li>
-  }
-</ul>
+    </header>
+
+    @if (ordine().length) {
+      <ol class="ordine" aria-label="Ordine dei documenti nel file">
+        @for (
+          documento of ordine();
+          track documento[0].documento;
+          let primo = $first, ultimo = $last
+        ) {
+          <li>
+            <span class="documento">{{ documento[0].documento }}</span>
+            <span class="pagine">{{ quante(documento) }}</span>
+            <button
+              type="button"
+              [attr.aria-label]="'Sposta prima ' + documento[0].documento"
+              [disabled]="primo"
+              (click)="sposta.emit({ documento: documento[0].documento, verso: -1 })"
+            >
+              ↑
+            </button>
+            <button
+              type="button"
+              [attr.aria-label]="'Sposta dopo ' + documento[0].documento"
+              [disabled]="ultimo"
+              (click)="sposta.emit({ documento: documento[0].documento, verso: 1 })"
+            >
+              ↓
+            </button>
+          </li>
+        }
+      </ol>
+    }
+
+    <app-anteprima
+      [pagine]="uscita.pagine"
+      [filigrana]="filigrana()"
+      (togli)="togli.emit($event)"
+    />
+  </article>
+}
 
 @if (!pronto()) {
   <p class="nota">Completa prima la scritta sulla copia.</p>

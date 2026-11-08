@@ -1,4 +1,5 @@
-import { Component, computed, input, signal } from '@angular/core';
+import { Component, computed, input, output, signal } from '@angular/core';
+import { Anteprima } from '../anteprima/anteprima';
 import { ImpostazioniFiligrana } from '../filigrana/disegna';
 import { Pagina } from '../pagina';
 import { Opzione, Scelta } from '../scelta/scelta';
@@ -13,7 +14,7 @@ interface Uscita {
 
 @Component({
   selector: 'app-scarica',
-  imports: [Scelta],
+  imports: [Anteprima, Scelta],
   templateUrl: './scarica.html',
   styleUrl: './scarica.css',
 })
@@ -22,6 +23,8 @@ export class Scarica {
   readonly filigrana = input.required<ImpostazioniFiligrana>();
   /** Si scarica solo dopo aver completato la scritta */
   readonly pronto = input.required<boolean>();
+  readonly togli = output<Pagina>();
+  readonly sposta = output<{ documento: string; verso: -1 | 1 }>();
 
   protected readonly formato = signal<'pdf' | 'jpg'>('pdf');
   /** Con più documenti: separati (di solito è quello che serve) o tutti in un file */
@@ -72,9 +75,18 @@ export class Scarica {
     return `${senzaVietati(this.aggiunta())}.${estensione}`;
   }
 
+  /** Nel file unico: i documenti che contiene, nell'ordine in cui compaiono */
+  protected readonly ordine = computed(() =>
+    this.insieme() && this.documenti().length > 1 ? this.documenti() : [],
+  );
+
   /** «2 pagine», oppure «2 immagini in uno ZIP» */
   protected contenuto(uscita: Uscita): string {
-    const quante = uscita.pagine.length;
+    return this.quante(uscita.pagine);
+  }
+
+  protected quante(pagine: Pagina[]): string {
+    const quante = pagine.length;
     if (this.formato() === 'pdf') return quante === 1 ? '1 pagina' : `${quante} pagine`;
     return quante === 1 ? '1 immagine' : `${quante} immagini in uno ZIP`;
   }
