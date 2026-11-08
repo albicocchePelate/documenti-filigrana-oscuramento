@@ -1,8 +1,11 @@
 import {
   Component,
   ElementRef,
+  Injector,
+  afterNextRender,
   computed,
   effect,
+  inject,
   input,
   linkedSignal,
   output,
@@ -81,6 +84,13 @@ export class Anteprima {
   private attesaConferma?: ReturnType<typeof setTimeout>;
 
   private readonly grande = viewChild<ElementRef<HTMLCanvasElement>>('grande');
+
+  /** La striscia delle miniature: se non ci stanno tutte, compaiono le frecce */
+  private readonly miniature = viewChild<ElementRef<HTMLElement>>('miniature');
+  protected readonly scorre = signal(false);
+  protected readonly inizioStriscia = signal(true);
+  protected readonly fineStriscia = signal(false);
+  private readonly injector = inject(Injector);
   private readonly fontCaricato = signal(false);
 
   constructor() {
@@ -95,6 +105,29 @@ export class Anteprima {
       );
       osservatore.observe(vista);
       pulisci(() => osservatore.disconnect());
+    });
+
+    // Si rimisura quando cambia la striscia o una miniatura (che prende la sua misura disegnandosi)
+    effect((pulisci) => {
+      const striscia = this.miniature()?.nativeElement;
+      if (!striscia) return;
+      this.pagine();
+      const osservatore = new ResizeObserver(() => this.misuraStriscia());
+      osservatore.observe(striscia);
+      afterNextRender(
+        () => [...striscia.children].forEach((miniatura) => osservatore.observe(miniatura)),
+        { injector: this.injector },
+      );
+      pulisci(() => osservatore.disconnect());
+    });
+
+    // La miniatura della pagina mostrata resta sempre in vista
+    effect(() => {
+      const indice = this.corrente();
+      this.miniature()?.nativeElement.children[indice]?.scrollIntoView({
+        block: 'nearest',
+        inline: 'nearest',
+      });
     });
 
     // La pagina grande si ridisegna quando cambia lei o la filigrana
@@ -200,6 +233,20 @@ export class Anteprima {
     if (!evento.ctrlKey) return;
     evento.preventDefault();
     this.ingrandisci(evento.deltaY < 0 ? 1 : -1);
+  }
+
+  protected misuraStriscia(): void {
+    const striscia = this.miniature()?.nativeElement;
+    if (!striscia) return;
+    this.scorre.set(striscia.scrollWidth > striscia.clientWidth + 1);
+    this.inizioStriscia.set(striscia.scrollLeft <= 1);
+    this.fineStriscia.set(striscia.scrollLeft + striscia.clientWidth >= striscia.scrollWidth - 1);
+  }
+
+  /** Di quasi una schermata di miniature, lasciandone in vista un pezzo per orientarsi */
+  protected scorriMiniature(verso: -1 | 1): void {
+    const striscia = this.miniature()!.nativeElement;
+    striscia.scrollBy({ left: verso * striscia.clientWidth * 0.8, behavior: 'smooth' });
   }
 
   protected vai(passo: number): void {

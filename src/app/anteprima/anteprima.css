@@ -199,13 +199,60 @@
     0 10px 30px rgb(0 0 0 / 0.1);
 }
 
+.striscia {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
 .miniature {
   display: flex;
+  flex: 1;
   gap: 8px;
+  min-width: 0;
   margin: 0;
-  padding: 2px 2px 6px;
+  padding: 2px;
   overflow-x: auto;
   list-style: none;
+  scrollbar-width: none;
+}
+
+.miniature li {
+  flex: none;
+}
+
+.scorri {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.scorri:hover:not(:disabled) {
+  border-color: var(--accent-ink);
+  color: var(--accent-ink);
+}
+
+.scorri:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.scorri svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .miniature button {

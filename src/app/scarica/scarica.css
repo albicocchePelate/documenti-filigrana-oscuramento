@@ -1,5 +1,6 @@
 .scarica {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 18px;
 }
 
@@ -40,6 +41,7 @@ input {
 /* Le righe dei file: quella scelta è evidenziata, e la sua anteprima è a destra */
 .file {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 10px;
   margin: 0;
   padding: 0;
@@ -48,7 +50,7 @@ input {
 
 .file li {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 4px 12px;
   padding: 12px 12px 10px 14px;

@@ -163,20 +163,45 @@
   </div>
 
   @if (pagine().length > 1) {
-    <ul class="miniature">
-      @for (pagina of pagine(); track pagina) {
-        <li>
-          <button
-            type="button"
-            [class.scelta]="$index === corrente()"
-            [attr.aria-label]="'Vai a ' + pagina.nome"
-            [attr.aria-current]="$index === corrente() ? 'true' : null"
-            (click)="mostra($index)"
-          >
-            <canvas [appMiniatura]="pagina"></canvas>
-          </button>
-        </li>
+    <!-- Le miniature: con tante pagine scorrono, con le frecce ai lati -->
+    <div class="striscia">
+      @if (scorre()) {
+        <button
+          type="button"
+          class="scorri"
+          aria-label="Miniature precedenti"
+          [disabled]="inizioStriscia()"
+          (click)="scorriMiniature(-1)"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+        </button>
       }
-    </ul>
+      <ul #miniature class="miniature" (scroll)="misuraStriscia()">
+        @for (pagina of pagine(); track pagina) {
+          <li>
+            <button
+              type="button"
+              [class.scelta]="$index === corrente()"
+              [attr.aria-label]="'Vai a ' + pagina.nome"
+              [attr.aria-current]="$index === corrente() ? 'true' : null"
+              (click)="mostra($index)"
+            >
+              <canvas [appMiniatura]="pagina"></canvas>
+            </button>
+          </li>
+        }
+      </ul>
+      @if (scorre()) {
+        <button
+          type="button"
+          class="scorri"
+          aria-label="Miniature successive"
+          [disabled]="fineStriscia()"
+          (click)="scorriMiniature(1)"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+        </button>
+      }
+    </div>
   }
 }

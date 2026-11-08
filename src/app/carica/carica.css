@@ -1,5 +1,6 @@
 :host {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 10px;
 }
 
@@ -46,6 +47,7 @@ input {
 /* Dopo il caricamento: l'elenco dei documenti, ognuno si può togliere */
 .riga {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 8px;
   padding: 8px;
   border: 1px solid var(--line);
@@ -81,6 +83,7 @@ input {
 
 .documenti {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 2px;
   margin: 0;
   padding: 0;

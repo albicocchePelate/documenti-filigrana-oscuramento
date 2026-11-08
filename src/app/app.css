@@ -15,7 +15,7 @@
   /* Alto quanto la finestra (meno i margini del body): la pagina non scorre, scorre la plancia.
      Dentro il riquadro di codice.albicocchepelate.it l'altezza è fissa */
   .strumento {
-    grid-template-columns: minmax(340px, 420px) 1fr;
+    grid-template-columns: minmax(340px, 420px) minmax(0, 1fr);
     height: max(560px, 100dvh - 48px);
   }
 
@@ -39,6 +39,7 @@
 
 .plancia {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   padding: 22px;
   border: 1px solid var(--line);
   border-radius: 20px;
@@ -171,6 +172,7 @@ app-carica:not(.strumento app-carica) {
 
 section {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 16px;
 }
 
