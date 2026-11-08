@@ -3,7 +3,7 @@
     <span class="domanda">Come verifico che i file non escono dal computer?</span>
     <span class="stato">
       {{ rete.altriSiti() === 0 ? 'Nessun dato uscito' : 'Richieste verso altri siti: vedi sotto' }}
-      · {{ rete.online() ? 'online' : 'offline, e funziona' }}
+      · <span class="connessione">{{ rete.online() ? 'online' : 'offline' }}</span>
     </span>
   </summary>
 

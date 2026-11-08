@@ -38,6 +38,11 @@ details[open] summary::before {
   font-size: 0.8125rem;
 }
 
+.connessione {
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+
 .prove {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
