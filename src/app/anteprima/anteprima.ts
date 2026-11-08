@@ -24,7 +24,12 @@ const ZOOM = [1, 1.5, 2, 3, 4];
   templateUrl: './anteprima.html',
   styleUrl: './anteprima.css',
   // Le frecce sfogliano quando l'anteprima ha il focus: con più file ognuno ha la sua
-  host: { tabindex: '0', '(keydown)': 'tasto($event)' },
+  // Un clic fuori dalla zona scelta la deseleziona (il clic sulla zona non arriva fin qui)
+  host: {
+    tabindex: '0',
+    '(keydown)': 'tasto($event)',
+    '(document:pointerdown)': 'zonaScelta.set(null)',
+  },
 })
 export class Anteprima {
   readonly pagine = input.required<Pagina[]>();
