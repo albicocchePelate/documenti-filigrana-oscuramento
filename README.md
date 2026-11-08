@@ -24,8 +24,7 @@ Si può verificare in diversi modi, descritti anche nella finestra «Verifica» 
 - funziona senza connessione a internet;
 - negli strumenti per sviluppatori del browser, alla voce Rete, non compare nessuna richiesta;
 - la pagina dichiara al browser di bloccare qualsiasi invio di dati (`connect-src 'none'`, in
-  cima a [`src/index.html`](src/index.html));
-- il codice è tutto qui.
+  cima a [`src/index.html`]);
 
 Le copie sono ridisegnate da zero e non contengono i dati nascosti dell'originale: posizione,
 dispositivo, data di scatto, autore, programma usato. Lo strumento mostra quali dati aveva ogni
