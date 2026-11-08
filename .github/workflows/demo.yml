@@ -1,0 +1,32 @@
+# A ogni modifica su main: compila lo strumento e lo mette nel ramo demo, cartella demo/.
+# Da lì lo prende codice.albicocchepelate.it.
+name: Demo
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  demo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Pubblica nel ramo demo
+        run: |
+          mkdir -p ramo/demo
+          cp -r dist/documenti-filigrana-oscuramento/browser/. ramo/demo/
+          cd ramo
+          git init -q -b demo
+          git add .
+          git -c user.name="github-actions[bot]" -c user.email="41898283+github-actions[bot]@users.noreply.github.com" \
+            commit -q -m "Demo da ${GITHUB_SHA::7}"
+          git push -q --force "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" demo
