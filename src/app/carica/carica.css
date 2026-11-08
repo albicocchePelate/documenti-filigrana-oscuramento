@@ -40,36 +40,20 @@ input {
 
 .zona span,
 .nota,
-.riepilogo {
-  color: var(--muted);
-  font-size: 0.9375rem;
-}
-
 .nota {
   text-align: center;
 }
 
-/* Dopo il caricamento: una riga sola */
+/* Dopo il caricamento: l'elenco dei documenti, ognuno si può togliere */
 .riga {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px 12px;
-  padding: 6px 6px 6px 14px;
+  display: grid;
+  gap: 8px;
+  padding: 8px;
   border: 1px solid var(--line);
   border-radius: 14px;
   transition:
     border-color 0.2s,
     background-color 0.2s;
-}
-
-.riepilogo {
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 0.875rem;
 }
 
 .aggiungi,
@@ -94,4 +78,68 @@ input {
 
 .ricomincia:hover {
   color: var(--text);
+}
+
+.documenti {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.documenti li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 0 4px 0 8px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+}
+
+.documenti li:hover {
+  background: var(--surface);
+}
+
+.documenti .nome {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.documenti .pagine {
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+
+.documenti button {
+  min-width: 28px;
+  height: 28px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 99px;
+  background: none;
+  color: var(--muted);
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.documenti .togli:hover {
+  color: var(--danger);
+}
+
+.documenti .si {
+  background: var(--danger);
+  color: var(--bg);
+  font-weight: 600;
+}
+
+.azioni {
+  display: flex;
+  gap: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--line);
 }

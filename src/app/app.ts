@@ -44,13 +44,13 @@ export class App {
     testo: this.testo(),
   }));
 
-  /** «3 pagine da 2 file» */
-  protected readonly riepilogo = computed(() => {
-    const pagine = this.pagine().length;
-    const file = new Set(this.pagine().map((pagina) => pagina.documento)).size;
-    const quante = pagine === 1 ? '1 pagina' : `${pagine} pagine`;
-    return file > 1 ? `${quante} da ${file} file` : quante;
-  });
+  /** I documenti caricati, per l'elenco del passo 1 */
+  protected readonly documenti = computed(() =>
+    perDocumento(this.pagine()).map((pagine) => ({
+      nome: pagine[0].documento,
+      pagine: pagine.length,
+    })),
+  );
 
   protected async aggiungi(file: File[]): Promise<void> {
     const errori: string[] = [];
@@ -91,6 +91,11 @@ export class App {
     this.pagine.update((pagine) =>
       pagine.map((altra) => (altra === pagina ? { ...pagina, zone } : altra)),
     );
+  }
+
+  protected togliDocumento(nome: string): void {
+    this.pagine.update((pagine) => pagine.filter((pagina) => pagina.documento !== nome));
+    this.metadati.update(({ [nome]: _, ...altri }) => altri);
   }
 
   protected togli(pagina: Pagina): void {

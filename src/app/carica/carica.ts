@@ -8,10 +8,14 @@ import { Component, input, output, signal } from '@angular/core';
 })
 export class Carica {
   readonly compatta = input(false);
-  /** «3 pagine da 2 file» */
-  readonly riepilogo = input('');
+  /** I documenti già caricati, con quante pagine ha ciascuno */
+  readonly documenti = input<{ nome: string; pagine: number }[]>([]);
   readonly caricati = output<File[]>();
   readonly ricomincia = output<void>();
+  readonly togliDocumento = output<string>();
+
+  /** Il documento per cui si è chiesto di toglierlo: si aspetta la conferma */
+  protected readonly daTogliere = signal<string | null>(null);
 
   /** C'è un file trascinato sopra la zona */
   protected readonly sopra = signal(false);

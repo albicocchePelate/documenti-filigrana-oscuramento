@@ -6,9 +6,10 @@
         <h2><span class="numero">1</span>Documenti</h2>
         <app-carica
           [compatta]="true"
-          [riepilogo]="riepilogo()"
+          [documenti]="documenti()"
           (caricati)="aggiungi($event)"
           (ricomincia)="ricomincia()"
+          (togliDocumento)="togliDocumento($event)"
         />
         <ng-container *ngTemplateOutlet="stato" />
       </section>

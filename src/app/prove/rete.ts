@@ -2,12 +2,10 @@ import { Injectable, signal } from '@angular/core';
 
 /**
  * Cosa passa per la rete da quando la pagina è aperta, contato dal browser stesso:
- * i file del sito (il codice dello strumento), le richieste verso altri siti e
- * i tentativi di invio che la regola della pagina ha bloccato.
+ * le richieste verso altri siti e i tentativi di invio che la regola della pagina ha bloccato.
  */
 @Injectable({ providedIn: 'root' })
 export class Rete {
-  readonly fileDelSito = signal(0);
   readonly altriSiti = signal(0);
   readonly inviiBloccati = signal(0);
   readonly online = signal(navigator.onLine);
@@ -15,12 +13,15 @@ export class Rete {
   constructor() {
     new PerformanceObserver((elenco) => {
       for (const voce of elenco.getEntries()) {
-        if (new URL(voce.name).origin === location.origin) this.fileDelSito.update((n) => n + 1);
-        else this.altriSiti.update((n) => n + 1);
+        // Le richieste a questo sito sono il codice dello strumento che arriva; contano le altre
+        if (new URL(voce.name).origin !== location.origin) this.altriSiti.update((n) => n + 1);
       }
     }).observe({ type: 'resource', buffered: true });
 
     document.addEventListener('securitypolicyviolation', (evento) => {
+      // In locale il server di sviluppo di Angular apre una connessione per ricaricare la pagina
+      // (ws://localhost): la regola la blocca, ma non è un invio. Online non esiste.
+      if (evento.blockedURI.startsWith('ws://localhost')) return;
       if (/connect-src|form-action/.test(evento.effectiveDirective))
         this.inviiBloccati.update((n) => n + 1);
     });

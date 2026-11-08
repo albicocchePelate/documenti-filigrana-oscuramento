@@ -6,12 +6,43 @@
     (dragleave)="sopra.set(false)"
     (drop)="lascia($event)"
   >
-    <span class="riepilogo">{{ riepilogo() }}</span>
-    <label class="aggiungi">
-      <input type="file" [accept]="formati" multiple (change)="scegli($event)" />
-      Aggiungi altri
-    </label>
-    <button type="button" class="ricomincia" (click)="ricomincia.emit()">Ricomincia</button>
+    <ul class="documenti">
+      @for (documento of documenti(); track documento.nome) {
+        <li>
+          @if (daTogliere() === documento.nome) {
+            <span class="nome">Togli «{{ documento.nome }}»?</span>
+            <button
+              type="button"
+              class="si"
+              (click)="togliDocumento.emit(documento.nome); daTogliere.set(null)"
+            >
+              Sì
+            </button>
+            <button type="button" class="no" (click)="daTogliere.set(null)">No</button>
+          } @else {
+            <span class="nome">{{ documento.nome }}</span>
+            <span class="pagine">{{
+              documento.pagine === 1 ? '1 pagina' : documento.pagine + ' pagine'
+            }}</span>
+            <button
+              type="button"
+              class="togli"
+              [attr.aria-label]="'Togli ' + documento.nome"
+              (click)="daTogliere.set(documento.nome)"
+            >
+              ×
+            </button>
+          }
+        </li>
+      }
+    </ul>
+    <div class="azioni">
+      <label class="aggiungi">
+        <input type="file" [accept]="formati" multiple (change)="scegli($event)" />
+        Aggiungi altri
+      </label>
+      <button type="button" class="ricomincia" (click)="ricomincia.emit()">Ricomincia</button>
+    </div>
   </div>
 } @else {
   <label

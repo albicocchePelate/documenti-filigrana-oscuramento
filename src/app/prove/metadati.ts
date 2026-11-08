@@ -26,7 +26,9 @@ async function dellaFoto(file: File): Promise<string[]> {
     dati.DateTimeOriginal && `Scattata il ${giorno(dati.DateTimeOriginal)}`,
     dati.Software && `Programma: ${dati.Software}`,
     dati.Artist && `Autore: ${dati.Artist}`,
-  ].filter((riga): riga is string => Boolean(riga));
+  ]
+    .filter((riga): riga is string => Boolean(riga))
+    .map(breve);
 }
 
 async function delPdf(file: File): Promise<string[]> {
@@ -41,7 +43,14 @@ async function delPdf(file: File): Promise<string[]> {
     info['Creator'] && `Creato con: ${info['Creator']}`,
     info['Producer'] && `Programma: ${info['Producer']}`,
     data && `Creato il ${giorno(data)}`,
-  ].filter((riga): riga is string => Boolean(riga));
+  ]
+    .filter((riga): riga is string => Boolean(riga))
+    .map(breve);
+}
+
+/** Certi valori sono lunghissimi (il nome completo di un programma): basta l'inizio */
+function breve(riga: string): string {
+  return riga.length > 48 ? `${riga.slice(0, 46)}…` : riga;
 }
 
 function giorno(data: Date): string {
