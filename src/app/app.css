@@ -12,15 +12,28 @@
 }
 
 @media (min-width: 880px) {
+  /* Alto quanto la finestra (meno i margini del body): la pagina non scorre, scorre la plancia.
+     Dentro il riquadro di codice.albicocchepelate.it l'altezza è fissa */
   .strumento {
     grid-template-columns: minmax(340px, 420px) 1fr;
-    align-items: start;
+    height: max(560px, 100dvh - 48px);
   }
 
-  /* Il piano resta fermo mentre la plancia scorre */
+  :host(.in-riquadro) .strumento {
+    height: 860px;
+  }
+
+  .plancia {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
   .piano {
-    position: sticky;
-    top: 16px;
+    min-height: 0;
+  }
+
+  .piano app-anteprima {
+    flex: 1;
   }
 }
 
@@ -40,24 +53,47 @@
 }
 
 .piano {
-  display: grid;
-  gap: 10px;
-  align-content: start;
-  min-height: 420px;
-  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px;
   border-radius: 20px;
   background: var(--surface);
 }
 
 .titolo-piano {
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 4px 10px;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
   font-size: 0.9375rem;
 }
 
+/* L'icona del file, nello stesso stile dei numeri dei passi */
+.titolo-piano svg {
+  width: 30px;
+  height: 30px;
+  flex: none;
+  padding: 6px;
+  border-radius: 9px;
+  background: var(--accent-soft);
+  fill: none;
+  stroke: var(--accent-ink);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.titolo-piano strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-title);
+  font-weight: 600;
+}
+
 .titolo-piano span {
+  flex: none;
   color: var(--muted);
   font-size: 0.875rem;
 }

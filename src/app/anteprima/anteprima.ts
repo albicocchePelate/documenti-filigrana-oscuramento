@@ -13,8 +13,6 @@ import { ImpostazioniFiligrana, disegnaPagina, fontPronto } from '../filigrana/d
 import { Pagina, Zona } from '../pagina';
 import { Miniatura } from './miniatura';
 
-/** L'altezza massima della pagina a zoom 100%: sta nel piano senza far scorrere la pagina */
-const ALTEZZA_VISTA = 540;
 const ZOOM = [1, 1.5, 2, 3, 4];
 
 /** Una pagina alla volta, grande, con sotto le miniature per saltare da una all'altra. */
@@ -47,14 +45,15 @@ export class Anteprima {
 
   /** Zoom: 1 è la pagina intera nel riquadro */
   protected readonly zoom = signal(1);
-  /** Quanto è largo il riquadro, per calcolare la misura della pagina */
-  private readonly spazio = signal(0);
+  /** Quanto è grande il riquadro, per calcolare la misura della pagina */
+  private readonly spazio = signal({ larghezza: 0, altezza: 0 });
   /** La larghezza della pagina a schermo: intera nel riquadro, per lo zoom */
   protected readonly larghezza = computed(() => {
     const pagina = this.pagina();
     if (!pagina) return 0;
     const proporzione = pagina.immagine.width / pagina.immagine.height;
-    return Math.min(this.spazio(), ALTEZZA_VISTA * proporzione) * this.zoom();
+    const { larghezza, altezza } = this.spazio();
+    return Math.min(larghezza, altezza * proporzione) * this.zoom();
   });
   private readonly vista = viewChild<ElementRef<HTMLElement>>('vista');
   /** Trascinando la pagina ingrandita ci si sposta: da dove è partito il trascinamento */
@@ -91,7 +90,9 @@ export class Anteprima {
     effect((pulisci) => {
       const vista = this.vista()?.nativeElement;
       if (!vista) return;
-      const osservatore = new ResizeObserver(([voce]) => this.spazio.set(voce.contentRect.width));
+      const osservatore = new ResizeObserver(([voce]) =>
+        this.spazio.set({ larghezza: voce.contentRect.width, altezza: voce.contentRect.height }),
+      );
       osservatore.observe(vista);
       pulisci(() => osservatore.disconnect());
     });

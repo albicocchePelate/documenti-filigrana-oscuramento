@@ -22,8 +22,11 @@ import { Scarica } from './scarica/scarica';
   imports: [Anteprima, Carica, Filigrana, NgTemplateOutlet, Prove, Scarica],
   templateUrl: './app.html',
   styleUrl: './app.css',
+  host: { '[class.in-riquadro]': 'inRiquadro' },
 })
 export class App {
+  /** Dentro la pagina del progetto su codice.albicocchepelate.it, in un riquadro */
+  protected readonly inRiquadro = window.parent !== window;
   protected readonly pagine = signal<Pagina[]>([]);
   /** Si parte da «Solo per »: di solito basta completarla */
   protected readonly scritta = signal('Solo per ');

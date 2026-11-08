@@ -54,6 +54,10 @@
     <section class="piano" aria-label="Anteprima">
       @if (scarica.inVista(); as uscita) {
         <p class="titolo-piano">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+            <path d="M14 3v5h5" />
+          </svg>
           <strong>{{ scarica.nome(uscita) }}{{ scarica.coda(uscita) }}</strong>
           <span>{{ scarica.contenuto(uscita) }}</span>
         </p>

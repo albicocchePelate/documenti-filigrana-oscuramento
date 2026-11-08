@@ -1,41 +1,33 @@
 @if (pagina(); as attuale) {
+  <!-- La barra degli strumenti: pagine, copri, zoom, togli -->
   <div class="barra">
     @if (pagine().length > 1) {
-      <button
-        type="button"
-        class="freccia"
-        aria-label="Pagina precedente"
-        [disabled]="corrente() === 0"
-        (click)="vai(-1)"
-      >
-        ‹
-      </button>
-    }
-    @if (pagine().length > 1) {
-      <span class="didascalia">{{ didascalia() }}</span>
-    }
-    @if (pagine().length > 1) {
-      <button
-        type="button"
-        class="freccia"
-        aria-label="Pagina successiva"
-        [disabled]="corrente() === pagine().length - 1"
-        (click)="vai(1)"
-      >
-        ›
-      </button>
-    }
-    @if (confermaTogli()) {
-      <span class="conferma" role="group" aria-label="Conferma">
-        <button type="button" class="annulla" (click)="confermaTogli.set(false)">Annulla</button>
-        <button type="button" class="si" (click)="confermaTogliPagina()">Sì, togli</button>
+      <span class="gruppo">
+        <button
+          type="button"
+          class="icona"
+          aria-label="Pagina precedente"
+          [disabled]="corrente() === 0"
+          (click)="vai(-1)"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+        </button>
+        <span class="didascalia" [title]="didascalia()">
+          {{ corrente() + 1 }} / {{ pagine().length }}
+        </span>
+        <button
+          type="button"
+          class="icona"
+          aria-label="Pagina successiva"
+          [disabled]="corrente() === pagine().length - 1"
+          (click)="vai(1)"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+        </button>
       </span>
-    } @else {
-      <button type="button" class="togli" (click)="chiediTogli()">Togli questa pagina</button>
+      <span class="separatore"></span>
     }
-  </div>
 
-  <div class="strumenti">
     <button
       type="button"
       class="copri"
@@ -46,36 +38,72 @@
         <rect x="4" y="7" width="16" height="10" rx="1.5" />
       </svg>
       Copri una zona
+      @if (attuale.zone.length) {
+        <span class="conteggio">{{ attuale.zone.length }}</span>
+      }
     </button>
     @if (attuale.zone.length) {
-      <span class="conteggio">
-        {{ attuale.zone.length === 1 ? '1 zona coperta' : attuale.zone.length + ' zone coperte' }}
-      </span>
-      <button type="button" class="annulla-zona" (click)="annullaUltima()">Annulla l'ultima</button>
+      <button
+        type="button"
+        class="icona"
+        aria-label="Annulla l'ultima zona"
+        title="Annulla l'ultima zona"
+        (click)="annullaUltima()"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M9 14L4 9l5-5" />
+          <path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11" />
+        </svg>
+      </button>
     }
+
     <span class="zoom" role="group" aria-label="Zoom">
       <button
         type="button"
+        class="icona"
         aria-label="Rimpicciolisci"
         [disabled]="zoom() === 1"
         (click)="ingrandisci(-1)"
       >
-        −
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12h12" /></svg>
       </button>
       <span class="percentuale">{{ zoom() * 100 }}%</span>
       <button
         type="button"
+        class="icona"
         aria-label="Ingrandisci"
         [disabled]="zoom() === 4"
         (click)="ingrandisci(1)"
       >
-        +
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12h12M12 6v12" /></svg>
       </button>
       @if (zoom() > 1) {
-        <button type="button" class="adatta" (click)="zoom.set(1)">Adatta</button>
+        <button type="button" class="testo" (click)="zoom.set(1)">Adatta</button>
       }
     </span>
+
+    <span class="separatore"></span>
+    @if (confermaTogli()) {
+      <span class="conferma" role="group" aria-label="Conferma">
+        Togliere la pagina?
+        <button type="button" class="testo" (click)="confermaTogli.set(false)">No</button>
+        <button type="button" class="si" (click)="confermaTogliPagina()">Sì</button>
+      </span>
+    } @else {
+      <button
+        type="button"
+        class="icona togli"
+        aria-label="Togli questa pagina"
+        title="Togli questa pagina"
+        (click)="chiediTogli()"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3" />
+        </svg>
+      </button>
+    }
   </div>
+
   @if (copro()) {
     <p class="suggerimento">
       Trascina sulla pagina sopra i dati da nascondere. Il dato sotto viene cancellato, non solo
