@@ -5,8 +5,6 @@ busta paga, contratto. Sulla copia si aggiunge una filigrana con scopo e data, p
 per affitto via Roma 10 · 12/11/2026», e si coprono i dati che non servono. Se la copia viene
 usata per altro, la scritta lo rende evidente.
 
-Si usa su [codice.albicocchepelate.it](https://codice.albicocchepelate.it/documenti-filigrana-oscuramento).
-
 ## Cosa fa
 
 - Legge JPG, PNG, HEIC e PDF, anche più file insieme. I PDF vengono aperti pagina per pagina.
