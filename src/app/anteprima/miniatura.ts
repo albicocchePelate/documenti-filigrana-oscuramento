@@ -14,7 +14,7 @@ export class Miniatura {
   constructor() {
     const foglio = inject<ElementRef<HTMLCanvasElement>>(ElementRef).nativeElement;
     effect(() => {
-      const immagine = this.pagina().immagine;
+      const immagine = this.pagina().miniatura;
       foglio.width = LARGHEZZA;
       foglio.height = Math.round((LARGHEZZA * immagine.height) / immagine.width);
       foglio.getContext('2d')!.drawImage(immagine, 0, 0, foglio.width, foglio.height);

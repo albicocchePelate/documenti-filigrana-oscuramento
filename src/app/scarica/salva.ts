@@ -1,5 +1,5 @@
 import { ImpostazioniFiligrana, disegnaPagina, fontPronto } from '../filigrana/disegna';
-import { Pagina } from '../pagina';
+import { Pagina, apriPagina, liberaFoglio } from '../pagina';
 import { creaPdf } from './crea-pdf';
 import { creaZip } from './crea-zip';
 
@@ -22,8 +22,8 @@ export async function salvaPdf(
   for (const pagina of pagine) {
     pronte.push({
       jpeg: await inJpeg(pagina, filigrana),
-      larghezza: pagina.immagine.width,
-      altezza: pagina.immagine.height,
+      larghezza: pagina.larghezza,
+      altezza: pagina.altezza,
     });
   }
   salva(creaPdf(pronte), `${nome}.pdf`);
@@ -47,14 +47,20 @@ export async function salvaImmagini(
   salva(creaZip(immagini), `${nome}.zip`);
 }
 
-/** La pagina con la filigrana, in JPEG. Il JPEG rifatto da zero non porta con sé metadati. */
+/**
+ * La pagina con la filigrana, in JPEG. Il JPEG rifatto da zero non porta con sé metadati.
+ * Si apre una pagina alla volta e la si chiude subito: anche i documenti lunghi stanno in memoria.
+ */
 async function inJpeg(pagina: Pagina, filigrana: ImpostazioniFiligrana): Promise<Uint8Array> {
   await fontPronto;
+  const immagine = await apriPagina(pagina);
   const foglio = document.createElement('canvas');
-  disegnaPagina(foglio, pagina, filigrana);
+  disegnaPagina(foglio, immagine, pagina.zone, filigrana);
+  immagine.close();
   const jpeg = await new Promise<Blob>((pronta, errore) =>
     foglio.toBlob((blob) => (blob ? pronta(blob) : errore()), 'image/jpeg', 0.9),
   );
+  liberaFoglio(foglio);
   return new Uint8Array(await jpeg.arrayBuffer());
 }
 

@@ -1,4 +1,4 @@
-import { LATO_MASSIMO, Pagina } from '../pagina';
+import { LATO_MASSIMO, Pagina, creaPagina } from '../pagina';
 import { apriPdf } from './apri-pdf';
 
 /** Il PDF protetto da password: lo diciamo con parole chiare */
@@ -26,14 +26,10 @@ export async function leggiPdf(
     foglio.width = Math.round(vista.width);
     foglio.height = Math.round(vista.height);
     await pagina.render({ canvas: foglio, viewport: vista }).promise;
+    pagina.cleanup();
 
     const suffisso = documento.numPages > 1 ? `-${numero}` : '';
-    pagine.push({
-      documento: nome,
-      nome: `${nome}${suffisso}`,
-      immagine: await createImageBitmap(foglio),
-      zone: [],
-    });
+    pagine.push(await creaPagina(foglio, nome, `${nome}${suffisso}`));
   }
   await documento.destroy();
   return pagine;

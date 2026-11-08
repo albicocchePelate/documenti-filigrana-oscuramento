@@ -136,8 +136,10 @@ export class Calendario {
     if (!this.host.nativeElement.contains(evento.target as Node)) this.aperto.set(false);
   }
 
+  /** Su iPhone e Mac Safari toccare un pulsante non gli dà il focus: senza destinazione non si chiude */
   protected fuocoFuori(evento: FocusEvent): void {
-    if (!this.host.nativeElement.contains(evento.relatedTarget as Node)) this.aperto.set(false);
+    const verso = evento.relatedTarget as Node | null;
+    if (verso && !this.host.nativeElement.contains(verso)) this.aperto.set(false);
   }
 
   /** Chiude e torna sul campo, così la tastiera non si perde */

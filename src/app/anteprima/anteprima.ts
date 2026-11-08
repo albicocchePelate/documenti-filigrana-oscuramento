@@ -54,7 +54,7 @@ export class Anteprima {
   protected readonly larghezza = computed(() => {
     const pagina = this.pagina();
     if (!pagina) return 0;
-    const proporzione = pagina.immagine.width / pagina.immagine.height;
+    const proporzione = pagina.larghezza / pagina.altezza;
     const { larghezza, altezza } = this.spazio();
     return Math.min(larghezza, altezza * proporzione) * this.zoom();
   });
@@ -68,6 +68,10 @@ export class Anteprima {
     computation: (pagine, prima) => Math.max(0, Math.min(prima?.value ?? 0, pagine.length - 1)),
   });
   protected readonly pagina = computed(() => this.pagine()[this.corrente()]);
+  /** Cambia solo quando cambia pagina, non quando si copre una zona */
+  private readonly fileMostrato = computed(() => this.pagina()?.file);
+  /** La pagina mostrata a piena risoluzione: aperta solo lei, le altre restano compresse */
+  private readonly aperta = signal<{ file: Blob; immagine: ImageBitmap } | null>(null);
 
   /** «busta-paga · pagina 2 di 3» */
   protected readonly didascalia = computed(() => {
@@ -130,12 +134,27 @@ export class Anteprima {
       });
     });
 
-    // La pagina grande si ridisegna quando cambia lei o la filigrana
+    // Cambiata pagina: si apre la nuova e si chiude quella di prima
+    effect((pulisci) => {
+      const file = this.fileMostrato();
+      if (!file) return;
+      let superata = false;
+      createImageBitmap(file).then((immagine) => {
+        if (superata) return immagine.close();
+        this.aperta()?.immagine.close();
+        this.aperta.set({ file, immagine });
+      });
+      pulisci(() => (superata = true));
+    });
+
+    // La pagina grande si ridisegna quando cambia lei, le sue zone o la filigrana
     effect(() => {
       this.fontCaricato();
       const foglio = this.grande()?.nativeElement;
       const pagina = this.pagina();
-      if (foglio && pagina) disegnaPagina(foglio, pagina, this.filigrana());
+      const aperta = this.aperta();
+      if (foglio && pagina && aperta?.file === pagina.file)
+        disegnaPagina(foglio, aperta.immagine, pagina.zone, this.filigrana());
     });
   }
 

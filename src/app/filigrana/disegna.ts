@@ -1,4 +1,4 @@
-import { Pagina } from '../pagina';
+import { Zona } from '../pagina';
 
 const FONT = '"DM Sans Variable", system-ui, sans-serif';
 
@@ -44,15 +44,16 @@ export function testoFiligrana(scritta: string, data: string): string {
  */
 export function disegnaPagina(
   foglio: HTMLCanvasElement,
-  pagina: Pagina,
+  immagine: ImageBitmap,
+  zone: Zona[],
   filigrana: ImpostazioniFiligrana,
 ): void {
-  foglio.width = pagina.immagine.width;
-  foglio.height = pagina.immagine.height;
+  foglio.width = immagine.width;
+  foglio.height = immagine.height;
   const disegno = foglio.getContext('2d')!;
-  disegno.drawImage(pagina.immagine, 0, 0);
+  disegno.drawImage(immagine, 0, 0);
   disegno.fillStyle = '#000';
-  for (const zona of pagina.zone) {
+  for (const zona of zone) {
     disegno.fillRect(
       zona.x * foglio.width,
       zona.y * foglio.height,

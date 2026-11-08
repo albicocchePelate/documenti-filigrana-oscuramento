@@ -1,4 +1,4 @@
-import { LATO_MASSIMO, Pagina } from '../pagina';
+import { LATO_MASSIMO, Pagina, creaPagina } from '../pagina';
 import { leggiHeic } from './leggi-heic';
 import { leggiPdf } from './leggi-pdf';
 
@@ -26,11 +26,9 @@ export async function leggiFile(
   switch (formato(file)) {
     case 'immagine':
       // La foto viene girata nel verso giusto, come la mostra il telefono
-      return [
-        { documento: nome, nome, immagine: await riduci(await createImageBitmap(file)), zone: [] },
-      ];
+      return [await creaPagina(inFoglio(await createImageBitmap(file)), nome, nome)];
     case 'heic':
-      return [{ documento: nome, nome, immagine: await riduci(await leggiHeic(file)), zone: [] }];
+      return [await creaPagina(inFoglio(await leggiHeic(file)), nome, nome)];
     case 'pdf':
       return leggiPdf(file, nome, avanzamento);
     default:
@@ -38,16 +36,15 @@ export async function leggiFile(
   }
 }
 
-/** Riporta l'immagine entro LATO_MASSIMO, se serve. */
-async function riduci(immagine: ImageBitmap): Promise<ImageBitmap> {
+/** La foto su un foglio, entro LATO_MASSIMO se serve */
+function inFoglio(immagine: ImageBitmap): HTMLCanvasElement {
   const scala = Math.min(1, LATO_MASSIMO / Math.max(immagine.width, immagine.height));
-  if (scala === 1) return immagine;
-
-  const ridotta = await createImageBitmap(immagine, {
-    resizeWidth: Math.round(immagine.width * scala),
-    resizeHeight: Math.round(immagine.height * scala),
-    resizeQuality: 'high',
-  });
+  const foglio = document.createElement('canvas');
+  foglio.width = Math.round(immagine.width * scala);
+  foglio.height = Math.round(immagine.height * scala);
+  const disegno = foglio.getContext('2d')!;
+  disegno.imageSmoothingQuality = 'high';
+  disegno.drawImage(immagine, 0, 0, foglio.width, foglio.height);
   immagine.close();
-  return ridotta;
+  return foglio;
 }

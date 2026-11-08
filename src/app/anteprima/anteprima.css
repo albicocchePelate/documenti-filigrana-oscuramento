@@ -156,7 +156,6 @@
    Ingrandita, ci si sposta dentro */
 .vista {
   display: flex;
-  flex: 1;
   min-height: 0;
   height: min(560px, 70svh);
   overflow: auto;
@@ -164,9 +163,11 @@
   margin: -10px;
 }
 
-/* Nelle due colonne il piano è alto quanto la finestra: il riquadro prende tutto quello che resta */
+/* Nelle due colonne il piano è alto quanto la finestra: il riquadro prende tutto quello che resta.
+   In una colonna no: flex: 1 lo schiaccerebbe a zero e la pagina sparirebbe */
 @media (min-width: 880px) {
   .vista {
+    flex: 1;
     height: auto;
   }
 }
