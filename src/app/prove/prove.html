@@ -1,0 +1,82 @@
+<details>
+  <summary>
+    <span class="domanda">Come verifico che i file non escono dal computer?</span>
+    <span class="stato">
+      {{ rete.altriSiti() === 0 ? 'Nessun dato uscito' : 'Richieste verso altri siti: vedi sotto' }}
+      · {{ rete.online() ? 'online' : 'offline, e funziona' }}
+    </span>
+  </summary>
+
+  <div class="prove">
+    <section>
+      <h3>La rete, contata dal browser</h3>
+      <ul class="numeri">
+        <li>
+          <strong>{{ rete.altriSiti() }}</strong> richieste ad altri siti
+        </li>
+        <li>
+          <strong>{{ rete.inviiBloccati() }}</strong> tentativi di invio bloccati
+        </li>
+        <li>
+          <strong>{{ rete.fileDelSito() }}</strong> file scaricati da questo sito: è il codice dello
+          strumento, arriva e basta
+        </li>
+      </ul>
+      <p>
+        Per controllare tu: tasto destro → <em>Ispeziona</em> → <em>Rete</em>, poi usa lo strumento.
+        Non parte niente.
+      </p>
+    </section>
+
+    <section>
+      <h3>Senza internet</h3>
+      @if (rete.online()) {
+        <p>Stacca il Wi-Fi e continua: funziona uguale, perché tutto succede qui.</p>
+      } @else {
+        <p class="bene">Sei offline, e lo strumento funziona lo stesso.</p>
+      }
+    </section>
+
+    <section>
+      <h3>Cosa c'era nei tuoi file</h3>
+      @if (documenti().length) {
+        <ul class="metadati">
+          @for (documento of documenti(); track documento[0]) {
+            <li>
+              <strong>{{ documento[0] }}</strong>
+              @if (documento[1].length) {
+                <span>{{ documento[1].join(' · ') }}</span>
+                <span class="bene">Nella copia: niente di tutto questo.</span>
+              } @else {
+                <span>Nessun dato nascosto. La copia non ne ha comunque.</span>
+              }
+            </li>
+          }
+        </ul>
+      } @else {
+        <p>
+          Le foto portano con sé posizione, telefono e ora dello scatto; i PDF autore e programma.
+          Quando carichi un file te lo mostro qui. Nella copia non ce n'è traccia: è rifatta da
+          zero.
+        </p>
+      }
+    </section>
+
+    <section>
+      <h3>La regola della pagina</h3>
+      <p>
+        La pagina dice al browser <code>connect-src 'none'</code>: il codice non può fare richieste
+        di rete, nemmeno volendo. La trovi in cima con tasto destro →
+        <em>Visualizza sorgente pagina</em>.
+      </p>
+    </section>
+
+    <section>
+      <h3>Il codice</h3>
+      <p>
+        È pubblico, sono pochi file:
+        <a [href]="codice" target="_blank" rel="noopener">{{ codice.replace('https://', '') }}</a>
+      </p>
+    </section>
+  </div>
+</details>

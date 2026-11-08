@@ -64,6 +64,7 @@
 
 /* Prima del caricamento: la spiegazione e la zona larga quanto un testo da leggere */
 .intro,
+.prove-iniziali,
 app-carica:not(.strumento app-carica) {
   max-width: 720px;
   width: 100%;

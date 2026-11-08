@@ -1,0 +1,93 @@
+details {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+
+summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  list-style: none;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+summary::before {
+  content: '›';
+  display: inline-block;
+  color: var(--muted);
+  transition: rotate 0.2s;
+}
+
+details[open] summary::before {
+  rotate: 90deg;
+}
+
+.domanda {
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.stato {
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+
+.prove {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px 28px;
+  padding: 4px 16px 18px;
+}
+
+section {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+  font-size: 0.875rem;
+}
+
+h3 {
+  font-family: var(--font-title);
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+p,
+.numeri li,
+.metadati span {
+  color: var(--muted);
+}
+
+ul {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.numeri strong {
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.metadati li {
+  display: grid;
+}
+
+.bene {
+  color: var(--accent-ink) !important;
+}
+
+code {
+  padding: 1px 5px;
+  border-radius: 5px;
+  background: var(--surface);
+  font-size: 0.85em;
+}

@@ -63,6 +63,8 @@
       }
     </section>
   </div>
+
+  <app-prove [metadati]="metadati()" />
 } @else {
   <header class="intro">
     <h1>Proteggi i documenti prima di mandarli</h1>
@@ -74,6 +76,7 @@
   </header>
   <app-carica (caricati)="aggiungi($event)" />
   <ng-container *ngTemplateOutlet="stato" />
+  <app-prove class="prove-iniziali" />
 }
 
 <!-- Cosa si sta leggendo, e i file che non si sono potuti aprire -->

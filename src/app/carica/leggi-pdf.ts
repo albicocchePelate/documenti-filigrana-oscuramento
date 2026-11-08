@@ -1,4 +1,5 @@
 import { LATO_MASSIMO, Pagina } from '../pagina';
+import { apriPdf } from './apri-pdf';
 
 /** Il PDF protetto da password: lo diciamo con parole chiare */
 export class PdfProtetto extends Error {}
@@ -9,15 +10,9 @@ export async function leggiPdf(
   nome: string,
   avanzamento: (testo: string) => void,
 ): Promise<Pagina[]> {
-  // pdf.js è grande: si carica solo quando arriva il primo PDF
-  const pdfjs = await import('pdfjs-dist');
-  pdfjs.GlobalWorkerOptions.workerSrc = 'pdf.worker.min.mjs';
-
-  const documento = await pdfjs
-    .getDocument({ data: new Uint8Array(await file.arrayBuffer()), isEvalSupported: false })
-    .promise.catch((errore) => {
-      throw errore?.name === 'PasswordException' ? new PdfProtetto() : errore;
-    });
+  const documento = await apriPdf(file).catch((errore) => {
+    throw errore?.name === 'PasswordException' ? new PdfProtetto() : errore;
+  });
 
   const pagine: Pagina[] = [];
   for (let numero = 1; numero <= documento.numPages; numero++) {
