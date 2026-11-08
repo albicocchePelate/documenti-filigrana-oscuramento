@@ -1,22 +1,22 @@
 @if (pagine().length) {
-  <section>
-    <h2><span class="numero">1</span>Documenti</h2>
-    <app-carica
-      [compatta]="true"
-      [riepilogo]="riepilogo()"
-      (caricati)="aggiungi($event)"
-      (ricomincia)="ricomincia()"
-    />
-    <ng-container *ngTemplateOutlet="stato" />
-  </section>
+  <div class="strumento">
+    <section class="documenti">
+      <h2><span class="numero">1</span>Documenti</h2>
+      <app-carica
+        [compatta]="true"
+        [riepilogo]="riepilogo()"
+        (caricati)="aggiungi($event)"
+        (ricomincia)="ricomincia()"
+      />
+      <ng-container *ngTemplateOutlet="stato" />
+    </section>
 
-  <section>
-    <h2><span class="numero">2</span>Filigrana</h2>
-    <app-filigrana [(scritta)]="scritta" [(data)]="data" [(stile)]="stile" [testo]="testo()" />
-  </section>
+    <section class="filigrana">
+      <h2><span class="numero">2</span>Filigrana</h2>
+      <app-filigrana [(scritta)]="scritta" [(data)]="data" [(stile)]="stile" [testo]="testo()" />
+    </section>
 
-  <section>
-    <h2><span class="numero">3</span>Controlla e scarica</h2>
+    <!-- Scarica porta con sé anche l'anteprima, nella colonna di destra -->
     <app-scarica
       [pagine]="pagine()"
       [filigrana]="filigrana()"
@@ -24,7 +24,7 @@
       (togli)="togli($event)"
       (sposta)="sposta($event)"
     />
-  </section>
+  </div>
 } @else {
   <header class="intro">
     <h1>Proteggi i documenti prima di mandarli</h1>

@@ -1,8 +1,44 @@
 :host {
   display: grid;
-  gap: 28px;
-  max-width: 720px;
+  gap: 24px;
+  max-width: 1200px;
   margin-inline: auto;
+}
+
+/* Una colonna; da 880 px in su due: comandi a sinistra, anteprima a destra */
+.strumento {
+  display: grid;
+  gap: 22px;
+  grid-template-areas: 'documenti' 'filigrana' 'scarica' 'vista';
+}
+
+@media (min-width: 880px) {
+  .strumento {
+    grid-template-columns: minmax(320px, 400px) 1fr;
+    grid-template-areas:
+      'documenti vista'
+      'filigrana vista'
+      'scarica vista';
+    grid-template-rows: auto auto 1fr;
+    align-items: start;
+    gap: 22px 32px;
+  }
+}
+
+.documenti {
+  grid-area: documenti;
+}
+
+.filigrana {
+  grid-area: filigrana;
+}
+
+/* Prima del caricamento: la spiegazione e la zona larga quanto un testo da leggere */
+.intro,
+app-carica:not(.strumento app-carica) {
+  max-width: 720px;
+  width: 100%;
+  justify-self: center;
 }
 
 .errore {
@@ -56,7 +92,7 @@
 
 section {
   display: grid;
-  gap: 12px;
+  gap: 10px;
 }
 
 h2 {
@@ -65,7 +101,7 @@ h2 {
   gap: 10px;
   font-family: var(--font-title);
   font-weight: 600;
-  font-size: 1.0625rem;
+  font-size: 1rem;
 }
 
 /* Il numero del passo, in un cerchietto */

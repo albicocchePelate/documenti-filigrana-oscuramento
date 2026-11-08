@@ -1,84 +1,96 @@
-<div class="scelte">
-  <app-scelta nome="Formato" [opzioni]="formati" [(valore)]="formato" />
-  @if (documenti().length > 1) {
-    <app-scelta nome="Documenti" [opzioni]="raggruppamenti" [(valore)]="insieme" />
-  }
-  <label class="aggiunta">
-    <span class="nome-campo">Aggiunta al nome</span>
-    <input
-      [value]="aggiunta()"
-      (input)="aggiunta.set(valore($event))"
-      placeholder="nessuna"
-      autocomplete="off"
-    />
-  </label>
-</div>
+<!-- Due parti: i comandi (a sinistra su schermi larghi) e l'anteprima del file scelto (a destra) -->
+<section class="scarica">
+  <h2><span class="numero">3</span>Scarica</h2>
 
-<!-- Una scheda per ogni file che si otterrà, con dentro le sue pagine -->
-@for (uscita of uscite(); track uscita.etichetta) {
-  <article class="uscita">
-    <header>
-      <span class="file">
+  <div class="scelte">
+    <app-scelta nome="Formato" [opzioni]="formati" [(valore)]="formato" />
+    @if (documenti().length > 1) {
+      <app-scelta nome="Documenti" [opzioni]="raggruppamenti" [(valore)]="insieme" />
+    }
+    <label class="aggiunta">
+      <span class="nome-campo">Dopo il nome</span>
+      <input
+        [value]="aggiunta()"
+        (input)="aggiunta.set(valore($event))"
+        placeholder="nessuna"
+        autocomplete="off"
+      />
+    </label>
+  </div>
+
+  <!-- Una riga per ogni file che si otterrà: cliccandola, a destra si vedono le sue pagine -->
+  <ul class="file">
+    @for (uscita of uscite(); track uscita.etichetta) {
+      <li [class.scelto]="uscita.etichetta === scelta()" (click)="scelta.set(uscita.etichetta)">
         <span class="nome-file">
           <input
             [value]="nome(uscita)"
             (input)="rinomina(uscita, valore($event))"
+            (focus)="scelta.set(uscita.etichetta)"
             [attr.aria-label]="'Nome del file per ' + uscita.etichetta"
             autocomplete="off"
           />
           <span class="coda">{{ coda(uscita) }}</span>
         </span>
         <span class="contenuto">{{ contenuto(uscita) }}</span>
-      </span>
-      <button
-        type="button"
-        class="scarica"
-        [disabled]="!pronto() || preparo()"
-        (click)="scarica(uscita)"
-      >
-        {{ preparo() === uscita.etichetta ? 'Preparo…' : 'Scarica' }}
-      </button>
-    </header>
-
-    @if (ordine().length) {
-      <ol class="ordine" aria-label="Ordine dei documenti nel file">
-        @for (
-          documento of ordine();
-          track documento[0].documento;
-          let primo = $first, ultimo = $last
-        ) {
-          <li>
-            <span class="documento">{{ documento[0].documento }}</span>
-            <span class="pagine">{{ quante(documento) }}</span>
-            <button
-              type="button"
-              [attr.aria-label]="'Sposta prima ' + documento[0].documento"
-              [disabled]="primo"
-              (click)="sposta.emit({ documento: documento[0].documento, verso: -1 })"
-            >
-              ↑
-            </button>
-            <button
-              type="button"
-              [attr.aria-label]="'Sposta dopo ' + documento[0].documento"
-              [disabled]="ultimo"
-              (click)="sposta.emit({ documento: documento[0].documento, verso: 1 })"
-            >
-              ↓
-            </button>
-          </li>
-        }
-      </ol>
+        <button
+          type="button"
+          class="scarica-file"
+          [disabled]="!pronto() || preparo()"
+          (click)="scarica(uscita); $event.stopPropagation()"
+        >
+          {{ preparo() === uscita.etichetta ? 'Preparo…' : 'Scarica' }}
+        </button>
+      </li>
     }
+  </ul>
 
+  @if (ordine().length) {
+    <ol class="ordine" aria-label="Ordine dei documenti nel file">
+      @for (
+        documento of ordine();
+        track documento[0].documento;
+        let primo = $first, ultimo = $last
+      ) {
+        <li>
+          <span class="documento">{{ documento[0].documento }}</span>
+          <span class="pagine">{{ quante(documento) }}</span>
+          <button
+            type="button"
+            [attr.aria-label]="'Sposta prima ' + documento[0].documento"
+            [disabled]="primo"
+            (click)="sposta.emit({ documento: documento[0].documento, verso: -1 })"
+          >
+            ↑
+          </button>
+          <button
+            type="button"
+            [attr.aria-label]="'Sposta dopo ' + documento[0].documento"
+            [disabled]="ultimo"
+            (click)="sposta.emit({ documento: documento[0].documento, verso: 1 })"
+          >
+            ↓
+          </button>
+        </li>
+      }
+    </ol>
+  }
+
+  @if (!pronto()) {
+    <p class="nota">Completa prima la scritta sulla copia.</p>
+  }
+</section>
+
+<section class="vista" aria-label="Anteprima">
+  @if (inVista(); as uscita) {
+    <p class="titolo-vista">
+      <strong>{{ nome(uscita) }}{{ coda(uscita) }}</strong>
+      <span>{{ contenuto(uscita) }}</span>
+    </p>
     <app-anteprima
       [pagine]="uscita.pagine"
       [filigrana]="filigrana()"
       (togli)="togli.emit($event)"
     />
-  </article>
-}
-
-@if (!pronto()) {
-  <p class="nota">Completa prima la scritta sulla copia.</p>
-}
+  }
+</section>

@@ -1,4 +1,4 @@
-import { Component, computed, input, output, signal } from '@angular/core';
+import { Component, computed, input, linkedSignal, output, signal } from '@angular/core';
 import { Anteprima } from '../anteprima/anteprima';
 import { ImpostazioniFiligrana } from '../filigrana/disegna';
 import { Pagina } from '../pagina';
@@ -74,6 +74,18 @@ export class Scarica {
       this.formato() === 'pdf' ? 'pdf' : uscita.pagine.length === 1 ? 'jpg' : 'zip';
     return `${senzaVietati(this.aggiunta())}.${estensione}`;
   }
+
+  /** Il file mostrato nell'anteprima: resta lo stesso finché esiste, altrimenti il primo */
+  protected readonly scelta = linkedSignal<Uscita[], string>({
+    source: this.uscite,
+    computation: (uscite, prima) =>
+      uscite.some((uscita) => uscita.etichetta === prima?.value)
+        ? prima!.value
+        : uscite[0].etichetta,
+  });
+  protected readonly inVista = computed(
+    () => this.uscite().find((uscita) => uscita.etichetta === this.scelta()) ?? this.uscite()[0],
+  );
 
   /** Nel file unico: i documenti che contiene, nell'ordine in cui compaiono */
   protected readonly ordine = computed(() =>

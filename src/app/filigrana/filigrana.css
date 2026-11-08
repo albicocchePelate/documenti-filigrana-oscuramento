@@ -12,7 +12,7 @@
 label {
   display: grid;
   gap: 4px;
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
 }
 
 .scritta {
@@ -22,7 +22,7 @@ label {
 
 input {
   width: 100%;
-  min-height: 44px;
+  min-height: 40px;
   padding: 0 12px;
   border: 1px solid var(--line-strong);
   border-radius: 10px;
@@ -52,14 +52,14 @@ input {
 }
 
 .visibilita .nome {
-  width: 130px;
+  width: 110px;
   flex: none;
   color: var(--muted);
 }
 
 .visibilita input {
   flex: 1;
-  min-height: 38px;
+  min-height: 30px;
   padding: 0;
   border: 0;
   accent-color: var(--accent-ink);
