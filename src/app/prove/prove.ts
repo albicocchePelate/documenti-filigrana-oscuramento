@@ -1,4 +1,5 @@
 import { Component, computed, inject, input } from '@angular/core';
+import { Metadato } from './metadati';
 import { Rete } from './rete';
 
 const CODICE = 'https://github.com/albicocchePelate/documenti-filigrana-oscuramento';
@@ -11,7 +12,7 @@ const CODICE = 'https://github.com/albicocchePelate/documenti-filigrana-oscurame
 })
 export class Prove {
   /** Per ogni documento caricato, cosa conteneva oltre al documento */
-  readonly metadati = input<Record<string, string[]>>({});
+  readonly metadati = input<Record<string, Metadato[]>>({});
 
   protected readonly rete = inject(Rete);
   protected readonly codice = CODICE;

@@ -5,7 +5,13 @@ import { formato } from '../carica/leggi';
  * Cosa raccontava il file oltre al documento: posizione, telefono, data, autore, programma.
  * Lo mostriamo per far vedere cosa non finisce nella copia (che è rifatta da zero e non ne ha).
  */
-export async function leggiMetadati(file: File): Promise<string[]> {
+/** Un dato nascosto nel file: «Posizione» → «45.46, 9.19» */
+export interface Metadato {
+  etichetta: string;
+  valore: string;
+}
+
+export async function leggiMetadati(file: File): Promise<Metadato[]> {
   try {
     return formato(file) === 'pdf' ? await delPdf(file) : await dellaFoto(file);
   } catch {
@@ -13,44 +19,45 @@ export async function leggiMetadati(file: File): Promise<string[]> {
   }
 }
 
-async function dellaFoto(file: File): Promise<string[]> {
+async function dellaFoto(file: File): Promise<Metadato[]> {
   const { default: exifr } = await import('exifr');
   const dati = await exifr.parse(file, { gps: true, tiff: true, exif: true });
   if (!dati) return [];
   const dispositivo = [dati.Make, dati.Model].filter(Boolean).join(' ');
-  return [
-    dati.latitude !== undefined &&
-      `Posizione: ${dati.latitude.toFixed(5)}, ${dati.longitude.toFixed(5)}`,
-    dispositivo && `Dispositivo: ${dispositivo}`,
-    dati.LensModel && `Obiettivo: ${dati.LensModel}`,
-    dati.DateTimeOriginal && `Scattata il ${giorno(dati.DateTimeOriginal)}`,
-    dati.Software && `Programma: ${dati.Software}`,
-    dati.Artist && `Autore: ${dati.Artist}`,
-  ]
-    .filter((riga): riga is string => Boolean(riga))
-    .map(breve);
+  return elenco({
+    Posizione:
+      dati.latitude !== undefined && `${dati.latitude.toFixed(5)}, ${dati.longitude.toFixed(5)}`,
+    Dispositivo: dispositivo,
+    Obiettivo: dati.LensModel,
+    Scattata: dati.DateTimeOriginal && giorno(dati.DateTimeOriginal),
+    Programma: dati.Software,
+    Autore: dati.Artist,
+  });
 }
 
-async function delPdf(file: File): Promise<string[]> {
+async function delPdf(file: File): Promise<Metadato[]> {
   const documento = await apriPdf(file);
   const info = (await documento.getMetadata()).info as Record<string, string>;
   await documento.destroy();
   const { PDFDateString } = await import('pdfjs-dist');
   const data = info['CreationDate'] && PDFDateString.toDateObject(info['CreationDate']);
-  return [
-    info['Title'] && `Titolo: ${info['Title']}`,
-    info['Author'] && `Autore: ${info['Author']}`,
-    info['Creator'] && `Creato con: ${info['Creator']}`,
-    info['Producer'] && `Programma: ${info['Producer']}`,
-    data && `Creato il ${giorno(data)}`,
-  ]
-    .filter((riga): riga is string => Boolean(riga))
-    .map(breve);
+  return elenco({
+    Titolo: info['Title'],
+    Autore: info['Author'],
+    'Creato con': info['Creator'],
+    Programma: info['Producer'],
+    Creato: data && giorno(data),
+  });
 }
 
-/** Certi valori sono lunghissimi (il nome completo di un programma): basta l'inizio */
-function breve(riga: string): string {
-  return riga.length > 48 ? `${riga.slice(0, 46)}…` : riga;
+/** Solo i dati presenti. Certi valori sono lunghissimi (il nome completo di un programma): basta l'inizio */
+function elenco(dati: Record<string, unknown>): Metadato[] {
+  return Object.entries(dati)
+    .filter(([, valore]) => typeof valore === 'string' && valore.trim())
+    .map(([etichetta, valore]) => {
+      const testo = (valore as string).trim();
+      return { etichetta, valore: testo.length > 44 ? `${testo.slice(0, 42)}…` : testo };
+    });
 }
 
 function giorno(data: Date): string {

@@ -5,11 +5,8 @@
       <path d="M8 11V8a4 4 0 0 1 8 0v3" />
     </svg>
     <span class="domanda">I tuoi file restano su questo computer</span>
-    <span class="stato">
-      {{ rete.altriSiti() === 0 ? 'nessun dato inviato' : 'vedi sotto' }} ·
-      <span class="connessione">{{ rete.online() ? 'online' : 'offline' }}</span>
-    </span>
-    <span class="apri">Come lo verifico</span>
+    <span class="stato">{{ rete.altriSiti() === 0 ? 'nessun dato inviato' : 'vedi sotto' }}</span>
+    <svg class="apri" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
   </summary>
 
   <ul class="garanzie">
@@ -31,8 +28,12 @@
       <span class="spunta" aria-hidden="true">✓</span>
       <div>
         <strong>Funziona anche senza internet</strong>
+        <p>
+          Ora sei <span class="connessione">{{ rete.online() ? 'online' : 'offline' }}</span
+          >.
+          {{ rete.online() ? 'Tutto succede qui, nel browser.' : 'E sta funzionando.' }}
+        </p>
         @if (rete.online()) {
-          <p>Tutto succede qui, nel browser.</p>
           <p class="come">Verifica: stacca il Wi-Fi e continua a usarlo.</p>
         } @else {
           <p>Sei offline e sta funzionando.</p>
@@ -46,11 +47,19 @@
         <strong>Le copie non hanno dati nascosti</strong>
         @if (documenti().length) {
           @for (documento of documenti(); track documento[0]) {
-            <p>
-              <em>{{ documento[0] }}</em
-              >:
-              {{ documento[1].length ? documento[1].join(' · ') : 'non ne aveva' }}
-            </p>
+            <div class="file">
+              <span class="nome-file">{{ documento[0] }}</span>
+              @if (documento[1].length) {
+                <dl>
+                  @for (dato of documento[1]; track dato.etichetta) {
+                    <dt>{{ dato.etichetta }}</dt>
+                    <dd>{{ dato.valore }}</dd>
+                  }
+                </dl>
+              } @else {
+                <span class="nessuno">nessun dato nascosto</span>
+              }
+            </div>
           }
           <p class="come">Nella copia non c'è niente di tutto questo: è rifatta da zero.</p>
         } @else {

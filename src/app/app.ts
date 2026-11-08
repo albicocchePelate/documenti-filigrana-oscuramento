@@ -12,7 +12,7 @@ import {
 } from './filigrana/disegna';
 import { Filigrana } from './filigrana/filigrana';
 import { Pagina, Zona } from './pagina';
-import { leggiMetadati } from './prove/metadati';
+import { Metadato, leggiMetadati } from './prove/metadati';
 import { Prove } from './prove/prove';
 import { perDocumento } from './scarica/salva';
 import { Scarica } from './scarica/scarica';
@@ -33,7 +33,7 @@ export class App {
   protected readonly lettura = signal('');
   protected readonly errori = signal<string[]>([]);
   /** Per ogni documento, cosa conteneva oltre al documento (posizione, telefono, autore…) */
-  protected readonly metadati = signal<Record<string, string[]>>({});
+  protected readonly metadati = signal<Record<string, Metadato[]>>({});
 
   protected readonly testo = computed(() => testoFiligrana(this.scritta(), this.data()));
   /** Chi deve solo coprire dei dati può spegnerla */

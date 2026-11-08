@@ -43,19 +43,19 @@ summary::-webkit-details-marker {
 }
 
 .apri {
+  width: 18px;
+  height: 18px;
   margin-left: auto;
-  color: var(--accent-ink);
-  font-size: 0.8125rem;
-}
-
-.apri::after {
-  content: ' ›';
-  display: inline-block;
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
   transition: rotate 0.2s;
 }
 
-details[open] .apri::after {
-  rotate: 90deg;
+details[open] .apri {
+  rotate: 180deg;
 }
 
 /* Le garanzie: una per riga, su due colonne quando c'è spazio */
@@ -113,4 +113,43 @@ code {
   border-radius: 5px;
   background: var(--surface);
   font-size: 0.85em;
+}
+
+/* Un riquadro per file: il nome, poi i dati nascosti in due colonne */
+.file {
+  display: grid;
+  gap: 4px;
+  margin-top: 6px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.nome-file {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px 12px;
+  margin: 0;
+  font-size: 0.8125rem;
+}
+
+dt {
+  color: var(--muted);
+}
+
+dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.nessuno {
+  color: var(--muted);
+  font-size: 0.8125rem;
 }

@@ -68,11 +68,8 @@
   <app-prove [metadati]="metadati()" />
 } @else {
   <header class="intro">
-    <h1>Proteggi i documenti prima di mandarli</h1>
-    <p>
-      Aggiungi una filigrana con scopo e data, e oscura i dati che non servono. Se la copia finisce
-      in mani sbagliate, non si può usare per altro.
-    </p>
+    <h1>Proteggi i documenti prima di inviarli</h1>
+    <p>Aggiungi una filigrana con scopo e data, e oscura i dati che non servono.</p>
     <p class="esempi">Per esempio: carta d'identità, patente, busta paga, contratto.</p>
   </header>
   <app-carica (caricati)="aggiungi($event)" />
