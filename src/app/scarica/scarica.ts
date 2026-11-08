@@ -1,10 +1,20 @@
-import { Component, computed, inject, input, linkedSignal, output, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  linkedSignal,
+  output,
+  signal,
+  untracked,
+} from '@angular/core';
 import { ImpostazioniFiligrana } from '../filigrana/disegna';
 import { Pagina } from '../pagina';
 import { Metadato } from '../prove/metadati';
 import { Verifica } from '../prove/verifica';
 import { Opzione, Scelta } from '../scelta/scelta';
-import { perDocumento, salvaImmagini, salvaPdf } from './salva';
+import { fileImmagini, filePdf, perDocumento, salva } from './salva';
 
 export interface Uscita {
   etichetta: string;
@@ -37,7 +47,26 @@ export class Scarica {
   );
   /** I nomi cambiati a mano, per etichetta */
   protected readonly nomi = signal<Record<string, string>>({});
-  protected readonly preparo = signal<string | null>(null);
+  protected readonly preparo = signal<{ etichetta: string; modo: Modo } | null>(null);
+
+  /** Sul telefono la copia si manda subito (WhatsApp, Mail…) invece di cercarla tra i file */
+  protected readonly condivisibile =
+    matchMedia('(hover: none)').matches &&
+    !!navigator.canShare?.({ files: [new File([''], 'copia.pdf', { type: 'application/pdf' })] });
+  /** Il file pronto che aspetta un secondo tocco per essere condiviso (vedi condividi) */
+  protected readonly pronto = signal<{ etichetta: string; file: File } | null>(null);
+
+  constructor() {
+    // Cambiato qualcosa, il file pronto non è più quello giusto
+    effect(() => {
+      this.pagine();
+      this.filigrana();
+      this.formato();
+      this.aggiunta();
+      this.nomi();
+      untracked(() => this.pronto.set(null));
+    });
+  }
 
   protected readonly formati: Opzione<'pdf' | 'jpg'>[] = [
     { valore: 'pdf', etichetta: 'PDF' },
@@ -126,18 +155,43 @@ export class Scarica {
     return (evento.target as HTMLInputElement).value;
   }
 
-  protected async scarica(uscita: Uscita): Promise<void> {
+  /** Prepara il file, poi lo scarica o apre il menu Condividi del telefono */
+  protected async consegna(uscita: Uscita, modo: Modo): Promise<void> {
     const nome =
       (senzaVietati(this.nome(uscita)).trim() || 'documento') + senzaVietati(this.aggiunta());
-    this.preparo.set(uscita.etichetta);
+    this.preparo.set({ etichetta: uscita.etichetta, modo });
     try {
-      if (this.formato() === 'pdf') await salvaPdf(uscita.pagine, this.filigrana(), nome);
-      else await salvaImmagini(uscita.pagine, this.filigrana(), nome);
+      const file =
+        this.formato() === 'pdf'
+          ? await filePdf(uscita.pagine, this.filigrana(), nome)
+          : await fileImmagini(uscita.pagine, this.filigrana(), nome);
+      if (modo === 'condividi' && navigator.canShare({ files: [file] }))
+        await this.condividi(uscita, file);
+      else salva(file);
     } finally {
       this.preparo.set(null);
     }
   }
+
+  protected async condividi(uscita: Uscita, file: File): Promise<void> {
+    try {
+      await navigator.share({ files: [file] });
+      this.pronto.set(null);
+    } catch (errore) {
+      // Il file ha richiesto qualche secondo e Safari non conta più il tocco: ne serve uno nuovo.
+      // Chiudere il menu senza scegliere (AbortError) va bene così
+      if ((errore as DOMException).name === 'NotAllowedError')
+        this.pronto.set({ etichetta: uscita.etichetta, file });
+    }
+  }
+
+  protected inPreparazione(uscita: Uscita, modo: Modo): boolean {
+    const preparo = this.preparo();
+    return preparo?.etichetta === uscita.etichetta && preparo.modo === modo;
+  }
 }
+
+type Modo = 'scarica' | 'condividi';
 
 /** Via i caratteri che i sistemi non accettano nei nomi dei file */
 function senzaVietati(nome: string): string {

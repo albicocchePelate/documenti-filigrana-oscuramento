@@ -13,11 +13,11 @@ export function perDocumento(pagine: Pagina[]): Pagina[][] {
 }
 
 /** Un PDF con queste pagine. `nome` è il nome del file senza estensione. */
-export async function salvaPdf(
+export async function filePdf(
   pagine: Pagina[],
   filigrana: ImpostazioniFiligrana,
   nome: string,
-): Promise<void> {
+): Promise<File> {
   const pronte = [];
   for (const pagina of pagine) {
     pronte.push({
@@ -26,25 +26,24 @@ export async function salvaPdf(
       altezza: pagina.altezza,
     });
   }
-  salva(creaPdf(pronte), `${nome}.pdf`);
+  return new File([creaPdf(pronte)], `${nome}.pdf`, { type: 'application/pdf' });
 }
 
-/** Le immagini: una sola si scarica così com'è, più d'una in uno ZIP («nome-1.jpg», «nome-2.jpg»…) */
-export async function salvaImmagini(
+/** Le immagini: una sola così com'è, più d'una in uno ZIP («nome-1.jpg», «nome-2.jpg»…) */
+export async function fileImmagini(
   pagine: Pagina[],
   filigrana: ImpostazioniFiligrana,
   nome: string,
-): Promise<void> {
+): Promise<File> {
   if (pagine.length === 1) {
     const jpeg = await inJpeg(pagine[0], filigrana);
-    salva(new Blob([jpeg as BlobPart], { type: 'image/jpeg' }), `${nome}.jpg`);
-    return;
+    return new File([jpeg as BlobPart], `${nome}.jpg`, { type: 'image/jpeg' });
   }
   const immagini = [];
   for (const [i, pagina] of pagine.entries()) {
     immagini.push({ nome: `${nome}-${i + 1}.jpg`, contenuto: await inJpeg(pagina, filigrana) });
   }
-  salva(creaZip(immagini), `${nome}.zip`);
+  return new File([creaZip(immagini)], `${nome}.zip`, { type: 'application/zip' });
 }
 
 /**
@@ -64,10 +63,11 @@ async function inJpeg(pagina: Pagina, filigrana: ImpostazioniFiligrana): Promise
   return new Uint8Array(await jpeg.arrayBuffer());
 }
 
-function salva(contenuto: Blob, nome: string): void {
+/** Nella cartella Download */
+export function salva(file: File): void {
   const collegamento = document.createElement('a');
-  collegamento.href = URL.createObjectURL(contenuto);
-  collegamento.download = nome;
+  collegamento.href = URL.createObjectURL(file);
+  collegamento.download = file.name;
   collegamento.click();
   setTimeout(() => URL.revokeObjectURL(collegamento.href), 1000);
 }

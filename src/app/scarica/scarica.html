@@ -46,14 +46,49 @@
             <span>Nessun dato nascosto da togliere</span>
           }
         </span>
-        <button
-          type="button"
-          class="scarica-file"
-          [disabled]="preparo()"
-          (click)="scarica(uscita); $event.stopPropagation()"
-        >
-          {{ preparo() === uscita.etichetta ? 'Preparo…' : 'Scarica' }}
-        </button>
+        <span class="azioni-file" [class.due]="condivisibile">
+          @if (condivisibile) {
+            @if (pronto()?.etichetta === uscita.etichetta) {
+              <button
+                type="button"
+                class="principale"
+                (click)="condividi(uscita, pronto()!.file); $event.stopPropagation()"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 15V4M8 8l4-4 4 4" />
+                  <path d="M8 11H6.5A1.5 1.5 0 0 0 5 12.5v7A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5v-7a1.5 1.5 0 0 0-1.5-1.5H16" />
+                </svg>
+                Condividi ora
+              </button>
+            } @else {
+              <button
+                type="button"
+                class="principale"
+                [disabled]="preparo()"
+                (click)="consegna(uscita, 'condividi'); $event.stopPropagation()"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 15V4M8 8l4-4 4 4" />
+                  <path d="M8 11H6.5A1.5 1.5 0 0 0 5 12.5v7A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5v-7a1.5 1.5 0 0 0-1.5-1.5H16" />
+                </svg>
+                {{ inPreparazione(uscita, 'condividi') ? 'Preparo…' : 'Condividi' }}
+              </button>
+            }
+          }
+          <button
+            type="button"
+            [class.principale]="!condivisibile"
+            [disabled]="preparo()"
+            (click)="consegna(uscita, 'scarica'); $event.stopPropagation()"
+          >
+            @if (condivisibile) {
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 4v11M7 10l5 5 5-5M5 20h14" />
+              </svg>
+            }
+            {{ inPreparazione(uscita, 'scarica') ? 'Preparo…' : 'Scarica' }}
+          </button>
+        </span>
       </li>
     }
   </ul>
