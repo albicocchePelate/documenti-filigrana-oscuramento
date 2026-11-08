@@ -1,27 +1,6 @@
-/* I due pezzi finiscono nella griglia della pagina: comandi a sinistra, anteprima a destra */
-:host {
-  display: contents;
-}
-
 .scarica {
-  grid-area: scarica;
   display: grid;
   gap: 12px;
-}
-
-.vista {
-  grid-area: vista;
-  display: grid;
-  gap: 10px;
-  align-self: start;
-}
-
-/* Su schermi larghi l'anteprima resta ferma mentre i comandi scorrono */
-@media (min-width: 880px) {
-  .vista {
-    position: sticky;
-    top: 16px;
-  }
 }
 
 .scelte {
@@ -170,15 +149,6 @@ input {
   cursor: default;
 }
 
-.titolo-vista {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 4px 10px;
-  font-size: 0.9375rem;
-}
-
-.titolo-vista span,
 .nota {
   color: var(--muted);
   font-size: 0.875rem;

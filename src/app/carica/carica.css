@@ -65,7 +65,11 @@ input {
 
 .riepilogo {
   flex: 1;
-  min-width: 90px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.875rem;
 }
 
 .aggiungi,

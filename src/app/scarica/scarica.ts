@@ -1,12 +1,11 @@
 import { Component, computed, input, linkedSignal, output, signal } from '@angular/core';
-import { Anteprima } from '../anteprima/anteprima';
 import { ImpostazioniFiligrana } from '../filigrana/disegna';
 import { Pagina } from '../pagina';
 import { Opzione, Scelta } from '../scelta/scelta';
 import { perDocumento, salvaImmagini, salvaPdf } from './salva';
 
 /** Un file che si scarica: cosa contiene e come si chiama all'inizio */
-interface Uscita {
+export interface Uscita {
   etichetta: string;
   nomeIniziale: string;
   pagine: Pagina[];
@@ -14,16 +13,13 @@ interface Uscita {
 
 @Component({
   selector: 'app-scarica',
-  imports: [Anteprima, Scelta],
+  imports: [Scelta],
   templateUrl: './scarica.html',
   styleUrl: './scarica.css',
 })
 export class Scarica {
   readonly pagine = input.required<Pagina[]>();
   readonly filigrana = input.required<ImpostazioniFiligrana>();
-  /** Si scarica solo dopo aver completato la scritta */
-  readonly pronto = input.required<boolean>();
-  readonly togli = output<Pagina>();
   readonly sposta = output<{ documento: string; verso: -1 | 1 }>();
 
   protected readonly formato = signal<'pdf' | 'jpg'>('pdf');
@@ -60,7 +56,7 @@ export class Scarica {
     }));
   });
 
-  protected nome(uscita: Uscita): string {
+  nome(uscita: Uscita): string {
     return this.nomi()[uscita.etichetta] ?? uscita.nomeIniziale;
   }
 
@@ -69,7 +65,7 @@ export class Scarica {
   }
 
   /** Quello che segue il nome: l'aggiunta e l'estensione, «-con-filigrana.pdf» */
-  protected coda(uscita: Uscita): string {
+  coda(uscita: Uscita): string {
     const estensione =
       this.formato() === 'pdf' ? 'pdf' : uscita.pagine.length === 1 ? 'jpg' : 'zip';
     return `${senzaVietati(this.aggiunta())}.${estensione}`;
@@ -83,7 +79,8 @@ export class Scarica {
         ? prima!.value
         : uscite[0].etichetta,
   });
-  protected readonly inVista = computed(
+  /** Letto dalla pagina per mostrarne l'anteprima */
+  readonly inVista = computed(
     () => this.uscite().find((uscita) => uscita.etichetta === this.scelta()) ?? this.uscite()[0],
   );
 
@@ -93,7 +90,7 @@ export class Scarica {
   );
 
   /** «2 pagine», oppure «2 immagini in uno ZIP» */
-  protected contenuto(uscita: Uscita): string {
+  contenuto(uscita: Uscita): string {
     return this.quante(uscita.pagine);
   }
 

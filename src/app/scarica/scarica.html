@@ -1,4 +1,3 @@
-<!-- Due parti: i comandi (a sinistra su schermi larghi) e l'anteprima del file scelto (a destra) -->
 <section class="scarica">
   <h2><span class="numero">3</span>Scarica</h2>
 
@@ -18,7 +17,7 @@
     </label>
   </div>
 
-  <!-- Una riga per ogni file che si otterrà: cliccandola, a destra si vedono le sue pagine -->
+  <!-- Una riga per ogni file che si otterrà: cliccandola, se ne vedono le pagine -->
   <ul class="file">
     @for (uscita of uscite(); track uscita.etichetta) {
       <li [class.scelto]="uscita.etichetta === scelta()" (click)="scelta.set(uscita.etichetta)">
@@ -36,7 +35,7 @@
         <button
           type="button"
           class="scarica-file"
-          [disabled]="!pronto() || preparo()"
+          [disabled]="preparo()"
           (click)="scarica(uscita); $event.stopPropagation()"
         >
           {{ preparo() === uscita.etichetta ? 'Preparo…' : 'Scarica' }}
@@ -74,23 +73,5 @@
         </li>
       }
     </ol>
-  }
-
-  @if (!pronto()) {
-    <p class="nota">Completa prima la scritta sulla copia.</p>
-  }
-</section>
-
-<section class="vista" aria-label="Anteprima">
-  @if (inVista(); as uscita) {
-    <p class="titolo-vista">
-      <strong>{{ nome(uscita) }}{{ coda(uscita) }}</strong>
-      <span>{{ contenuto(uscita) }}</span>
-    </p>
-    <app-anteprima
-      [pagine]="uscita.pagine"
-      [filigrana]="filigrana()"
-      (togli)="togli.emit($event)"
-    />
   }
 </section>

@@ -1,29 +1,41 @@
 @if (pagine().length) {
   <div class="strumento">
-    <section class="documenti">
-      <h2><span class="numero">1</span>Documenti</h2>
-      <app-carica
-        [compatta]="true"
-        [riepilogo]="riepilogo()"
-        (caricati)="aggiungi($event)"
-        (ricomincia)="ricomincia()"
+    <!-- La plancia: i tre passi, uno sotto l'altro -->
+    <div class="plancia">
+      <section>
+        <h2><span class="numero">1</span>Documenti</h2>
+        <app-carica
+          [compatta]="true"
+          [riepilogo]="riepilogo()"
+          (caricati)="aggiungi($event)"
+          (ricomincia)="ricomincia()"
+        />
+        <ng-container *ngTemplateOutlet="stato" />
+      </section>
+
+      <section>
+        <h2><span class="numero">2</span>Filigrana</h2>
+        <app-filigrana [(scritta)]="scritta" [(data)]="data" [(stile)]="stile" [testo]="testo()" />
+      </section>
+
+      <app-scarica
+        #scarica
+        [pagine]="pagine()"
+        [filigrana]="filigrana()"
+        (sposta)="sposta($event)"
       />
-      <ng-container *ngTemplateOutlet="stato" />
-    </section>
+    </div>
 
-    <section class="filigrana">
-      <h2><span class="numero">2</span>Filigrana</h2>
-      <app-filigrana [(scritta)]="scritta" [(data)]="data" [(stile)]="stile" [testo]="testo()" />
+    <!-- Il piano di lavoro: le pagine del file scelto in Scarica -->
+    <section class="piano" aria-label="Anteprima">
+      @if (scarica.inVista(); as uscita) {
+        <p class="titolo-piano">
+          <strong>{{ scarica.nome(uscita) }}{{ scarica.coda(uscita) }}</strong>
+          <span>{{ scarica.contenuto(uscita) }}</span>
+        </p>
+        <app-anteprima [pagine]="uscita.pagine" [filigrana]="filigrana()" (togli)="togli($event)" />
+      }
     </section>
-
-    <!-- Scarica porta con sé anche l'anteprima, nella colonna di destra -->
-    <app-scarica
-      [pagine]="pagine()"
-      [filigrana]="filigrana()"
-      [pronto]="completata()"
-      (togli)="togli($event)"
-      (sposta)="sposta($event)"
-    />
   </div>
 } @else {
   <header class="intro">

@@ -1,5 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { Component, computed, signal } from '@angular/core';
+import { Anteprima } from './anteprima/anteprima';
 import { Carica } from './carica/carica';
 import { formato, leggiFile } from './carica/leggi';
 import { PdfProtetto } from './carica/leggi-pdf';
@@ -14,36 +15,27 @@ import { Pagina } from './pagina';
 import { perDocumento } from './scarica/salva';
 import { Scarica } from './scarica/scarica';
 
-const INIZIO = 'Solo per ';
-
 @Component({
   selector: 'app-root',
-  imports: [Carica, Filigrana, NgTemplateOutlet, Scarica],
+  imports: [Anteprima, Carica, Filigrana, NgTemplateOutlet, Scarica],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
 export class App {
   protected readonly pagine = signal<Pagina[]>([]);
   /** Si parte da «Solo per »: di solito basta completarla */
-  protected readonly scritta = signal(INIZIO);
+  protected readonly scritta = signal('Solo per ');
   protected readonly data = signal(oggi());
   protected readonly stile = signal<StileFiligrana>(STILE_INIZIALE);
   /** Cosa si sta leggendo adesso, mentre i file arrivano */
   protected readonly lettura = signal('');
   protected readonly errori = signal<string[]>([]);
 
-  /** Finché la scritta non è completata l'anteprima mostra «Solo per …», così si vede l'effetto */
-  protected readonly testo = computed(() =>
-    testoFiligrana(this.completata() ? this.scritta() : `${INIZIO}…`, this.data()),
-  );
+  protected readonly testo = computed(() => testoFiligrana(this.scritta(), this.data()));
   protected readonly filigrana = computed<ImpostazioniFiligrana>(() => ({
     ...this.stile(),
     testo: this.testo(),
   }));
-  protected readonly completata = computed(() => {
-    const scritta = this.scritta().trim();
-    return scritta.length > 0 && scritta !== INIZIO.trim();
-  });
 
   /** «3 pagine da 2 file» */
   protected readonly riepilogo = computed(() => {
