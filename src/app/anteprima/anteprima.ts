@@ -208,15 +208,27 @@ export class Anteprima {
     });
   }
 
-  /** Lasciato il dito o il mouse, il rettangolo si aggiunge (se non è un semplice clic) */
+  /**
+   * Lasciato il dito o il mouse, il rettangolo si aggiunge. Un semplice clic no, e nemmeno un
+   * rettangolo più sottile di 3 pixel della pagina. Le righe strette, come un IBAN, sì.
+   */
   protected finisci(): void {
-    this.spostamento = null;
     const zona = this.bozza();
+    this.annulla();
+    if (!zona) return;
+    const pagina = this.pagina();
+    const larghezza = zona.larghezza * pagina.larghezza;
+    const altezza = zona.altezza * pagina.altezza;
+    const clic = zona.larghezza < 0.01 && zona.altezza < 0.01;
+    if (clic || larghezza < 3 || altezza < 3) return;
+    this.copri.emit({ pagina, zone: [...pagina.zone, zona] });
+  }
+
+  /** Il telefono ha interrotto il gesto (per scorrere o ingrandire): la bozza non vale */
+  protected annulla(): void {
+    this.spostamento = null;
     this.inizio = null;
     this.bozza.set(null);
-    if (!zona || zona.larghezza < 0.01 || zona.altezza < 0.01) return;
-    const pagina = this.pagina();
-    this.copri.emit({ pagina, zone: [...pagina.zone, zona] });
   }
 
   protected scegliZona(evento: PointerEvent, zona: Zona): void {

@@ -39,7 +39,8 @@ export class App {
   protected readonly conFiligrana = signal(true);
   protected readonly filigrana = computed<ImpostazioniFiligrana>(() => ({
     ...this.stile(),
-    attiva: this.conFiligrana(),
+    // Senza scritta né data non c'è niente da disegnare: la copia è solo oscurata
+    attiva: this.conFiligrana() && !!this.testo(),
     testo: this.testo(),
   }));
 
@@ -50,21 +51,33 @@ export class App {
     })),
   );
 
-  protected async aggiungi(file: File[]): Promise<void> {
+  /** I file aggiunti mentre se ne legge un altro aspettano il loro turno */
+  private coda = Promise.resolve();
+  /** Cresce a ogni «Ricomincia»: quello che si stava leggendo prima non va più aggiunto */
+  private giro = 0;
+
+  protected aggiungi(file: File[]): void {
+    const giro = this.giro;
+    this.coda = this.coda.then(() => this.leggi(file, giro));
+  }
+
+  private async leggi(file: File[], giro: number): Promise<void> {
     const errori: string[] = [];
+    const valido = () => giro === this.giro;
     for (const uno of file) {
+      if (!valido()) return;
       if (!formato(uno)) {
         errori.push(`«${uno.name}»: questo formato non lo leggo. Vanno bene JPG, PNG, HEIC e PDF.`);
         continue;
       }
       this.lettura.set(`Leggo «${uno.name}»…`);
       try {
-        const nuove = distinte(
-          await leggiFile(uno, (testo) => this.lettura.set(testo)),
-          this.pagine(),
-        );
+        const lette = await leggiFile(uno, (testo) => valido() && this.lettura.set(testo));
+        if (!valido()) return;
+        const nuove = distinte(lette, this.pagine());
         this.pagine.update((pagine) => [...pagine, ...nuove]);
         const righe = await leggiMetadati(uno);
+        if (!valido()) return;
         this.metadati.update((tutti) => ({ ...tutti, [nuove[0].documento]: righe }));
       } catch (errore) {
         errori.push(
@@ -79,6 +92,8 @@ export class App {
   }
 
   protected ricomincia(): void {
+    this.giro++;
+    this.lettura.set('');
     this.pagine.set([]);
     this.metadati.set({});
     this.errori.set([]);

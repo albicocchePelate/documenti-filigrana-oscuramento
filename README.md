@@ -22,9 +22,11 @@ parte e non restano salvati: chiudendo la pagina spariscono.
 Si può verificare in diversi modi, descritti anche nella finestra «Verifica» dello strumento:
 
 - funziona senza connessione a internet;
-- negli strumenti per sviluppatori del browser, alla voce Rete, non compare nessuna richiesta;
-- la pagina dichiara al browser di bloccare qualsiasi invio di dati (`connect-src 'none'`, in
-  cima a [`src/index.html`](src/index.html)).
+- negli strumenti per sviluppatori del browser, alla voce Rete, compaiono solo i file dello
+  strumento che arrivano, nessun invio;
+- la pagina chiede al browser di rifiutare i collegamenti aperti dal codice per spedire dati,
+  anche da parte delle librerie usate (`connect-src 'none'`, in cima a
+  [`src/index.html`](src/index.html)).
 
 Le copie sono ridisegnate da zero e non contengono i dati nascosti dell'originale: posizione,
 dispositivo, data di scatto, autore, programma usato. Lo strumento mostra quali dati aveva ogni
@@ -35,5 +37,9 @@ file prima di toglierli.
 - Il testo delle copie in PDF non si può selezionare o cercare: ogni pagina diventa un'immagine.
   È voluto, così sotto le zone nere non resta niente.
 - I PDF protetti da password non si aprono.
+- Le pagine diventano immagini di al massimo 2400 pixel per lato, circa 200 dpi su un A4: si legge
+  bene, ma le scritte minute dei fogli grandi perdono definizione.
+- Nelle copie in PDF ogni pagina è larga come un A4, qualunque fosse la misura dell'originale.
+- Le pagine non si ruotano e, dentro un documento, non si cambiano di ordine.
 
 Realizzato con il supporto di AI.

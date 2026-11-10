@@ -4,10 +4,11 @@ import { leggiPdf } from './leggi-pdf';
 
 type Formato = 'immagine' | 'heic' | 'pdf';
 
-/** Il formato dal tipo del file, o dall'estensione quando il browser non lo sa (succede con HEIC). */
+/** Il formato dal tipo del file, o dall'estensione quando il browser non lo sa (HEIC, certe app) */
 export function formato(file: File): Formato | null {
-  const estensione = file.name.split('.').pop()?.toLowerCase();
+  const estensione = file.name.split('.').pop()?.toLowerCase() ?? '';
   if (file.type === 'image/jpeg' || file.type === 'image/png') return 'immagine';
+  if (!file.type && ['jpg', 'jpeg', 'png'].includes(estensione)) return 'immagine';
   if (file.type === 'application/pdf' || estensione === 'pdf') return 'pdf';
   if (/^image\/hei[cf]$/.test(file.type) || estensione === 'heic' || estensione === 'heif')
     return 'heic';

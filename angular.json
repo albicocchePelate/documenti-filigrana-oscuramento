@@ -47,6 +47,11 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "openjpeg_nowasm_fallback.js",
+                "input": "node_modules/pdfjs-dist/wasm",
+                "output": "pdfjs"
               }
             ],
             "styles": [
