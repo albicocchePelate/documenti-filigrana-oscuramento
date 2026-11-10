@@ -1,0 +1,1 @@
+body{padding:24px 16px}button{cursor:pointer}@media(hover:none){.solo-mouse{display:none!important}}@media(hover:hover){.solo-tocco{display:none!important}}@media(pointer:coarse){input:not([type=range],[type=checkbox]){font-size:max(16px,1em)!important}}
