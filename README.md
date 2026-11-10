@@ -23,7 +23,7 @@ Si può verificare in diversi modi, descritti anche nella finestra «Verifica» 
 
 - funziona senza connessione a internet;
 - negli strumenti per sviluppatori del browser, alla voce Rete, compaiono solo i file dello
-  strumento che arrivano, nessun invio;
+  strumento che arrivano: niente esce con i documenti o con i loro dati;
 - la pagina chiede al browser di rifiutare i collegamenti aperti dal codice per spedire dati,
   anche da parte delle librerie usate (`connect-src 'none'`, in cima a
   [`src/index.html`](src/index.html)).
