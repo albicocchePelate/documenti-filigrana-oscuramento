@@ -9,9 +9,9 @@
 
     <!--
       ================================================================
-      QUESTA RIGA IMPEDISCE ALLA PAGINA DI INVIARE DATI.
-      connect-src 'none': il browser blocca ogni richiesta di rete
-      fatta dal codice. I tuoi file non possono uscire da qui.
+      QUESTA RIGA BLOCCA GLI INVII DI DATI DAL CODICE.
+      connect-src 'none': il browser rifiuta fetch, XHR e WebSocket,
+      anche delle librerie usate. Il resto lo dice il codice, che è pubblico.
       ================================================================
     -->
     <meta

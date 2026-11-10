@@ -172,6 +172,11 @@ input {
   }
 }
 
+.errore {
+  color: var(--danger);
+  font-size: 0.9375rem;
+}
+
 /* Nel file unico: in che ordine stanno i documenti, uno per riga */
 .ordine {
   display: grid;

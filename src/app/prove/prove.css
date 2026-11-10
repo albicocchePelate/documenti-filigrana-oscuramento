@@ -113,6 +113,11 @@ dialog h2 {
   font-weight: 700;
 }
 
+.spunta.attenzione {
+  background: var(--danger);
+  color: var(--bg);
+}
+
 .garanzie div {
   display: grid;
   gap: 2px;

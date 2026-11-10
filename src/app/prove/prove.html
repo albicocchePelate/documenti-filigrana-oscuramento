@@ -15,16 +15,28 @@
 
   <ul class="garanzie">
     <li>
-      <span class="spunta" aria-hidden="true">✓</span>
+      @if (rete.altriSiti()) {
+        <span class="spunta attenzione" aria-hidden="true">!</span>
+      } @else {
+        <span class="spunta" aria-hidden="true">✓</span>
+      }
       <div>
-        <strong>Nessun dato è uscito da questa pagina</strong>
+        <strong>
+          {{
+            rete.altriSiti()
+              ? 'Ci sono richieste verso altri siti'
+              : 'Nessuna richiesta verso altri siti'
+          }}
+        </strong>
         <p>
-          Il browser conta {{ rete.altriSiti() }} richieste verso altri siti.
+          Il browser ne conta {{ rete.altriSiti() }}.
           @if (rete.inviiBloccati()) {
             {{ rete.inviiBloccati() }} tentativi di collegarsi fuori sono stati fermati.
           }
         </p>
-        <p class="come solo-mouse">Verifica: tasto destro → Ispeziona → Rete, poi usa lo strumento.</p>
+        <p class="come solo-mouse">
+          Verifica: tasto destro → Ispeziona → Rete, poi usa lo strumento.
+        </p>
       </div>
     </li>
 
@@ -35,13 +47,15 @@
         <p>
           Ora sei <span class="connessione">{{ rete.online() ? 'online' : 'offline' }}</span
           >.
-          {{ rete.online() ? 'Tutto succede qui, nel browser.' : 'E sta funzionando.' }}
+          {{
+            rete.online()
+              ? 'Tutto succede qui, nel browser.'
+              : 'Se lo strumento continua a rispondere, la prova è questa.'
+          }}
         </p>
         @if (rete.online()) {
           <p class="come solo-mouse">Verifica: stacca il Wi-Fi e continua a usarlo.</p>
           <p class="come solo-tocco">Verifica: attiva la modalità aereo e continua a usarlo.</p>
-        } @else {
-          <p>Sei offline e sta funzionando.</p>
         }
       </div>
     </li>
@@ -54,7 +68,9 @@
           @for (documento of documenti(); track documento[0]) {
             <div class="file" [class.evidenziato]="evidenziati().includes(documento[0])">
               <span class="nome-file">{{ documento[0] }}</span>
-              @if (documento[1].length) {
+              @if (documento[1] === null) {
+                <span class="nessuno">non sono riuscito a leggerli</span>
+              } @else if (documento[1].length) {
                 <dl>
                   @for (dato of documento[1]; track dato.etichetta) {
                     <dt>{{ dato.etichetta }}</dt>
@@ -76,10 +92,10 @@
     <li>
       <span class="spunta" aria-hidden="true">✓</span>
       <div>
-        <strong>Il browser blocca ogni invio</strong>
+        <strong>Il browser blocca gli invii del codice</strong>
         <p>
-          La pagina dichiara <code>connect-src 'none'</code>: niente richieste di rete, nemmeno
-          volendo.
+          La pagina dichiara <code>connect-src 'none'</code>: il browser rifiuta i collegamenti
+          aperti dal codice per spedire dati, anche da parte delle librerie usate.
         </p>
         <p class="come solo-mouse">Verifica: tasto destro → Visualizza sorgente pagina, in cima.</p>
       </div>
@@ -93,7 +109,9 @@
           I documenti stanno solo nella memoria di questa scheda: chiudendola, spariscono. Niente
           viene salvato nel browser.
         </p>
-        <p class="come solo-mouse">Verifica: tasto destro → Ispeziona → Applicazione → Archiviazione.</p>
+        <p class="come solo-mouse">
+          Verifica: tasto destro → Ispeziona → Applicazione → Archiviazione.
+        </p>
         <p class="come">Restano solo le copie che scarichi, nella cartella Download.</p>
       </div>
     </li>

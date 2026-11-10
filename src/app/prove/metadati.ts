@@ -7,15 +7,18 @@ export interface Metadato {
   valore: string;
 }
 
+/** Per ogni documento i suoi dati nascosti; null se non si sono potuti leggere */
+export type Metadati = Record<string, Metadato[] | null>;
+
 /**
  * Cosa raccontava il file oltre al documento: posizione, telefono, data, autore, programma.
  * Lo mostriamo per far vedere cosa non finisce nella copia (che è rifatta da zero e non ne ha).
  */
-export async function leggiMetadati(file: File): Promise<Metadato[]> {
+export async function leggiMetadati(file: File): Promise<Metadato[] | null> {
   try {
     return formato(file) === 'pdf' ? await delPdf(file) : await dellaFoto(file);
   } catch {
-    return [];
+    return null;
   }
 }
 

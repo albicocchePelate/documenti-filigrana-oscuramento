@@ -43,6 +43,9 @@ function inFoglio(immagine: ImageBitmap): HTMLCanvasElement {
   foglio.width = Math.round(immagine.width * scala);
   foglio.height = Math.round(immagine.height * scala);
   const disegno = foglio.getContext('2d')!;
+  // Le parti trasparenti di un PNG diventano bianche: nel JPEG sarebbero nere
+  disegno.fillStyle = '#fff';
+  disegno.fillRect(0, 0, foglio.width, foglio.height);
   disegno.imageSmoothingQuality = 'high';
   disegno.drawImage(immagine, 0, 0, foglio.width, foglio.height);
   immagine.close();

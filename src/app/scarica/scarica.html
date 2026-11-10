@@ -42,6 +42,8 @@
             <button type="button" class="vedi" (click)="vediTolti($event, uscita)">
               Vedi quali
             </button>
+          } @else if (nonLetti(uscita)) {
+            <span>Copia rifatta da zero, senza dati nascosti</span>
           } @else {
             <span>Nessun dato nascosto da togliere</span>
           }
@@ -56,7 +58,9 @@
               >
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M12 15V4M8 8l4-4 4 4" />
-                  <path d="M8 11H6.5A1.5 1.5 0 0 0 5 12.5v7A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5v-7a1.5 1.5 0 0 0-1.5-1.5H16" />
+                  <path
+                    d="M8 11H6.5A1.5 1.5 0 0 0 5 12.5v7A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5v-7a1.5 1.5 0 0 0-1.5-1.5H16"
+                  />
                 </svg>
                 Condividi ora
               </button>
@@ -69,7 +73,9 @@
               >
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M12 15V4M8 8l4-4 4 4" />
-                  <path d="M8 11H6.5A1.5 1.5 0 0 0 5 12.5v7A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5v-7a1.5 1.5 0 0 0-1.5-1.5H16" />
+                  <path
+                    d="M8 11H6.5A1.5 1.5 0 0 0 5 12.5v7A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5v-7a1.5 1.5 0 0 0-1.5-1.5H16"
+                  />
                 </svg>
                 {{ inPreparazione(uscita, 'condividi') ? 'Preparo…' : 'Condividi' }}
               </button>
@@ -92,6 +98,10 @@
       </li>
     }
   </ul>
+
+  @if (errore()) {
+    <p class="errore" role="alert">{{ errore() }}</p>
+  }
 
   @if (ordine().length) {
     <div class="ordine">

@@ -3,7 +3,6 @@
  * browser (il suo motore è dentro il file JavaScript, non si scarica niente da fuori).
  */
 export async function leggiHeic(file: File): Promise<ImageBitmap> {
-  // libheif è grande: si carica solo quando arriva la prima foto HEIC
   const { default: creaLibheif } = await import('libheif-js/libheif-wasm/libheif-bundle.mjs');
   const libheif = creaLibheif();
   const decodificatore = new libheif.HeifDecoder();

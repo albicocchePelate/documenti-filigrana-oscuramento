@@ -10,7 +10,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { Metadato } from './metadati';
+import { Metadati } from './metadati';
 import { Rete } from './rete';
 import { Verifica } from './verifica';
 
@@ -24,7 +24,7 @@ const CODICE = 'https://github.com/albicocchePelate/documenti-filigrana-oscurame
 })
 export class Prove {
   /** Per ogni documento caricato, cosa conteneva oltre al documento */
-  readonly metadati = input<Record<string, Metadato[]>>({});
+  readonly metadati = input<Metadati>({});
 
   protected readonly rete = inject(Rete);
   protected readonly codice = CODICE;

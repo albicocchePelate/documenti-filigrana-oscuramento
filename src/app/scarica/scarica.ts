@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { ImpostazioniFiligrana } from '../filigrana/disegna';
 import { Pagina } from '../pagina';
-import { Metadato } from '../prove/metadati';
+import { Metadati } from '../prove/metadati';
 import { Verifica } from '../prove/verifica';
 import { Opzione, Scelta } from '../scelta/scelta';
 import { fileImmagini, filePdf, perDocumento, salva } from './salva';
@@ -33,7 +33,7 @@ export class Scarica {
   readonly filigrana = input.required<ImpostazioniFiligrana>();
   readonly sposta = output<{ documento: string; verso: -1 | 1 }>();
   /** Per ogni documento, cosa conteneva oltre al documento: lo si mostra per dire che è stato tolto */
-  readonly metadati = input<Record<string, Metadato[]>>({});
+  readonly metadati = input<Metadati>({});
 
   private readonly verifica = inject(Verifica);
 
@@ -48,6 +48,7 @@ export class Scarica {
   /** I nomi cambiati a mano, per etichetta */
   protected readonly nomi = signal<Record<string, string>>({});
   protected readonly preparo = signal<{ etichetta: string; modo: Modo } | null>(null);
+  protected readonly errore = signal('');
 
   /** Sul telefono la copia si manda subito (WhatsApp, Mail…) invece di cercarla tra i file */
   protected readonly condivisibile =
@@ -136,6 +137,11 @@ export class Scarica {
     this.verifica.mostra(this.documentiDi(uscita));
   }
 
+  /** Se di qualche documento del file non si sono potuti leggere i dati nascosti */
+  protected nonLetti(uscita: Uscita): boolean {
+    return this.documentiDi(uscita).some((documento) => this.metadati()[documento] === null);
+  }
+
   private documentiDi(uscita: Uscita): string[] {
     return [...new Set(uscita.pagine.map((pagina) => pagina.documento))];
   }
@@ -160,6 +166,7 @@ export class Scarica {
     const nome =
       (senzaVietati(this.nome(uscita)).trim() || 'documento') + senzaVietati(this.aggiunta());
     this.preparo.set({ etichetta: uscita.etichetta, modo });
+    this.errore.set('');
     try {
       const file =
         this.formato() === 'pdf'
@@ -168,6 +175,10 @@ export class Scarica {
       if (modo === 'condividi' && navigator.canShare({ files: [file] }))
         await this.condividi(uscita, file);
       else salva(file);
+    } catch {
+      this.errore.set(
+        `Non sono riuscito a preparare «${uscita.etichetta}». Forse manca memoria: chiudi altre schede o separa i documenti e riprova.`,
+      );
     } finally {
       this.preparo.set(null);
     }

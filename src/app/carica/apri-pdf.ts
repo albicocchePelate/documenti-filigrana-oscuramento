@@ -3,7 +3,6 @@ import type { PDFDocumentProxy } from 'pdfjs-dist';
 /**
  * Apre un PDF con pdf.js. Il suo motore gira nella pagina stessa e non in un worker separato:
  * per i documenti di tutti i giorni basta.
- * pdf.js è grande: si carica solo quando arriva il primo PDF.
  */
 export async function apriPdf(file: File): Promise<PDFDocumentProxy> {
   const [pdfjs] = await Promise.all([
